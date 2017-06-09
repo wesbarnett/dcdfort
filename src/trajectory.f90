@@ -13,7 +13,7 @@ module dcdfort_trajectory
     end type molfile_timestep_t
 
     type :: Frame
-        real(C_FLOAT), allocatable :: xyz(:)
+        real(C_FLOAT), allocatable :: xyz(:,:)
         !integer(C_INT) :: STEP
         !real(C_FLOAT) :: box(3,3), prec, time
     end type
@@ -28,7 +28,7 @@ module dcdfort_trajectory
         procedure :: open => trajectory_open
         procedure :: natoms => trajectory_get_natoms
         procedure :: read_next => trajectory_read_next
-!       procedure :: x => trajectory_get_xyz
+        procedure :: x => trajectory_get_xyz
     end type
 
     interface 
@@ -127,7 +127,6 @@ contains
         ! If the user specified how many frames to read and it is greater than one, use it
         N = merge(F, 1, present(F))
 
-        x = 3.14
         ! Are we near the end of the file?
 !       N = min(this%FRAMES_REMAINING, N)
 !       this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
@@ -140,10 +139,12 @@ contains
 
         do I = 1, N
 
+            print *,I
             if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
-            allocate(this%frameArray(I)%xyz(3*this%NUMATOMS))
+            allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
             STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz)
+            print *, STAT
 
         end do
 
@@ -158,28 +159,28 @@ contains
     end subroutine print_frames_saved
 
     ! TODO: groups
-!   function trajectory_get_xyz(this, frame, atom)
+    function trajectory_get_xyz(this, frame, atom)
 
-!       implicit none
-!       real :: trajectory_get_xyz(3)
-!       integer, intent(in) :: frame, atom
-!       integer :: atom_tmp, natoms
-!       class(Trajectory), intent(inout) :: this
-!       character (len=1024) :: message
+        implicit none
+        real :: trajectory_get_xyz(3)
+        integer, intent(in) :: frame, atom
+        integer :: atom_tmp, natoms
+        class(Trajectory), intent(inout) :: this
+        character (len=1024) :: message
 
 !       call trajectory_check_frame(this, frame)
 
-!       atom_tmp = atom
-!       natoms = this%natoms()
+        atom_tmp = atom
+        natoms = this%natoms()
 
-!       if (atom > natoms .or. atom < 1) then
-!           write(message, "(a,i0,a,i0,a)") "Tried to access atom number ", atom_tmp, " when there are ", &
-!               natoms, ". Note that Fortran uses one-based indexing."
-!           call error_stop_program(trim(message))
-!       end if
+        if (atom > natoms .or. atom < 1) then
+            write(message, "(a,i0,a,i0,a)") "Tried to access atom number ", atom_tmp, " when there are ", &
+                natoms, ". Note that Fortran uses one-based indexing."
+            call error_stop_program(trim(message))
+        end if
 
-!       trajectory_get_xyz = this%frameArray(frame)%xyz(:,atom)
+        trajectory_get_xyz = this%frameArray(frame)%xyz(:,atom)
 
-!   end function trajectory_get_xyz
+    end function trajectory_get_xyz
 
 end module dcdfort_trajectory

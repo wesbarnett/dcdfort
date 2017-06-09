@@ -5,13 +5,23 @@ program main
     implicit none
 
     type(Trajectory) :: trj
-    integer :: n
+    integer :: n, i, j, f, k
 
     call trj%open("dump.dcd")
 
-    write(*,*) "atoms: ", trj%natoms()
-    write(*,*) "frames: ", trj%nframes
+    n = trj%natoms()
+    f = trj%nframes
 
-    n = trj%read_next(5)
+    do i = 1, 1
+
+        k = trj%read_next()
+
+        do j = 1, n
+
+            write(*,*) i, j, trj%x(1,j)
+
+        end do
+
+    end do
 
 end program main
