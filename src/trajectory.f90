@@ -143,7 +143,7 @@ contains
             if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
             allocate(this%frameArray(I)%xyz(3*this%NUMATOMS))
-            STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz, this%frameArray(I)%box)
+            STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz)
 
         end do
 
