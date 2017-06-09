@@ -32,6 +32,7 @@ module dcdfort_trajectory
         procedure :: x => trajectory_get_xyz
         procedure :: box => trajectory_get_box
         procedure :: read => trajectory_read
+        procedure :: close => trajectory_close
     end type
 
     interface 
@@ -61,12 +62,10 @@ module dcdfort_trajectory
             real(C_FLOAT) :: coords(*), box(*)
         end function
 
-        ! TODO: Implement
-        type(C_PTR) function close_dcd_read(indexes, fixedrecords)
+        subroutine close_file_read(v) bind(C, name='close_file_read')
             import
-            integer(C_INT) :: indexes
-            real(C_FLOAT) :: fixedrecords
-        end function
+            type(C_PTR) :: v
+        end subroutine
 
     end interface
 
@@ -203,6 +202,8 @@ contains
 
         N = this%read_next(this%NFRAMES)
 
+        call this%close()
+
     end subroutine trajectory_read
 
     function trajectory_get_box(this, frame)
@@ -231,5 +232,14 @@ contains
         end if
 
     end subroutine trajectory_check_frame
+
+    subroutine trajectory_close(this)
+
+        implicit none
+        class(Trajectory), intent(inout) :: this
+
+        call close_file_read(this % v) 
+
+    end subroutine trajectory_close
 
 end module dcdfort_trajectory

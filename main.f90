@@ -10,7 +10,7 @@ program main
 
     call trj%read("dump.dcd")
 
-    do i = 1, 10
+    do i = 1, 1
 
         do j = 1, trj%natoms()
 
