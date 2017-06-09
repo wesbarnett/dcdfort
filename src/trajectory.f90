@@ -48,13 +48,6 @@ module dcdfort_trajectory
             type(C_PTR), intent(in) :: v
         end function
 
-        integer(C_INT) function read_next_timestep(v, natoms, ts) bind(C, name='read_next_timestep')
-            import
-            type(C_PTR), intent(in) :: v
-            integer(C_INT), intent(in) :: natoms
-            type(molfile_timestep_t), intent(inout) :: ts
-        end function
-
         integer(C_INT) function read_next_wrapper(v, natoms, coords, box) bind(C, name='read_next_wrapper')
             import
             type(C_PTR) :: v
