@@ -6,12 +6,6 @@ module dcdfort_trajectory
     implicit none
     private
 
-    type, public, bind(C) :: molfile_timestep_t
-        TYPE(C_PTR) :: coords, velocities
-        real(C_FLOAT) :: A, B, C, alpha, beta, gamma
-        real(C_DOUBLE) :: physical_time
-    end type molfile_timestep_t
-
     type :: Frame
         real(C_FLOAT), allocatable :: xyz(:,:)
         real(C_FLOAT) :: box(6)
@@ -100,6 +94,7 @@ contains
         v_c = open_dcd_read(filename, filetype, this%NUMATOMS)
         call c_f_pointer(v_c, this % v)
         this%NFRAMES = get_nframes(this % v)
+        this%FRAMES_REMAINING = this%NFRAMES
 
         write(error_unit,'(a)') "Opened "//trim(filename)//" for reading."
         write(error_unit,'(i0,a)') this%NUMATOMS, " atoms present in system."
@@ -130,8 +125,8 @@ contains
         N = merge(F, 1, present(F))
 
         ! Are we near the end of the file?
-!       N = min(this%FRAMES_REMAINING, N)
-!       this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
+        N = min(this%FRAMES_REMAINING, N)
+        this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
 
         if (allocated(this%frameArray)) deallocate(this%frameArray)
 
