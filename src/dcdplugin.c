@@ -930,6 +930,13 @@ extern int get_nframes(void *v) {
     return dcd->nsets;
 }
 
+extern int read_next_wrapper(void *v, int natoms, float *coords) 
+{
+    molfile_timestep_t ts;
+    ts.coords = coords;
+    int stat = read_next_timestep(v, natoms, &ts);
+}
+
 extern int read_next_timestep(void *v, int natoms, molfile_timestep_t *ts) {
   dcdhandle *dcd;
   int i, j, rc;
