@@ -20,6 +20,7 @@ module dcdfort_trajectory
         integer :: FRAMES_REMAINING
     contains
         procedure :: open => trajectory_open
+        procedure :: natoms => trajectory_get_natoms
     end type
 
     interface 
@@ -81,5 +82,16 @@ contains
         !write(error_unit,'(i0,a)') this%NFRAMES, " frames present in trajectory file."
 
     end subroutine trajectory_open
+
+    ! TODO: Get number of atoms in a group
+    function trajectory_get_natoms(this)
+
+        implicit none
+        integer :: trajectory_get_natoms
+        class(Trajectory), intent(in) :: this
+
+        trajectory_get_natoms = this%NUMATOMS
+
+    end function trajectory_get_natoms
 
 end module dcdfort_trajectory
