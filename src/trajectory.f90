@@ -9,8 +9,6 @@ module dcdfort_trajectory
     type :: Frame
         real(C_FLOAT), allocatable :: xyz(:,:)
         real(C_FLOAT) :: box(6)
-        !integer(C_INT) :: STEP
-        !real(C_FLOAT) :: box(3,3), prec, time
     end type
 
     type, public :: Trajectory
