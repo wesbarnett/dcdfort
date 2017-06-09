@@ -30,7 +30,7 @@ extern void *open_dcd_read(const char *path, const char *filetype, int *natoms);
 extern int read_next_timestep(void *v, int natoms, molfile_timestep_t *ts);
 extern void close_file_read(void *v);
 extern int get_nframes(void *v);
-extern int read_next_wrapper(void *v, int natoms, float *coords);
+extern int read_next_wrapper(void *v, int natoms, float *coords, float *box);
 
 #ifdef __cplusplus
 }
