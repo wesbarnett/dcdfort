@@ -7,18 +7,13 @@ program main
     type(Trajectory) :: trj
     integer :: n, i, j, f, k
 
-    call trj%open("dump.dcd")
+    call trj%read("dump.dcd")
 
-    n = trj%natoms()
-    f = trj%nframes
+    do i = 1, trj%nframes
 
-    do i = 1, 1
+        do j = 1, trj%natoms()
 
-        k = trj%read_next()
-
-        do j = 1, n
-
-            write(*,*) i, j, trj%x(1,j)
+            write(*,*) i, j, trj%x(i,j)
 
         end do
 

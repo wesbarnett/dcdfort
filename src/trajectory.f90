@@ -29,6 +29,7 @@ module dcdfort_trajectory
         procedure :: natoms => trajectory_get_natoms
         procedure :: read_next => trajectory_read_next
         procedure :: x => trajectory_get_xyz
+        procedure :: read => trajectory_read
     end type
 
     interface 
@@ -56,6 +57,13 @@ module dcdfort_trajectory
             type(C_PTR) :: v
             integer(C_INT) :: natoms
             real(C_FLOAT) :: coords(*)
+        end function
+
+        ! TODO: Implement
+        type(C_PTR) function close_dcd_read(indexes, fixedrecords)
+            import
+            integer(C_INT) :: indexes
+            real(C_FLOAT) :: fixedrecords
         end function
 
     end interface
@@ -139,12 +147,10 @@ contains
 
         do I = 1, N
 
-            print *,I
             if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
             allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
             STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz)
-            print *, STAT
 
         end do
 
@@ -182,5 +188,19 @@ contains
         trajectory_get_xyz = this%frameArray(frame)%xyz(:,atom)
 
     end function trajectory_get_xyz
+
+    ! TODO: implement lammps file and groups/types
+    subroutine trajectory_read(this, dcdfile)
+
+        implicit none
+        class(Trajectory), intent(inout) :: this
+        character (len=*) :: dcdfile
+        integer :: N
+
+        call this%open(dcdfile)
+
+        N = this%read_next(this%NFRAMES)
+
+    end subroutine trajectory_read
 
 end module dcdfort_trajectory
