@@ -1,6 +1,6 @@
 #
 # This file is part of libdcdfort
-# https://github.com/wesbarnett/libdcdfort
+# https://github.com/wesbarnett/dcdfort
 #
 # Copyright (c) 2017 by James W. Barnett
 #

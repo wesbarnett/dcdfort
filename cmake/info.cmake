@@ -1,6 +1,6 @@
 #
 # This file is part of libdcdfort
-# https://github.com/wesbarnett/libdcdfort
+# https://github.com/wesbarnett/dcdfort
 #
 # Copyright (c) 2017 by James W. Barnett
 #
@@ -18,8 +18,8 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-set ( PROJECT_DESCRIPTION "Fortran toolkit for analyzing LAMMPS simulations" )
-set ( PROJECT_URL "https://github.com/wesbarnett/libdcdfort" )
+set ( PROJECT_DESCRIPTION "Fortran toolkit for analyzing DCD trajectory files" )
+set ( PROJECT_URL "https://github.com/wesbarnett/dcdfort" )
 set ( LIBDIR "lib")
 set ( INCLUDEDIR "include")
 set ( INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX}/${LIBDIR} )
