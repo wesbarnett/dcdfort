@@ -1,6 +1,6 @@
 # libdcdfort
 
-Personal code for reading in DCD trajectory files for analysis. Uses and
+Personal code for reading in DCD trajectory files for analysis. Uses an
 object-oriented style, reading in the DCD format using the VMD plugin (provided
 with this source) and DCD.
 
