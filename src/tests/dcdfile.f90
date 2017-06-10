@@ -27,22 +27,16 @@ program dcdfile_test
     ! TEST 1
     x = trj%x(1, 1)
     ans = [17.49, 7.52, 2.20]
-    print *, x
-    print *, ans
     call check(x, ans, passed, total)
 
     ! TEST 2
     x = trj%x(50, 50)
     ans = [3.59, 19.99, 18.16]
-    print *, x
-    print *, ans
     call check(x, ans, passed, total)
 
     ! TEST 3
     x = trj%x(trj%NFRAMES, trj%natoms())
     ans = [40.60, 1.55, 2.62]
-    print *, x
-    print *, ans
     call check(x, ans, passed, total)
 
     call finished_tests(passed, total)
