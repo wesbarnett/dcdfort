@@ -5,19 +5,31 @@ module dcdfort_utils
  
 contains
 
-    ! TODO: FIX!! Only works for CUBIC boxes
     function pbc(a, box)
 
         implicit none
         real(8), intent(in) :: a(3), box(6)
-        real(8) :: pbc(3)
+        real(8) :: pbc(3), tbox(3,3) = 0.0
         integer :: I
-        integer :: shift
+        real(8), parameter :: pi = 2.0d0*acos(0.0d0)
+
+        ! A = box(1), B = box(2), C = box(3)
+        ! alpha = box(4), beta = box(5), gamma = box(6)
+
+        ! convert angles to box vectors
+        tbox(1,1) = box(1)
+
+        tbox(1,2) = box(2)*cos(box(6)*pi/180.0d0)
+        tbox(2,2) = sqrt(box(2)**2-tbox(1,2)**2)
+
+        tbox(1,3) = box(3)*cos(box(5)*pi/180.0d0)
+        tbox(2,3) = (box(2)*box(3)*cos(box(4)*pi/180.0d0) - tbox(1,2)*tbox(1,3))/tbox(2,2)
+        tbox(3,3) = sqrt(box(2)**2-tbox(1,3)**2-tbox(2,3)**2)
 
         pbc = a
-        pbc(3) = pbc(3) - box(3) * nint(pbc(3)/box(3))
-        pbc(2) = pbc(2) - box(2) * nint(pbc(2)/box(2))
-        pbc(1) = pbc(1) - box(1) * nint(pbc(1)/box(1))
+        do I = 3, 1, -1
+            pbc(1:I) = pbc(1:I) - tbox(1:I,I) * nint(pbc(I) / tbox(I,I))
+        end do
 
     end function pbc
 
