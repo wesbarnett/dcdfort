@@ -43,7 +43,7 @@
  ***************************************************************************/
 
 #include "largefiles.h"   /* platform dependent 64-bit file I/O defines */
-#include "dcdplugin.h"
+#include "fastio.h"       /* must come before others, for O_DIRECT...   */
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -62,6 +62,24 @@
 #define RECSCALE32BIT 1
 #define RECSCALE64BIT 2
 #define RECSCALEMAX   2
+
+typedef struct {
+  fio_fd fd;
+  int natoms;
+  int nsets;
+  int setsread;
+  int istart;
+  int nsavc;
+  double delta;
+  int nfixed;
+  float *x, *y, *z;
+  int *freeind;
+  float *fixedcoords;
+  int reverse;
+  int charmm;  
+  int first;
+  int with_unitcell;
+} dcdhandle;
 
 /* Define error codes that may be returned by the DCD routines */
 #define DCD_SUCCESS      0  /* No problems                     */
@@ -925,26 +943,8 @@ extern void *open_dcd_read(const char *path, const char *filetype,
   return dcd;
 }
 
-extern int get_nframes(void *v) {
-    dcdhandle *dcd = (dcdhandle *)v;
-    return dcd->nsets;
-}
 
-extern int read_next_wrapper(void *v, int natoms, float *coords, float *box) 
-{
-    molfile_timestep_t ts;
-    ts.coords = coords;
-    int stat = read_next_timestep(v, natoms, &ts);
-    box[0] = ts.A;
-    box[1] = ts.B;
-    box[2] = ts.C;
-    box[3] = ts.alpha;
-    box[4] = ts.beta;
-    box[5] = ts.gamma;
-    return stat;
-}
-
-extern int read_next_timestep(void *v, int natoms, molfile_timestep_t *ts) {
+static int read_next_timestep(void *v, int natoms, molfile_timestep_t *ts) {
   dcdhandle *dcd;
   int i, j, rc;
   float unitcell[6];
@@ -1241,4 +1241,25 @@ int main(int argc, char *argv[]) {
 }
       
 #endif
+
+/* Added for libdcdfort */
+extern int get_nframes(void *v) {
+    dcdhandle *dcd = (dcdhandle *)v;
+    return dcd->nsets;
+}
+
+/* Added for libdcdfort */
+extern int read_next_wrapper(void *v, int natoms, float *coords, float *box) 
+{
+    molfile_timestep_t ts;
+    ts.coords = coords;
+    int stat = read_next_timestep(v, natoms, &ts);
+    box[0] = ts.A;
+    box[1] = ts.B;
+    box[2] = ts.C;
+    box[3] = ts.alpha;
+    box[4] = ts.beta;
+    box[5] = ts.gamma;
+    return stat;
+}
 
