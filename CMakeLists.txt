@@ -25,6 +25,5 @@ add_subdirectory ( src )
 include ( public )
 
 # Tests
-# TODO
-#enable_testing ()
-#add_subdirectory ( src/tests )
+enable_testing ()
+add_subdirectory ( src/tests )
