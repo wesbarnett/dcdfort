@@ -1,8 +1,8 @@
 #
-# This file is part of libgmxfort
-# https://github.com/wesbarnett/libgmxfort
+# This file is part of libdcdfort
+# https://github.com/wesbarnett/libdcdfort
 #
-# Copyright (c) 2016,2017 by James W. Barnett
+# Copyright (c) 2017 by James W. Barnett
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
