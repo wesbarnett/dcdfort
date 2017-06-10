@@ -115,7 +115,7 @@ contains
         implicit none
         real(8) :: dihedral_angle
         real(8), intent(in), dimension(3) :: i, j, k, l
-        real(8), intent(in), dimension(3,3) :: box
+        real(8), intent(in), dimension(6) :: box
         real(8) :: A_mag, B_mag, G_mag
         real(8), dimension(3) :: H, G, F, A, B, cross_BA
 
