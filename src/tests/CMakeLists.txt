@@ -6,12 +6,13 @@ add_library ( dcdfort_tests SHARED "dcdfort_tests.f90" )
 target_link_libraries ( dcdfort_tests ${CMAKE_PROJECT_NAME} )
 
 # Create the test programs and link them to the test library
-foreach ( TESTNAME dcdfile )
+foreach ( TESTNAME dcdfile read_next )
     add_executable ( ${TESTNAME} ${TESTNAME}.f90 )
     target_link_libraries ( ${TESTNAME} dcdfort_tests )
 endforeach ( TESTNAME )
 
 add_test ( "Read_dcdfile" dcdfile )
+add_test ( "Read_next" read_next )
 
 # Copy over files needed for running the tests
 configure_file ( test.dcd ${CMAKE_CURRENT_BINARY_DIR}/test.dcd COPYONLY )

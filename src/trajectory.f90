@@ -161,6 +161,9 @@ contains
 
         end do
 
+        trajectory_read_next = N
+        call print_frames_saved(N)
+
     end function trajectory_read_next
 
     subroutine print_frames_saved(I)
