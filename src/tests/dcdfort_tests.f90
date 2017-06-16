@@ -28,6 +28,7 @@ module dcdfort_tests
     type(Trajectory) :: trj
     real(8), parameter :: PI = 2.0d0*acos(0.0d0)
     character (len=8), parameter :: dcdfile = "test.dcd"
+    character (len=8), parameter :: ndxfile = "test.ndx"
     real :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
     integer :: passed = 0, total = 0, a, ans_val
 

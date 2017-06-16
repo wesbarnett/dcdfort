@@ -19,7 +19,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # The main library to build
-add_library ( ${CMAKE_PROJECT_NAME} SHARED dcdplugin.c trajectory.f90 utils.f90 )
+add_library ( ${CMAKE_PROJECT_NAME} SHARED dcdplugin.c common.f90 indexfile.f90
+    trajectory.f90 utils.f90 ) 
 
 # Where to put files after they are built, and what to name them
 set_target_properties ( ${CMAKE_PROJECT_NAME}

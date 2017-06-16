@@ -23,6 +23,8 @@ module dcdfort_trajectory
 
     use, intrinsic :: iso_c_binding
     use, intrinsic :: iso_fortran_env
+    use dcdfort_common
+    use dcdfort_index
     implicit none
     private
 
@@ -34,9 +36,11 @@ module dcdfort_trajectory
     type, public :: Trajectory
         type(C_PTR), pointer :: v
         type(Frame), allocatable :: frameArray(:)
+        type(IndexFile) :: ndx
         integer :: NFRAMES
         integer :: NUMATOMS, N
         integer :: FRAMES_REMAINING
+        logical :: read_only_index_group
     contains
         procedure :: open => trajectory_open
         procedure :: natoms => trajectory_get_natoms
@@ -76,19 +80,7 @@ module dcdfort_trajectory
 
 contains
 
-    subroutine error_stop_program(message)
-
-        implicit none
-        character (len=*), intent(in) :: message
-
-        write(error_unit,*)
-        write(error_unit,'(a, a)') "LIBDCDFORT ERROR: ", message
-        write(error_unit,*)
-        call abort()
-
-    end subroutine error_stop_program
-
-    subroutine trajectory_open(this, filename_in)
+    subroutine trajectory_open(this, filename_in, ndxfile)
 
         use, intrinsic :: iso_c_binding, only: C_NULL_CHAR, c_f_pointer
 
@@ -96,6 +88,7 @@ contains
         class(Trajectory), intent(inout) :: this
         type(C_PTR) :: v_c
         character (len=*), intent(in) :: filename_in
+        character (len=*), intent(in), optional :: ndxfile
         character (len=206) :: filename, filetype
         logical :: ex
 
@@ -114,30 +107,40 @@ contains
         this%NFRAMES = get_nframes(this % v)
         this%FRAMES_REMAINING = this%NFRAMES
 
+        this%N = this%NUMATOMS ! Save for use when user selects just one group
+        if (present(ndxfile)) call this%ndx%read(ndxfile, this%NUMATOMS)
+
         write(error_unit,'(a)') "Opened "//trim(filename)//" for reading."
         write(error_unit,'(i0,a)') this%NUMATOMS, " atoms present in system."
         write(error_unit,'(i0,a)') this%NFRAMES, " frames present in trajectory file."
 
     end subroutine trajectory_open
 
-    ! TODO: Get number of atoms in a group
-    function trajectory_get_natoms(this)
+    function trajectory_get_natoms(this, group)
 
         implicit none
         integer :: trajectory_get_natoms
         class(Trajectory), intent(in) :: this
+        character (len=*), intent(in), optional :: group
 
-        trajectory_get_natoms = this%NUMATOMS
+        if (this%read_only_index_group .and. present(group)) then
+            call error_stop_program("Do not specify an index group in natoms() when already specifying an & 
+                &index group with read() or read_next().")
+        end if
+
+        trajectory_get_natoms = merge(this%ndx%get_natoms(group), this%NUMATOMS, present(group))
 
     end function trajectory_get_natoms
 
-    function trajectory_read_next(this, F)
+    function trajectory_read_next(this, F, ndxgrp)
 
         implicit none
         integer :: trajectory_read_next
         class(Trajectory), intent(inout) :: this
         integer, intent(in), optional :: F
-        integer :: I, N, STAT
+        character (len=*), optional :: ndxgrp
+        integer :: I, J, N, STAT
+        real, allocatable :: xyz(:,:)
 
         ! If the user specified how many frames to read and it is greater than one, use it
         N = merge(F, 1, present(F))
@@ -147,19 +150,47 @@ contains
         this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
 
         if (allocated(this%frameArray)) deallocate(this%frameArray)
-
         allocate(this%frameArray(N))
 
         write(error_unit,*)
 
-        do I = 1, N
+        this%read_only_index_group = .false.
 
-            if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
+        if (present(ndxgrp)) then
 
-            allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
-            STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz, this%frameArray(I)%box)
+            allocate(xyz(3,this%N))
+            this%NUMATOMS = this%natoms(trim(ndxgrp))
+            do I = 1, N
 
-        end do
+                if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
+
+                allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
+                STAT = read_next_wrapper(this%v, this%NUMATOMS, xyz, this%frameArray(I)%box)
+
+                do J = 1, size(this%ndx%group)
+                    if (trim(this%ndx%group(J)%title) .eq. trim(ndxgrp)) then
+                        this%frameArray(I)%xyz = xyz(:,this%ndx%group(J)%LOC)
+                        exit
+                    end if
+                end do
+
+            end do
+            deallocate(xyz)
+
+            this%read_only_index_group = .true.
+
+        else
+
+            do I = 1, N
+
+                if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
+
+                allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
+                STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz, this%frameArray(I)%box)
+
+            end do
+
+        end if
 
         trajectory_read_next = N
         call print_frames_saved(N)
@@ -174,8 +205,7 @@ contains
 
     end subroutine print_frames_saved
 
-    ! TODO: groups
-    function trajectory_get_xyz(this, frame, atom)
+    function trajectory_get_xyz(this, frame, atom, group)
 
         implicit none
         real :: trajectory_get_xyz(3)
@@ -183,11 +213,17 @@ contains
         integer :: atom_tmp, natoms
         class(Trajectory), intent(inout) :: this
         character (len=1024) :: message
+        character (len=*), intent(in), optional :: group
 
         call trajectory_check_frame(this, frame)
 
-        atom_tmp = atom
-        natoms = this%natoms()
+        if (this%read_only_index_group .and. present(group)) then
+            call error_stop_program("Do not specify an index group in x() when already specifying an & 
+                &index group with read() or read_next().")
+        end if
+
+        atom_tmp = merge(this%ndx%get(group, atom), atom, present(group))
+        natoms = merge(this%natoms(group), this%natoms(), present(group))
 
         if (atom > natoms .or. atom < 1) then
             write(message, "(a,i0,a,i0,a)") "Tried to access atom number ", atom_tmp, " when there are ", &
@@ -195,21 +231,21 @@ contains
             call error_stop_program(trim(message))
         end if
 
-        trajectory_get_xyz = this%frameArray(frame)%xyz(:,atom)
+        trajectory_get_xyz = this%frameArray(frame)%xyz(:,atom_tmp)
 
     end function trajectory_get_xyz
 
-    ! TODO: implement lammps file and groups/types
-    subroutine trajectory_read(this, dcdfile)
+    subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp)
 
         implicit none
         class(Trajectory), intent(inout) :: this
+        character (len=*), optional :: ndxfile, ndxgrp
         character (len=*) :: dcdfile
         integer :: N
 
-        call this%open(dcdfile)
+        call this%open(dcdfile, ndxfile)
 
-        N = this%read_next(this%NFRAMES)
+        N = this%read_next(this%NFRAMES, ndxgrp)
 
         call this%close()
 
