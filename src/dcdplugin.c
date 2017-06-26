@@ -1263,3 +1263,9 @@ extern int read_next_wrapper(void *v, int natoms, float *coords, float *box)
     return stat;
 }
 
+extern int skip_dcdstep_wrapper(void *v) 
+{
+    dcdhandle *dcd;
+    dcd = (dcdhandle *)v;
+    return skip_dcdstep(dcd->fd, dcd->natoms, dcd->nfixed, dcd->charmm);
+}

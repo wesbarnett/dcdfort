@@ -49,6 +49,7 @@ module dcdfort_trajectory
         procedure :: box => trajectory_get_box
         procedure :: read => trajectory_read
         procedure :: close => trajectory_close
+        procedure :: skip_next => trajectory_skip_next
     end type
 
     interface 
@@ -69,6 +70,11 @@ module dcdfort_trajectory
             type(C_PTR) :: v
             integer(C_INT) :: natoms
             real(C_FLOAT) :: coords(*), box(*)
+        end function
+
+        integer(C_INT) function skip_dcdstep_wrapper(v) bind(C, name='skip_dcdstep_wrapper')
+            import
+            type(C_PTR) :: v
         end function
 
         subroutine close_file_read(v) bind(C, name='close_file_read')
@@ -131,6 +137,31 @@ contains
         trajectory_get_natoms = merge(this%ndx%get_natoms(group), this%NUMATOMS, present(group))
 
     end function trajectory_get_natoms
+
+    function trajectory_skip_next(this, F)
+
+        class(Trajectory), intent(inout) :: this
+        integer, intent(in), optional :: F
+        integer :: trajectory_skip_next, i, stat, N
+
+        ! If the user specified how many frames to read and it is greater than one, use it
+        N = merge(F, 1, present(F))
+
+        ! Are we near the end of the file?
+        N = min(this%FRAMES_REMAINING, N)
+        this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
+
+        do i = 1, N
+            stat = skip_dcdstep_wrapper(this%v) 
+            print *, i
+            if (stat .ne. 0) then
+                trajectory_skip_next = i-1
+                exit
+            end if
+        end do
+        trajectory_skip_next = N
+
+    end function trajectory_skip_next
 
     function trajectory_read_next(this, F, ndxgrp)
 

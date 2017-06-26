@@ -25,18 +25,23 @@ program read_next_test
     call trj%open(dcdfile)
 
     ! TEST 1
-    a = trj%read_next(100)
-    x = trj%x(100, 100)
+    a = trj%skip_next(50)
+    a = trj%read_next(50)
+    x = trj%x(50, 100)
     ans = [14.55, 3.74, 3.58]
     call check(x, ans, passed, total)
 
     ! TEST 2
-    ans_val = 100
+    ans_val = 50
     call check(a, ans_val, passed, total) 
 
     ! TEST 3
     a = trj%read_next(200)
     ans_val = 1
+    call check(a, ans_val, passed, total) 
+
+    a = trj%skip_next(200)
+    ans_val = 0
     call check(a, ans_val, passed, total) 
 
     ! TEST 4
