@@ -153,12 +153,12 @@ contains
 
         do i = 1, N
             stat = skip_dcdstep_wrapper(this%v) 
-            print *, i
             if (stat .ne. 0) then
                 trajectory_skip_next = i-1
                 exit
             end if
         end do
+        write(error_unit,'(a,i0,a)') "Skipped ", this%NFRAMES, " frames."
         trajectory_skip_next = N
 
     end function trajectory_skip_next
