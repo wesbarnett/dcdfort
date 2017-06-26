@@ -38,7 +38,7 @@ module dcdfort_trajectory
         type(Frame), allocatable :: frameArray(:)
         type(IndexFile) :: ndx
         integer :: NFRAMES
-        integer :: NUMATOMS, N
+        integer :: NUMATOMS, N, frames_read
         integer :: FRAMES_REMAINING
         logical :: read_only_index_group
     contains
@@ -223,6 +223,7 @@ contains
 
         end if
 
+        this%frames_read = N
         trajectory_read_next = N
         call print_frames_saved(N)
 
@@ -301,9 +302,9 @@ contains
         integer, intent(in) :: frame
         character (len=1024) :: message
 
-        if (frame > this%NFRAMES .or. frame < 1) then
+        if (frame > this%frames_read .or. frame < 1) then
             write(message, "(a,i0,a,i0,a)") "Tried to access frame number ", frame, " when there are ", &
-                this%NFRAMES, ". Note that Fortran uses one-based indexing."
+                this%frames_read, " read into memory. Note that Fortran uses one-based indexing."
             call error_stop_program(trim(message))
         end if
 
