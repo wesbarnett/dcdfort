@@ -143,7 +143,7 @@ myatom = trj%x(1, 1)
 
 Note that when you use `x()` you will still have to give it the frame number as
 the first argument even if you only read in one frame with `read_next()`.  You
-can always get the number of frames in a trajectory file object with the
+can always get the *total* number of frames in a trajectory file object with the
 `nframes` member:
 
 ```fortran
@@ -151,6 +151,8 @@ integer :: n
 ! ...
 n = trj%nframes
 ```
+
+This is distinct from the number of frames read in using `read_next()`.
 
 You can also get the number of atoms with the `natoms()` method:
 
