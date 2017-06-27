@@ -125,6 +125,9 @@ end do
 call trj%close()
 ```
 
+To skip a frame without reading it into memory use `skip_next()`. You can also
+pass an integer argument to indicate how many frames to skip.
+
 After calling `read()` or `read_next()` every atom's coordinates are accessible
 via the `x()` method. For example, to get the coordinates of the first atom in
 the first frame you would do the following. The frame is the first argument and
