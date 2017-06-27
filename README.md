@@ -30,7 +30,7 @@ To test your build, do:
 make test
 ```
 
-If the tests do not pass, please file an issue.
+If any tests do not pass, please file an issue.
 
 ## Installation
 
