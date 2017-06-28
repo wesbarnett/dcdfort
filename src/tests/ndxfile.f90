@@ -49,11 +49,16 @@ program ndxfile_test
     call check(a, ans_val, passed, total) 
 
     ! TEST 6
+    a = trj%natoms("FOOBAR")
+    ans_val = 0
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 7
     a = trj%natoms("TEST")
     ans_val = 1
     call check(a, ans_val, passed, total) 
 
-    ! TEST 7
+    ! TEST 8
     a = trj%nframes
     ans_val = 101
     call check(a, ans_val, passed, total) 

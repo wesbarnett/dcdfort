@@ -33,6 +33,7 @@ module dcdfort_index
 
     type, public :: IndexFile
         type (ndxgroups), allocatable :: group(:)
+        logical :: group_warning = .true.
     contains
         procedure :: read => indexfile_read
         procedure :: get => indexfile_get
@@ -144,15 +145,10 @@ contains
 
         implicit none
         integer :: indexfile_get
-        class(IndexFile), intent(in) :: this
+        class(IndexFile), intent(inout) :: this
         character (len=*), intent(in) :: group_name
         integer, intent(in), optional :: I
         integer :: J
-        character (len=10000) :: msg
-
-        if (size(this%group) .eq. 0) then
-            call error_stop_program("No groups found in index file. Did you specify an index file in open()?")
-        end if
 
         do J = 1, size(this%group)
 
@@ -165,12 +161,24 @@ contains
 
         end do
 
-        indexfile_get = -1
-        write(error_unit, '(a)') "ERROR: "//trim(group_name)//" is not in index file. The groups available are:"
-        do J = 1, size(this%group)
-            write(error_unit,'(a10,a,i0,a)') this%group(J)%title, " (", this%group(J)%NUMATOMS, ")"
-        end do
-        stop 1
+        ! If user asked to get the number of atoms in an index group, and that index group is not 
+        ! in the index file, just return 0. If the user specified an atom number, then throw an error,
+        ! since the overall index cannot be returned in that case
+        if (.not. present(I)) then
+            if (this%group_warning) then
+                write(error_unit, '(a)') "LIBDCDFORT WARNING: No atoms found in index group '"//trim(group_name)//"'."
+                write(error_unit, '(a)') "This warning will not appear again for any other missing index groups."
+                this%group_warning = .false.
+            end if
+            indexfile_get = 0
+        else
+            indexfile_get = -1
+            write(error_unit, '(a)') "LIBDCDFORT ERROR: "//trim(group_name)//" is not in index file. The groups available are:"
+            do J = 1, size(this%group)
+                write(error_unit,'(a10,a,i0,a)') this%group(J)%title, " (", this%group(J)%NUMATOMS, ")"
+            end do
+            stop 1
+        end if
 
     end function indexfile_get
 

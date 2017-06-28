@@ -79,6 +79,15 @@ type(Trajectory) :: trj
 call trj%read("traj.dcd")
 ```
 
+If you have a corresponding index file, you can add a second argument to open:
+
+```fortran
+call trj%read("traj.dcd", "index.ndx")
+```
+
+Now information regarding the index groups is stored in memory and can be used
+in some of the following methods.
+
 The `read()` method opens the dcd file, reads in all information, and then
 closes it. The `trj` object in this example now stores all of the coordinates and
 information from the .dcd file.
@@ -89,7 +98,7 @@ file on your own. By default it reads in one frame:
 
 ```fortran
 integer :: n
-call trj%open("traj.dcd")
+call trj%open("traj.dcd", "index.ndx")
 n = trj%read_next()
 call trj%close()
 ```
@@ -112,7 +121,7 @@ implicit none
 type(Trajectory) :: trj
 integer :: i, n
 
-call trj%open("traj.dcd")
+call trj%open("traj.dcd", "index.ndx")
 
 n = trj%read_next(10)
 do while (n > 0)
@@ -126,7 +135,9 @@ call trj%close()
 ```
 
 To skip a frame without reading it into memory use `skip_next()`. You can also
-pass an integer argument to indicate how many frames to skip.
+pass an integer argument to indicate how many frames to skip. The function
+returns the actual number of frames skipped (you might be near the end of the
+file and not able to skip all you specified).
 
 After calling `read()` or `read_next()` every atom's coordinates are accessible
 via the `x()` method. For example, to get the coordinates of the first atom in
@@ -141,6 +152,21 @@ myatom = trj%x(1, 1)
 
 **Note**: Fortran uses one-based indexing, and that convention is retained here.
 
+If you read in an index file, you can get atom coordinates in relationship to
+that. The following gets the fifth atom in index group C in the 10th frame:
+
+```fortran
+myatom = trj%x(10, 5, "C")
+```
+
+If the index group does not exist, then an error will be thrown, causing the
+program to stop.
+
+**Note:** If you have more than one group in your index file with the same name,
+this will simply use the first group with that name. It's best not to repeat
+group names in your index file. The library will give you a warning if it finds
+that an index name is duplicated, but the program will continue.
+
 Note that when you use `x()` you will still have to give it the frame number as
 the first argument even if you only read in one frame with `read_next()`.  You
 can always get the *total* number of frames in a trajectory file object with the
@@ -152,7 +178,10 @@ integer :: n
 n = trj%nframes
 ```
 
-This is distinct from the number of frames read in using `read_next()`.
+This is distinct from the number of frames read in using `read_next()`. The
+frame number passed to the `x()` method, and other methods here, is always in
+relationship to the number of frames read in, not the total number of frames in
+the file.
 
 You can also get the number of atoms with the `natoms()` method:
 
@@ -161,6 +190,15 @@ integer :: n
 ! ...
 n = trj%natoms()
 ```
+
+If you want to know how many atoms are in an index group include the group name
+as an argument. In this example the group name is "C":
+
+```fortran
+n = trj%natoms("C")
+```
+
+If that index group does not exist, then the method will simply return 0.
 
 To get the box coordinates, use `box`. The following gets the box of the `2`nd
 frame:
@@ -178,6 +216,17 @@ As shown above, the most common use of this library is to use `read()` or
 `read_next()` to save all atom locations and then use getters like `x()` and
 `natoms()` to get information about them by specifying an index group as an
 argument.
+
+To save memory, you can save just a specific index group with read():
+
+```fortran
+trj%read(xtcfile, ndxfile, "C")
+```
+
+If you do this, you only have access to the group above, and you should never
+pass an index group name to getters like x(), since only one group is available.
+If you do specify a group in a getter after already specifying it in `read()` or
+`read_next()`, you will get an error, and the program will stop.
 
 There are several functions and subroutines in the `dcdfort_utils` module,
 including periodic boundary and distance calculations. Check out the source file
