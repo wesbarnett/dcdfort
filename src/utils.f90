@@ -34,7 +34,6 @@ contains
 
     end function pbc
 
-
     function cross(a, b)
 
         implicit none
@@ -47,28 +46,35 @@ contains
 
     end function cross
 
-
     function distance2(a, b, box)
 
         implicit none
         real(8) :: distance2
         real(8), intent(in), dimension(3) :: a, b
         real(8) :: c(3)
-        real(8), intent(in) :: box(6)
+        real(8), intent(in), optional :: box(6)
 
-        c = pbc(a - b, box)
+        if (present(box)) then
+            c = pbc(a - b, box)
+        else
+            c = a - b
+        end if
         distance2 = dot_product(c, c)
 
     end function distance2
-
 
     function distance(a, b, box)
 
         implicit none
         real(8) :: distance
         real(8), intent(in), dimension(3) :: a, b
-        real(8), intent(in) :: box(6)
-        distance = dsqrt(distance2(a, b, box))
+        real(8), intent(in), optional :: box(6)
+
+        if (present(box)) then
+            distance = dsqrt(distance2(a, b, box))
+        else
+            distance = dsqrt(distance2(a, b))
+        end if
 
     end function distance
 
@@ -83,7 +89,6 @@ contains
 
     end function bond_vector
 
-
     function magnitude(a)
 
         implicit none
@@ -93,7 +98,6 @@ contains
         magnitude = dsqrt(dot_product(a, a))
 
     end function magnitude
-
 
     function bond_angle(a, b, c, box)
 
@@ -109,7 +113,6 @@ contains
         bond_angle = dacos(dot_product(bond1, bond2)/(magnitude(bond1)*magnitude(bond2)))
 
     end function bond_angle
-
 
     function dihedral_angle(i, j, k, l, box)
 
