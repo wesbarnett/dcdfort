@@ -68,8 +68,11 @@ contains
         NGRPS = 0
         do while (IO_STATUS .eq. 0)
             read(INDEX_FILE_UNIT, '(a)', iostat=IO_STATUS) line
+            if (IO_STATUS .ne. 0) goto 100
             if (index(line, "[") .ne. 0) NGRPS = NGRPS + 1
         end do
+
+100     continue
 
         if (allocated(this%group)) deallocate(this%group)
         allocate(this%group(NGRPS), TITLE_LOC(NGRPS+1)) ! Add one to include end of file
@@ -82,6 +85,7 @@ contains
         do while (IO_STATUS .eq. 0)
 
             read(INDEX_FILE_UNIT, '(a)', iostat=IO_STATUS) line
+            if (IO_STATUS .ne. 0) goto 200
             if (index(line, "[") .ne. 0) then
                 this%group(I)%title = trim(line(index(line, "[")+2:index(line, "]")-2))
                 TITLE_LOC(I) = J
@@ -90,6 +94,9 @@ contains
             J = J + 1
 
         end do
+
+200     continue
+
         TITLE_LOC(I) = J-1 ! End of file location
 
         ! Now finally get all of the indices for each group
@@ -108,6 +115,7 @@ contains
                 ! Our guess was too large if we made it back here, go to the beginning and reduce our guess by 1, try again
                 rewind INDEX_FILE_UNIT
                 this%group(I)%NUMATOMS = this%group(I)%NUMATOMS - 1
+                if (this%group(I)%NUMATOMS .le. 0) goto 300
 
                 ! Read all the way to the group
                 do J = 1, TITLE_LOC(I); read(INDEX_FILE_UNIT, '(a)', iostat=IO_STATUS) line; end do
@@ -119,6 +127,8 @@ contains
 
             ! Specifying array bounds for array to be allocated is not required for F2008 but is required for F2003
             allocate(this%group(I)%LOC(1:this%group(I)%NUMATOMS), source=INDICES_TMP(1:this%group(I)%NUMATOMS))
+
+300         cycle
 
         end do
         deallocate(INDICES_TMP)
