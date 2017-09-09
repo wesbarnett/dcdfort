@@ -97,6 +97,7 @@ contains
         character (len=*), intent(in), optional :: ndxfile
         character (len=206) :: filename, filetype
         logical :: ex
+        integer :: i, j
 
         inquire(file=trim(filename_in), exist=ex)
 

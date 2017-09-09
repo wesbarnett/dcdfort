@@ -107,6 +107,7 @@ contains
             ! Initial guess only how many items are in the group
             ! Add 1, bc loop subtracts 1 at the beginning
             this%group(I)%NUMATOMS = (TITLE_LOC(I+1)-TITLE_LOC(I)-1)*15 + 1
+
             if (N < this%group(I)%NUMATOMS) this%group(I)%NUMATOMS = N + 1
             IO_STATUS = 5000
 
@@ -115,7 +116,10 @@ contains
                 ! Our guess was too large if we made it back here, go to the beginning and reduce our guess by 1, try again
                 rewind INDEX_FILE_UNIT
                 this%group(I)%NUMATOMS = this%group(I)%NUMATOMS - 1
-                if (this%group(I)%NUMATOMS .le. 0) goto 300
+                if (this%group(I)%NUMATOMS .le. 0) then 
+                    this%group(I)%NUMATOMS = 0
+                    goto 300
+                end if
 
                 ! Read all the way to the group
                 do J = 1, TITLE_LOC(I); read(INDEX_FILE_UNIT, '(a)', iostat=IO_STATUS) line; end do
@@ -145,6 +149,26 @@ contains
                 end if
             end do
         end do
+
+        ! Error checking to see if index file goes with the trajectory file
+
+        ! If the number of atoms is not the same in the System group (first group) and dcd file
+        if (this%group(1)%numatoms .ne. N .or. this%group(1)%loc(this%group(1)%numatoms) .ne. N) then
+            if (this%group(1)%title .eq. "System") call error_stop_program("Index file does not match dcd file.")
+        end if
+
+        do i = 1, NGRPS
+
+            ! If number of atoms in index group is larger than number of atoms in dcd file
+            if (this%group(i)%numatoms .gt. N) call error_stop_program("Index file does not match dcd file.")
+
+            ! If a location number is greater than number of atoms in dcd file
+            do j = 1, this%group(i)%numatoms
+                if (this%group(i)%loc(j) .gt. N) call error_stop_program("Index file does not match dcd file.")
+            end do
+
+        end do
+
 
         close(INDEX_FILE_UNIT)
         
@@ -177,7 +201,7 @@ contains
         if (.not. present(I)) then
             if (this%group_warning) then
                 write(error_unit, '(a)') "LIBDCDFORT WARNING: No atoms found in index group '"//trim(group_name)//"'."
-                write(error_unit, '(a)') "This warning will not appear again for any other missing index groups."
+                write(error_unit, '(a)') "This warning will not appear again for any other index groups."
                 this%group_warning = .false.
             end if
             indexfile_get = 0
