@@ -35,7 +35,7 @@ contains
         write(error_unit,*)
         write(error_unit,'(a, a)') "LIBDCDFORT ERROR: ", message
         write(error_unit,*)
-        call abort()
+        stop 1
 
     end subroutine error_stop_program
 

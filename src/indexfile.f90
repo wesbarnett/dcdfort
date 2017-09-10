@@ -217,4 +217,3 @@ contains
     end function indexfile_get
 
 end module dcdfort_index
-

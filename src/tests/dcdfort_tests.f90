@@ -113,10 +113,8 @@ contains
 
         if (passed .ne. total) then
             write(output_unit, '(a)') "WARNING: Some tests failed!"
-            call abort()
         end if
 
     end subroutine finished_tests
 
 end module dcdfort_tests
-
