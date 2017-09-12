@@ -97,6 +97,8 @@ contains
 
 200     continue
 
+        if (this%group(1)%title .ne. "System") call error_stop_program("Index file does not have 'System' group as first group.")
+
         ! Index files can have a varying number of columns. This attempts to
         ! detect the correct number by reading in the second line of the file,
         ! which should be a list of indices for the "System" group.
@@ -170,7 +172,7 @@ contains
 
         ! If the number of atoms is not the same in the System group (first group) and dcd file
         if (this%group(1)%numatoms .ne. N .or. this%group(1)%loc(this%group(1)%numatoms) .ne. N) then
-            if (this%group(1)%title .eq. "System") call error_stop_program("Index file does not match dcd file.")
+            call error_stop_program("Index file does not match dcd file.")
         end if
 
         do i = 1, NGRPS
