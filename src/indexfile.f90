@@ -47,9 +47,9 @@ contains
         implicit none
         class(IndexFile), intent(inout) :: this
         character (len=*), intent(in) :: filename
-        character (len=2048) :: line
-        integer :: INDEX_FILE_UNIT, IO_STATUS, NGRPS, I, J
-        integer, allocatable :: INDICES_TMP(:), TITLE_LOC(:)
+        character (len=2048) :: line, NCOLS_string, fmt_string
+        integer :: INDEX_FILE_UNIT, IO_STATUS, NGRPS, I, J, NCOLS
+        integer, allocatable :: INDICES_TMP(:), TITLE_LOC(:), num_array(:)
         logical :: ex
         integer, intent(in) :: N
 
@@ -97,6 +97,22 @@ contains
 
 200     continue
 
+        ! Index files can have a varying number of columns. This attempts to
+        ! detect the correct number by reading in the second line of the file,
+        ! which should be a list of indices for the "System" group.
+        NCOLS = 100
+        allocate(num_array(NCOLS))
+        IO_STATUS = 5000
+        do while (IO_STATUS .ne. 0)
+            NCOLS = NCOLS - 1
+            write(NCOLS_string, '(i0)') NCOLS
+            write(fmt_string, '(a)') '('//trim(NCOLS_string)//'i0)'
+            rewind INDEX_FILE_UNIT
+            read(INDEX_FILE_UNIT, '(a)', iostat=IO_STATUS) line
+            read(INDEX_FILE_UNIT, '(a)', iostat=IO_STATUS) line
+            read(line, *, iostat=IO_STATUS) num_array(1:NCOLS)
+        end do
+
         TITLE_LOC(I) = J-1 ! End of file location
 
         ! Now finally get all of the indices for each group
@@ -106,7 +122,7 @@ contains
 
             ! Initial guess only how many items are in the group
             ! Add 1, bc loop subtracts 1 at the beginning
-            this%group(I)%NUMATOMS = (TITLE_LOC(I+1)-TITLE_LOC(I)-1)*15 + 1
+            this%group(I)%NUMATOMS = (TITLE_LOC(I+1)-TITLE_LOC(I)-1)*NCOLS + 1
 
             if (N < this%group(I)%NUMATOMS) this%group(I)%NUMATOMS = N + 1
             IO_STATUS = 5000
