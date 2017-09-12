@@ -63,6 +63,23 @@ program ndxfile_test
     ans_val = 101
     call check(a, ans_val, passed, total) 
 
+    call trj%read(dcdfile2, ndxfile2)
+
+    ! TEST 9
+    a = trj%natoms("System")
+    ans_val = 60703
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 10
+    a = trj%natoms("monGroup")
+    ans_val = 60000
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 11
+    a = trj%natoms("gasGroup")
+    ans_val = 703
+    call check(a, ans_val, passed, total) 
+
     call finished_tests(passed, total)
 
 end program ndxfile_test

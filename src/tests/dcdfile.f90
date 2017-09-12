@@ -39,6 +39,9 @@ program dcdfile_test
     ans = [40.60, 1.55, 2.62]
     call check(x, ans, passed, total)
 
+    call trj%read(dcdfile2)
+    call check(trj%NFRAMES, 51, passed, total)
+
     call finished_tests(passed, total)
 
 end program dcdfile_test
