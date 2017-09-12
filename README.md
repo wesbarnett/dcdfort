@@ -237,9 +237,9 @@ for what is available.
 Other than the DCD plugin which is released under its own license, this project
 is release under the following license.
 
+```
 libdcdfort
 
-```
 Copyright (C) 2017 James W. Barnett
 
 This program is free software; you can redistribute it and/or modify it under
@@ -256,4 +256,4 @@ this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ```
 
-See LICENSE for full details.
+See the file `LICENSE` for full details.
