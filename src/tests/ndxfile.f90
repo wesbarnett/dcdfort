@@ -63,21 +63,57 @@ program ndxfile_test
     ans_val = 101
     call check(a, ans_val, passed, total) 
 
+    ! TEST 9
+    a = trj%ndx%get("lastgroup",16)
+    ans_val = 16441
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 10
+    a = trj%ndx%get("lastgroup",17)
+    ans_val = 16445
+    call check(a, ans_val, passed, total) 
+
     call trj%read(dcdfile2, ndxfile2)
 
-    ! TEST 9
+    ! TEST 11
     a = trj%natoms("System")
     ans_val = 60703
     call check(a, ans_val, passed, total) 
 
-    ! TEST 10
+    ! TEST 12
     a = trj%natoms("monGroup")
     ans_val = 60000
     call check(a, ans_val, passed, total) 
 
-    ! TEST 11
+    ! TEST 13
     a = trj%natoms("gasGroup")
     ans_val = 703
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 14
+    a = trj%ndx%get("lastgroup",13)
+    ans_val = 60702
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 15
+    a = trj%ndx%get("lastgroup",14)
+    ans_val = 60703
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 16
+    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup"))
+    ans_val = 60703
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 17
+    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup")-1)
+    ans_val = 60702
+    call check(a, ans_val, passed, total) 
+
+    call trj%read(dcdfile3, ndxfile3)
+    ! TEST 18
+    a = trj%natoms("gasGroup")
+    ans_val = 100
     call check(a, ans_val, passed, total) 
 
     call finished_tests(passed, total)

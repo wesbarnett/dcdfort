@@ -115,7 +115,7 @@ contains
             read(line, *, iostat=IO_STATUS) num_array(1:NCOLS)
         end do
 
-        TITLE_LOC(I) = J ! End of file location
+        TITLE_LOC(I) = J-1 ! End of file location
 
         ! Now finally get all of the indices for each group
         ! Allocate for total number of atoms in system, since that is the maximum
