@@ -116,6 +116,11 @@ program ndxfile_test
     ans_val = 100
     call check(a, ans_val, passed, total) 
 
+    ! TEST 18
+    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup"))
+    ans_val = 60100
+    call check(a, ans_val, passed, total) 
+
     call finished_tests(passed, total)
 
 end program ndxfile_test
