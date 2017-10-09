@@ -1,15 +1,12 @@
 # libdcdfort
 
-Personal code for reading in DCD trajectory files generated from
+Fortran library for reading in DCD trajectory files generated from
 LAMMPS simulations for analysis. Uses an object-oriented style.
 
 This is similar to my other project
-[libgmxfort](https://github.com/wesbarnett/libgmxfort), and there is the remote
-possibility that I could merge these two projects together, but really I just
-needed something quick and simple to work with a new project I have using the
-DCD file format.
+[libgmxfort](https://github.com/wesbarnett/libgmxfort).
 
-**NOTE:** DCD files generated from simulation packages other than
+**Note:** DCD files generated from simulation packages other than
 LAMMPS may not work correctly with this library.
 
 ## Compilation
@@ -228,8 +225,8 @@ real(8) :: timestep
 delta = trj%timestep
 ```
 
-**WARNING:** Some programs such as *catdcd* overwrite time step
-information. dcdfort outputs this information whenever it opens a
+**Warning:** Some programs such as *catdcd* overwrite time step
+information. *dcdfort* outputs this information whenever it opens a
 file. If you intend on using this information in your analysis
 program, double check that it is correct.
 
