@@ -1,10 +1,8 @@
 ## Type of request?
 
-- [ ] Bug report
-- [ ] Feature request
-- [ ] Question
+*Choose one: Bug report, feature request, question*
 
-*Now fill out the sections below that apply*
+*Now fill out the sections below that apply.*
 
 # Bug report
 
