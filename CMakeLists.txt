@@ -52,13 +52,32 @@ set ( PACKAGE_VERSION "${PACKAGE_NAME}-${VERSION}" )
 # Go ahead and set this, even though it may never be used
 ####################################################################
 if ( NOT CMAKE_BUILD_TYPE )
-    set ( CMAKE_BUILD_TYPE "Release" )
+  set ( CMAKE_BUILD_TYPE "Release" )
 endif ()
 
 ####################################################################
 # Create library
 ####################################################################
-add_subdirectory ( src )
+# The main library to build
+file ( GLOB PKG_SOURCES ${CMAKE_SOURCE_DIR}/src/*.f90 )
+
+add_library ( ${CMAKE_PROJECT_NAME} SHARED ${PKG_SOURCES} ) 
+
+# Where to put files after they are built, and what to name them
+set_target_properties ( ${CMAKE_PROJECT_NAME}
+  PROPERTIES
+  OUTPUT_NAME ${CMAKE_PROJECT_NAME}
+  PREFIX lib
+  SOVERSION ${VERSION_MAJOR}.${VERSION_MINOR}
+  VERSION ${VERSION}
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+  Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/include" )
+
+# Install the compiled library
+install ( TARGETS ${CMAKE_PROJECT_NAME} LIBRARY DESTINATION lib )
+
+# Install the module files (in include directory)
+install ( DIRECTORY "${CMAKE_BINARY_DIR}/include" DESTINATION "${CMAKE_INSTALL_PREFIX}" )
 
 ####################################################################
 # Publicize installed location to other CMake projects and pkgconfig
@@ -98,4 +117,30 @@ install ( FILES
 # Tests
 ####################################################################
 enable_testing ()
-add_subdirectory ( src/tests )
+# Include the module files from the built libdcdfort.so
+include_directories( ${CMAKE_BINARY_DIR}/include )
+
+# Create a library for the tests and link it to the built libdcdfort.so
+add_library ( dcdfort_tests SHARED "${CMAKE_CURRENT_SOURCE_DIR}/src/tests/dcdfort_tests.f90" )
+target_link_libraries ( dcdfort_tests ${CMAKE_PROJECT_NAME} )
+
+# Create the test programs and link them to the test library
+foreach ( TESTNAME dcdfile read_next utils ndxfile ndxfile_grp )
+    add_executable ( ${TESTNAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/${TESTNAME}.f90 )
+    target_link_libraries ( ${TESTNAME} dcdfort_tests )
+endforeach ( TESTNAME )
+
+add_test ( "Read_dcdfile" dcdfile )
+add_test ( "Read_next" read_next )
+add_test ( "Utils" utils )
+add_test ( "Index_file" ndxfile )
+add_test ( "Index_file_groups" ndxfile_grp )
+
+# Copy over files needed for running the tests
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test.dcd ${CMAKE_CURRENT_BINARY_DIR}/test.dcd COPYONLY )
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test.ndx ${CMAKE_CURRENT_BINARY_DIR}/test.ndx COPYONLY )
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test2.dcd ${CMAKE_CURRENT_BINARY_DIR}/test2.dcd COPYONLY )
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test2.ndx ${CMAKE_CURRENT_BINARY_DIR}/test2.ndx COPYONLY )
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test3.dcd ${CMAKE_CURRENT_BINARY_DIR}/test3.dcd COPYONLY )
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test3.ndx ${CMAKE_CURRENT_BINARY_DIR}/test3.ndx COPYONLY )
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/lj2.dcd ${CMAKE_CURRENT_BINARY_DIR}/lj2.dcd COPYONLY )
