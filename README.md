@@ -290,8 +290,7 @@ for what is available.
 
 ## License
 
-Other than the DCD plugin which is released under its own license, this project
-is release under the following license.
+This project is release under the following license.
 
 ```
 libdcdfort

@@ -31,9 +31,6 @@ include ( info )
 # Set package version
 include ( version )
 
-# Include C header files for compilation
-include_directories( include )
-
 # Set build type
 include ( buildtype )
 

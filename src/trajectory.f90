@@ -21,20 +21,20 @@
 ! TODO: groups/types, lammps file
 module dcdfort_trajectory
 
-    use, intrinsic :: iso_c_binding
     use, intrinsic :: iso_fortran_env
     use dcdfort_common
     use dcdfort_index
+    use dcdfort_reader
     implicit none
     private
 
     type :: Frame
-        real(C_FLOAT), allocatable :: xyz(:,:)
-        real(C_FLOAT) :: box(6)
+        real, allocatable :: xyz(:,:)
+        real(8) :: box(6)
     end type
 
     type, public :: Trajectory
-        type(C_PTR), pointer :: v
+        type(dcdfile) :: dcd
         type(Frame), allocatable :: frameArray(:)
         type(IndexFile) :: ndx
         integer :: NFRAMES
@@ -43,7 +43,7 @@ module dcdfort_trajectory
         integer :: ISTART ! timestep of first frame in trajectory file
         integer :: IEND  ! timestep of last frame in trajectory file
         integer :: NEVERY ! frequency trajectory was saved (in time steps)
-        real(8) :: timestep ! simulation time step
+        real :: timestep ! simulation time step
         logical :: read_only_index_group
     contains
         procedure :: open => trajectory_open
@@ -56,56 +56,17 @@ module dcdfort_trajectory
         procedure :: skip_next => trajectory_skip_next
     end type
 
-    interface 
-
-        type(C_PTR) function open_dcd_read(filename, filetype, natoms) bind(C, name='open_dcd_read')
-            import
-            character(kind=C_CHAR), intent(in) :: filename(*), filetype(*)
-            integer(C_INT), intent(out) :: natoms
-        end function
-
-        subroutine get_dcd_info(v, nsets, istart, iend, nsavc, delta) bind(C, name='get_dcd_info')
-            import
-            type(C_PTR), intent(in) :: v
-            integer(C_INT), intent(out) :: nsets, istart, iend, nsavc
-            real(C_DOUBLE), intent(out) :: delta
-        end subroutine
-
-        integer(C_INT) function read_next_wrapper(v, natoms, coords, box) bind(C, name='read_next_wrapper')
-            import
-            type(C_PTR) :: v
-            integer(C_INT) :: natoms
-            real(C_FLOAT) :: coords(*), box(*)
-        end function
-
-        integer(C_INT) function skip_dcdstep_wrapper(v) bind(C, name='skip_dcdstep_wrapper')
-            import
-            type(C_PTR) :: v
-        end function
-
-        subroutine close_file_read(v) bind(C, name='close_file_read')
-            import
-            type(C_PTR) :: v
-        end subroutine
-
-    end interface
-
 contains
 
     subroutine trajectory_open(this, filename_in, ndxfile)
 
-        use, intrinsic :: iso_c_binding, only: C_NULL_CHAR, c_f_pointer
-
         implicit none
         class(Trajectory), intent(inout) :: this
-        type(C_PTR) :: v_c
         character (len=*), intent(in) :: filename_in
         character (len=*), intent(in), optional :: ndxfile
-        character (len=206) :: filename, filetype
+        character (len=206) :: filetype
         logical :: ex
         integer :: i, j
-        integer :: nsets, istart, nsavc
-        real(8) :: delta
 
         inquire(file=trim(filename_in), exist=ex)
 
@@ -113,19 +74,15 @@ contains
             call error_stop_program(trim(filename_in)//" does not exist.")
         end if
 
-        ! Set the file name to be read in for C.
-        filename = trim(filename_in)//C_NULL_CHAR
-        filetype = "dcd"//C_NULL_CHAR
+        call this%dcd%open(trim(filename_in))
+        call this%dcd%read_header(this%nframes, this%istart, this%nevery, this%iend, this%timestep, this%NUMATOMS)
 
-        v_c = open_dcd_read(filename, filetype, this%NUMATOMS)
-        call c_f_pointer(v_c, this % v)
-        call get_dcd_info(this % v, this % nframes, this % istart, this % iend, this % nevery, this % timestep)
         this%FRAMES_REMAINING = this%NFRAMES
 
         this%N = this%NUMATOMS ! Save for use when user selects just one group
         if (present(ndxfile)) call this%ndx%read(ndxfile, this%NUMATOMS)
 
-        write(error_unit,'(a)') "Opened "//trim(filename)//" for reading."
+        write(error_unit,'(a)') "Opened "//trim(filename_in)//" for reading."
         write(error_unit,'(i0,a)') this%NUMATOMS, " atoms present in system."
         write(error_unit,'(i0,a)') this%NFRAMES, " frames present in trajectory file."
         write(error_unit,'(a,i0)') "First timestep saved: ", this%ISTART
@@ -165,7 +122,7 @@ contains
         this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
 
         do i = 1, N
-            stat = skip_dcdstep_wrapper(this%v) 
+            call this%dcd%skip_next()
             if (stat .ne. 0) then
                 write(error_unit,'(a,i0,a)') "Skipped ", i-1, " frames."
                 trajectory_skip_next = i-1
@@ -210,7 +167,8 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
-                STAT = read_next_wrapper(this%v, this%NUMATOMS, xyz, this%frameArray(I)%box)
+!               STAT = read_next_wrapper(this%v, this%NUMATOMS, xyz, this%frameArray(I)%box)
+                call this%dcd%read_next(xyz, this%frameArray(I)%box)
 
                 do J = 1, size(this%ndx%group)
                     if (trim(this%ndx%group(J)%title) .eq. trim(ndxgrp)) then
@@ -231,7 +189,8 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
-                STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz, this%frameArray(I)%box)
+!               STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz, this%frameArray(I)%box)
+                call this%dcd%read_next(this%frameArray(I)%xyz, this%frameArray(I)%box)
 
             end do
 
@@ -329,7 +288,7 @@ contains
         implicit none
         class(Trajectory), intent(inout) :: this
 
-        call close_file_read(this % v) 
+        call this%dcd%close()
 
     end subroutine trajectory_close
 
