@@ -61,15 +61,17 @@ find the file (by default in the directory `/usr/local/lib/pkgconfig`)
 
 ### API
 
-To use the library always put `use dcdfort_trajectory` for in order to use the
-`Trajectory` class and `use dcdfort_utils` in order to use any of the other
-utilities.  There is an example in the `example` folder on how to do this.
+Add `use dcdfort_trajectory` to your Fortran program in order to use
+the `Trajectory` class and `use dcdfort_utils` in order to use any of
+the other utilities.  There is an example in the `example` folder on
+how to do this.
 
 #### Reading in trajectory and index files
 
-Typically you will open a trajectory file (and optionally a corresponding index
-file). Then you will read in the entire trajectory file at once, or you can read
-it in in chunks. Then you should close the trajectory file when done.
+Typically you will open a trajectory file (and optionally a
+corresponding GROMACS-style index file). Then you will read in the
+entire trajectory file at once, or you can read it in in chunks. Then
+you should close the trajectory file when done.
 
 The simplest way to use this library is to construct a `Trajectory` object and
 then use the `read()` method:
