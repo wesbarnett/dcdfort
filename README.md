@@ -1,9 +1,7 @@
 # libdcdfort
 
 Personal code for reading in DCD trajectory files generated from
-LAMMPS simulations for analysis. Uses an object-oriented style,
-reading in the DCD format using the VMD plugin (provided with this
-source) and DCD. 
+LAMMPS simulations for analysis. Uses an object-oriented style.
 
 This is similar to my other project
 [libgmxfort](https://github.com/wesbarnett/libgmxfort), and there is the remote
