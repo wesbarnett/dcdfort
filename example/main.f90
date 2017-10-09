@@ -5,7 +5,7 @@ program main
     implicit none
 
     type(Trajectory) :: trj
-    integer :: n, i, j, f, k
+    integer :: i, j
     real :: box(6)
 
     call trj%read("dump.dcd")
