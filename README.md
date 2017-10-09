@@ -252,7 +252,7 @@ To get the box coordinates, use `box`. The following gets the box of the `2`nd
 frame:
 
 ```fortran
-real :: mybox(6)
+real(8) :: mybox(6)
 ! ...
 mybox = trj%box(2)
 ```
