@@ -69,20 +69,21 @@ contains
         integer :: i, j
 
         call this%dcd%open(trim(filename_in))
-        call this%dcd%read_header(this%nframes, this%istart, this%nevery, this%iend, this%timestep, this%NUMATOMS)
-
-        this%FRAMES_REMAINING = this%NFRAMES
-
-        this%N = this%NUMATOMS ! Save for use when user selects just one group
-        if (present(ndxfile)) call this%ndx%read(ndxfile, this%NUMATOMS)
 
         write(error_unit,'(a)') "Opened "//trim(filename_in)//" for reading."
+        call this%dcd%read_header(this%nframes, this%istart, this%nevery, this%iend, this%timestep, this%NUMATOMS)
+
         write(error_unit,'(i0,a)') this%NUMATOMS, " atoms present in system."
         write(error_unit,'(i0,a)') this%NFRAMES, " frames present in trajectory file."
         write(error_unit,'(a,i0)') "First timestep saved: ", this%ISTART
         write(error_unit,'(a,i0)') "Last timestep saved: ", this%IEND
         write(error_unit,'(a,f12.6)') "Simulation timestep: ", this%timestep
         write(error_unit,'(a,i0,a)') "Trajectory written every ", this%nevery, " timesteps."
+
+        this%FRAMES_REMAINING = this%NFRAMES
+
+        this%N = this%NUMATOMS ! Save for use when user selects just one group
+        if (present(ndxfile)) call this%ndx%read(ndxfile, this%NUMATOMS)
 
     end subroutine trajectory_open
 
