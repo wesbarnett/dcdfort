@@ -39,33 +39,38 @@ program dcdfile_test
     ans = [40.60, 1.55, 2.62]
     call check(x, ans, passed, total)
 
+    ! TEST 4
+    box = trj%box(3)
+    ans_box = reshape((/50.2718, 50.2718, 50.2718, 90.0, 90.0, 90.0/), shape(ans_box))
+    call check(box, ans_box, passed, total)
+
     call trj%read(dcdfile2)
     call check(trj%NFRAMES, 51, passed, total)
 
 
     call trj%read(dcdfile4)
 
-    ! TEST 4
+    ! TEST 5
     n = trj%nframes
     a = 101
     call check(n, a, passed, total)
 
-    ! TEST 5
+    ! TEST 6
     n = trj%nevery
     a = 100
     call check(n, a, passed, total)
 
-    ! TEST 6
+    ! TEST 7
     n = trj%istart
     a = 10000000
     call check(n, a, passed, total)
 
-    ! TEST 7
+    ! TEST 8
     n = trj%iend
     a = 10010000
     call check(n, a, passed, total)
 
-    ! TEST 8
+    ! TEST 9
     b = trj%timestep
     c = 0.012
     call check(b, c, passed, total)
