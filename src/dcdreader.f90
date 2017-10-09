@@ -131,8 +131,8 @@ contains
         if ( nframes2 .ne. nframes) then
             write(error_unit,'(a,i0,a,i0,a)') "WARNING: Header indicates ", nframes, &
                 &" frames, but file size indicates ", nframes2, "." 
+            nframes = nframes2
         end if
-            
 
     end subroutine dcdfile_read_header
 
