@@ -20,12 +20,16 @@
 
 module dcdfort_reader
 
+    use dcdfort_common
+    use iso_c_binding, only: C_NULL_CHAR
+
     implicit none
 
     real(8), parameter :: pi = 2.0d0*dacos(0.0d0)
 
     type, public :: dcdfile
         integer :: u
+        integer :: filesize
     contains
         procedure :: open => dcdfile_open
         procedure :: read_header => dcdfile_read_header
@@ -41,6 +45,14 @@ contains
         implicit none
         character (len=*) :: filename
         class(dcdfile), intent(inout) :: this
+        integer :: filesize
+        logical :: ex
+
+        inquire(file=trim(filename), exist=ex, size=this%filesize)
+
+        if (ex .eqv. .false.) then
+            call error_stop_program(trim(filename)//" does not exist.")
+        end if
 
         open(newunit=this%u, file=trim(filename), form="unformatted", access="stream")
 
@@ -50,17 +62,21 @@ contains
 
         implicit none
 
-        integer :: dummy, nframes, istart, nevery, iend, natoms, i, ntitle
+        integer :: dummy, nframes, istart, nevery, iend, natoms, i, ntitle, n, framesize, nframes2
         character (len=4) :: cord_string
         character (len=80) :: title_string
         real :: timestep
         class(dcdfile), intent(inout) :: this
 
-        ! Should be 84
         read(this%u) dummy
+        if (dummy .ne. 84) then
+            call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
+        end if
 
-        ! Should be 'CORD'
         read(this%u) cord_string
+        if (cord_string .ne. "CORD") then
+            call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
+        end if
 
         ! Number of snapshots in file
         read(this%u) nframes
@@ -88,16 +104,35 @@ contains
         read(this%u) ntitle
         do i = 1, ntitle
             read(this%u) title_string
-            write(*,'(a)') trim(title_string)
+
+            n = 1
+            do while (n .le. 80 .and. title_string(n:n) .ne. C_NULL_CHAR)
+                n = n + 1
+            end do
+
+            write(error_unit,'(a)') trim(title_string(1:n))
         end do
 
         read(this%u) dummy
         read(this%u) dummy
+        if (dummy .ne. 4) then
+            call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
+        end if
 
         ! Number of atoms in each snapshot
         read(this%u) natoms
 
         read(this%u) dummy
+
+        ! Each frame has natoms*3 (4 bytes each), plus 6 box dimensions (8 bytes each)
+        framesize = natoms*3*4 + 6*8
+        ! Just an estimate
+        nframes2 = (this%filesize-108)/framesize
+        if ( nframes2 .ne. nframes) then
+            write(error_unit,'(a,i0,a,i0,a)') "WARNING: Header indicates ", nframes, &
+                &" frames, but file size indicates ", nframes2, "." 
+        end if
+            
 
     end subroutine dcdfile_read_header
 

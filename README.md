@@ -1,8 +1,9 @@
 # libdcdfort
 
-Personal code for reading in DCD trajectory files for analysis. Uses an
-object-oriented style, reading in the DCD format using the VMD plugin (provided
-with this source) and DCD.
+Personal code for reading in DCD trajectory files generated from
+LAMMPS simulations for analysis. Uses an object-oriented style,
+reading in the DCD format using the VMD plugin (provided with this
+source) and DCD. 
 
 This is similar to my other project
 [libgmxfort](https://github.com/wesbarnett/libgmxfort), and there is the remote
@@ -10,11 +11,8 @@ possibility that I could merge these two projects together, but really I just
 needed something quick and simple to work with a new project I have using the
 DCD file format.
 
-**NOTE:** I have used this for dcd output from LAMMPS and
-have made a few slight modifications to the VMD molfile dcdplugin with
-LAMMPS in mind, so if you use this for dcd output from other
-simulation packages it may not work as expected, specifically timestep
-information.
+**NOTE:** DCD files generated from simulation packages other than
+LAMMPS may not work correctly with this library.
 
 ## Compilation
 

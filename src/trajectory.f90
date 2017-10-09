@@ -68,12 +68,6 @@ contains
         logical :: ex
         integer :: i, j
 
-        inquire(file=trim(filename_in), exist=ex)
-
-        if (ex .eqv. .false.) then
-            call error_stop_program(trim(filename_in)//" does not exist.")
-        end if
-
         call this%dcd%open(trim(filename_in))
         call this%dcd%read_header(this%nframes, this%istart, this%nevery, this%iend, this%timestep, this%NUMATOMS)
 
@@ -167,7 +161,6 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
-!               STAT = read_next_wrapper(this%v, this%NUMATOMS, xyz, this%frameArray(I)%box)
                 call this%dcd%read_next(xyz, this%frameArray(I)%box)
 
                 do J = 1, size(this%ndx%group)
@@ -189,7 +182,6 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
-!               STAT = read_next_wrapper(this%v, this%NUMATOMS, this%frameArray(I)%xyz, this%frameArray(I)%box)
                 call this%dcd%read_next(this%frameArray(I)%xyz, this%frameArray(I)%box)
 
             end do
