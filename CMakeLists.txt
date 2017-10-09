@@ -19,7 +19,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 cmake_minimum_required ( VERSION 2.8.8 )
-enable_language ( Fortran C )
+enable_language ( Fortran )
 
 list ( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 
@@ -32,6 +32,7 @@ set ( PROJECT_DESCRIPTION "Fortran toolkit for analyzing DCD trajectory files" )
 set ( PROJECT_URL "https://github.com/wesbarnett/dcdfort" )
 set ( LIBDIR "lib")
 set ( INCLUDEDIR "include")
+set ( TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/ )
 set ( INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX}/${LIBDIR} )
 set ( INSTALL_INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/${INCLUDEDIR} )
 
@@ -78,6 +79,12 @@ install ( TARGETS ${CMAKE_PROJECT_NAME} LIBRARY DESTINATION lib )
 
 # Install the module files (in include directory)
 install ( DIRECTORY "${CMAKE_BINARY_DIR}/include" DESTINATION "${CMAKE_INSTALL_PREFIX}" )
+
+install ( DIRECTORY "${CMAKE_SOURCE_DIR}/example" DESTINATION
+    "${CMAKE_INSTALL_PREFIX}/share/${PACKAGE_NAME}/" )
+
+install ( FILES "${CMAKE_SOURCE_DIR}/LICENSE" DESTINATION
+    "${CMAKE_INSTALL_PREFIX}/share/licenes/${PACKAGE_NAME}/" )
 
 ####################################################################
 # Publicize installed location to other CMake projects and pkgconfig
@@ -126,7 +133,7 @@ target_link_libraries ( dcdfort_tests ${CMAKE_PROJECT_NAME} )
 
 # Create the test programs and link them to the test library
 foreach ( TESTNAME dcdfile read_next utils ndxfile ndxfile_grp )
-    add_executable ( ${TESTNAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/${TESTNAME}.f90 )
+    add_executable ( ${TESTNAME} ${TESTDIR}/${TESTNAME}.f90 )
     target_link_libraries ( ${TESTNAME} dcdfort_tests )
 endforeach ( TESTNAME )
 
@@ -137,10 +144,10 @@ add_test ( "Index_file" ndxfile )
 add_test ( "Index_file_groups" ndxfile_grp )
 
 # Copy over files needed for running the tests
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test.dcd ${CMAKE_CURRENT_BINARY_DIR}/test.dcd COPYONLY )
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test.ndx ${CMAKE_CURRENT_BINARY_DIR}/test.ndx COPYONLY )
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test2.dcd ${CMAKE_CURRENT_BINARY_DIR}/test2.dcd COPYONLY )
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test2.ndx ${CMAKE_CURRENT_BINARY_DIR}/test2.ndx COPYONLY )
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test3.dcd ${CMAKE_CURRENT_BINARY_DIR}/test3.dcd COPYONLY )
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/test3.ndx ${CMAKE_CURRENT_BINARY_DIR}/test3.ndx COPYONLY )
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/lj2.dcd ${CMAKE_CURRENT_BINARY_DIR}/lj2.dcd COPYONLY )
+configure_file ( ${TESTDIR}/test.dcd ${CMAKE_CURRENT_BINARY_DIR}/test.dcd COPYONLY )
+configure_file ( ${TESTDIR}/test.ndx ${CMAKE_CURRENT_BINARY_DIR}/test.ndx COPYONLY )
+configure_file ( ${TESTDIR}/test2.dcd ${CMAKE_CURRENT_BINARY_DIR}/test2.dcd COPYONLY )
+configure_file ( ${TESTDIR}/test2.ndx ${CMAKE_CURRENT_BINARY_DIR}/test2.ndx COPYONLY )
+configure_file ( ${TESTDIR}/test3.dcd ${CMAKE_CURRENT_BINARY_DIR}/test3.dcd COPYONLY )
+configure_file ( ${TESTDIR}/test3.ndx ${CMAKE_CURRENT_BINARY_DIR}/test3.ndx COPYONLY )
+configure_file ( ${TESTDIR}/lj2.dcd ${CMAKE_CURRENT_BINARY_DIR}/lj2.dcd COPYONLY )
