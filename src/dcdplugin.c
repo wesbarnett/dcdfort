@@ -69,6 +69,7 @@ typedef struct {
   int nsets;
   int setsread;
   int istart;
+  int iend;
   int nsavc;
   double delta;
   int nfixed;
@@ -152,7 +153,7 @@ static void print_dcderror(const char *func, int errcode) {
  *               *reverse set to one if reverse-endian, zero if not.
  *               *charmm set to internal code for handling charmm data.
  */
-static int read_dcdheader(fio_fd fd, int *N, int *NSET, int *ISTART, 
+static int read_dcdheader(fio_fd fd, int *N, int *NSET, int *ISTART, int *IEND,
                    int *NSAVC, double *DELTA, int *NAMNF, 
                    int **FREEINDEXES, float **fixedcoords, int *reverseEndian, 
                    int *charmm)
@@ -160,6 +161,7 @@ static int read_dcdheader(fio_fd fd, int *N, int *NSET, int *ISTART,
   unsigned int input_integer[2];  /* buffer space */
   int i, ret_val, rec_scale;
   char hdrbuf[84];    /* char buffer used to store header */
+  char TITLE[80];
   int NTITLE;
   int dcdcordmagic;
   char *corp = (char *) &dcdcordmagic;
@@ -264,6 +266,10 @@ static int read_dcdheader(fio_fd fd, int *N, int *NSET, int *ISTART,
   (*NSAVC) = *((int *) (hdrbuf + 8));
   if (*reverseEndian) swap4_unaligned(NSAVC, 1);
 
+  /* Store IEND, the final timestep */
+  (*IEND) = *((int *) (hdrbuf + 12));
+  if (*reverseEndian) swap4_unaligned(IEND, 1);
+
   /* Store NAMNF, the number of fixed atoms */
   (*NAMNF) = *((int *) (hdrbuf + 32));
   if (*reverseEndian) swap4_unaligned(NAMNF, 1);
@@ -332,8 +338,10 @@ static int read_dcdheader(fio_fd fd, int *N, int *NSET, int *ISTART,
     }
 
     for (i=0; i<NTITLE; i++) {
-      fio_fseek(fd, 80, FIO_SEEK_CUR);
+      //fio_fseek(fd, 80, FIO_SEEK_CUR);
+      ret_val = READ(fd, &TITLE, 80*sizeof(char));
       CHECK_FEOF(ret_val, "reading TITLE");
+      printf("dcdplugin) %s\n",TITLE);
     }
 
     /* Get the ending size for this block */
@@ -863,7 +871,7 @@ extern void *open_dcd_read(const char *path, const char *filetype,
   memset(dcd, 0, sizeof(dcdhandle));
   dcd->fd = fd;
 
-  if ((rc = read_dcdheader(dcd->fd, &dcd->natoms, &dcd->nsets, &dcd->istart, 
+  if ((rc = read_dcdheader(dcd->fd, &dcd->natoms, &dcd->nsets, &dcd->istart, &dcd->iend,
          &dcd->nsavc, &dcd->delta, &dcd->nfixed, &dcd->freeind, 
          &dcd->fixedcoords, &dcd->reverse, &dcd->charmm))) {
     print_dcderror("read_dcdheader", rc);
@@ -1242,10 +1250,16 @@ int main(int argc, char *argv[]) {
       
 #endif
 
+
 /* Added for libdcdfort */
-extern int get_nframes(void *v) {
+extern void get_dcd_info(void *v, int *nsets, int *istart, int *iend, int *nsavc, double *delta) 
+{
     dcdhandle *dcd = (dcdhandle *)v;
-    return dcd->nsets;
+    *nsets = dcd->nsets;
+    *istart = dcd->istart;
+    *iend = dcd->iend;
+    *nsavc = dcd->nsavc;
+    *delta = dcd->delta;
 }
 
 /* Added for libdcdfort */
@@ -1263,6 +1277,7 @@ extern int read_next_wrapper(void *v, int natoms, float *coords, float *box)
     return stat;
 }
 
+/* Added for libdcdfort */
 extern int skip_dcdstep_wrapper(void *v) 
 {
     dcdhandle *dcd;

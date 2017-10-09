@@ -33,8 +33,9 @@ module dcdfort_tests
     character (len=9), parameter :: ndxfile2 = "test2.ndx"
     character (len=9), parameter :: dcdfile3 = "test3.dcd"
     character (len=9), parameter :: ndxfile3 = "test3.ndx"
+    character (len=7), parameter :: dcdfile4 = "lj2.dcd"
     real :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
-    integer :: passed = 0, total = 0, a, ans_val
+    integer :: passed = 0, total = 0, a, ans_val, n
 
     interface check
         module procedure check_int, check_real, check_array, check_array_2d

@@ -40,6 +40,10 @@ module dcdfort_trajectory
         integer :: NFRAMES
         integer :: NUMATOMS, N, frames_read
         integer :: FRAMES_REMAINING
+        integer :: ISTART ! timestep of first frame in trajectory file
+        integer :: IEND  ! timestep of last frame in trajectory file
+        integer :: NEVERY ! frequency trajectory was saved (in time steps)
+        real(8) :: timestep ! simulation time step
         logical :: read_only_index_group
     contains
         procedure :: open => trajectory_open
@@ -60,10 +64,12 @@ module dcdfort_trajectory
             integer(C_INT), intent(out) :: natoms
         end function
 
-        integer(C_INT) function get_nframes(v) bind(C, name='get_nframes')
+        subroutine get_dcd_info(v, nsets, istart, iend, nsavc, delta) bind(C, name='get_dcd_info')
             import
             type(C_PTR), intent(in) :: v
-        end function
+            integer(C_INT), intent(out) :: nsets, istart, iend, nsavc
+            real(C_DOUBLE), intent(out) :: delta
+        end subroutine
 
         integer(C_INT) function read_next_wrapper(v, natoms, coords, box) bind(C, name='read_next_wrapper')
             import
@@ -98,6 +104,8 @@ contains
         character (len=206) :: filename, filetype
         logical :: ex
         integer :: i, j
+        integer :: nsets, istart, nsavc
+        real(8) :: delta
 
         inquire(file=trim(filename_in), exist=ex)
 
@@ -111,7 +119,7 @@ contains
 
         v_c = open_dcd_read(filename, filetype, this%NUMATOMS)
         call c_f_pointer(v_c, this % v)
-        this%NFRAMES = get_nframes(this % v)
+        call get_dcd_info(this % v, this % nframes, this % istart, this % iend, this % nevery, this % timestep)
         this%FRAMES_REMAINING = this%NFRAMES
 
         this%N = this%NUMATOMS ! Save for use when user selects just one group
@@ -120,6 +128,10 @@ contains
         write(error_unit,'(a)') "Opened "//trim(filename)//" for reading."
         write(error_unit,'(i0,a)') this%NUMATOMS, " atoms present in system."
         write(error_unit,'(i0,a)') this%NFRAMES, " frames present in trajectory file."
+        write(error_unit,'(a,i0)') "First timestep saved: ", this%ISTART
+        write(error_unit,'(a,i0)') "Last timestep saved: ", this%IEND
+        write(error_unit,'(a,f12.6)') "Simulation timestep: ", this%timestep
+        write(error_unit,'(a,i0,a)') "Trajectory written every ", this%nevery, " timesteps."
 
     end subroutine trajectory_open
 

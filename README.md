@@ -10,6 +10,12 @@ possibility that I could merge these two projects together, but really I just
 needed something quick and simple to work with a new project I have using the
 DCD file format.
 
+**NOTE:** I have used this for dcd output from LAMMPS and
+have made a few slight modifications to the VMD molfile dcdplugin with
+LAMMPS in mind, so if you use this for dcd output from other
+simulation packages it may not work as expected, specifically timestep
+information.
+
 ## Compilation
 
 After cloning the repository, or extracting the release tarball, cd into the
@@ -64,6 +70,8 @@ find the file (by default in the directory `/usr/local/lib/pkgconfig`)
 To use the library always put `use dcdfort_trajectory` for in order to use the
 `Trajectory` class and `use dcdfort_utils` in order to use any of the other
 utilities.  There is an example in the `example` folder on how to do this.
+
+#### Reading in trajectory and index files
 
 Typically you will open a trajectory file (and optionally a corresponding index
 file). Then you will read in the entire trajectory file at once, or you can read
@@ -139,6 +147,8 @@ pass an integer argument to indicate how many frames to skip. The function
 returns the actual number of frames skipped (you might be near the end of the
 file and not able to skip all you specified).
 
+#### Getting simulation information
+
 After calling `read()` or `read_next()` every atom's coordinates are accessible
 via the `x()` method. For example, to get the coordinates of the first atom in
 the first frame you would do the following. The frame is the first argument and
@@ -183,6 +193,50 @@ frame number passed to the `x()` method, and other methods here, is always in
 relationship to the number of frames read in, not the total number of frames in
 the file.
 
+To get the timestep corresponding with the first saved frame in the
+trajectory file do:
+
+```fortran
+integer :: istart
+! ...
+istart = trj%istart
+```
+
+To get the timestep corresponding with the last saved frame in the
+trajectory file do:
+
+```fortran
+integer :: iend
+! ...
+iend = trj%iend
+```
+
+To get how often frames were saved in your simulation to this
+trajectory file use the `nevery` object. This corresponds with the
+fifth column in a LAMMPS `dump dcd` line where you indicated to dump
+every this many timesteps. It is the column labeled `N` in the LAMMPS
+[dump manual page](http://lammps.sandia.gov/doc/dump.html).
+
+```fortran
+real(8) :: nevery
+! ...
+nsavc = trj%nevery
+```
+
+To get the simulation timestep, use the `timestep` object. This
+corresponds to the `timestep` setting in LAMMPS.
+
+```fortran
+real(8) :: timestep
+! ...
+delta = trj%timestep
+```
+
+**WARNING:** Some programs such as *catdcd* overwrite time step
+information. dcdfort outputs this information whenever it opens a
+file. If you intend on using this information in your analysis
+program, double check that it is correct.
+
 You can also get the number of atoms with the `natoms()` method:
 
 ```fortran
@@ -211,6 +265,8 @@ mybox = trj%box(2)
 
 The first three elements of the array are the x, y, and z dimensions. The last
 three elements are the alpha, beta, and gamma angles.
+
+#### Reading in specific groups only
 
 As shown above, the most common use of this library is to use `read()` or
 `read_next()` to save all atom locations and then use getters like `x()` and

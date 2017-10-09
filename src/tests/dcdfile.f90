@@ -42,6 +42,34 @@ program dcdfile_test
     call trj%read(dcdfile2)
     call check(trj%NFRAMES, 51, passed, total)
 
+
+    call trj%read(dcdfile4)
+
+    ! TEST 4
+    n = trj%nframes
+    a = 101
+    call check(n, a, passed, total)
+
+    ! TEST 5
+    n = trj%nevery
+    a = 100
+    call check(n, a, passed, total)
+
+    ! TEST 6
+    n = trj%istart
+    a = 10000000
+    call check(n, a, passed, total)
+
+    ! TEST 7
+    n = trj%iend
+    a = 10010000
+    call check(n, a, passed, total)
+
+    ! TEST 8
+    b = trj%timestep
+    c = 0.012
+    call check(b, c, passed, total)
+
     call finished_tests(passed, total)
 
 end program dcdfile_test
