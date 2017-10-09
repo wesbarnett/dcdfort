@@ -1,7 +1,8 @@
 # libdcdfort
 
 Fortran library for reading in DCD trajectory files generated from
-LAMMPS simulations for analysis. Uses an object-oriented style.
+[LAMMPS](http://lammps.sandia.gov) simulations for analysis. Uses an
+object-oriented style.
 
 This is similar to my other project
 [libgmxfort](https://github.com/wesbarnett/libgmxfort).
