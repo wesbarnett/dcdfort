@@ -252,7 +252,7 @@ contains
     function trajectory_get_box(this, frame)
 
         implicit none
-        real :: trajectory_get_box(6)
+        real(8) :: trajectory_get_box(6)
         class(Trajectory), intent(in) :: this
         integer, intent(in) :: frame
 
