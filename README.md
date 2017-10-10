@@ -178,6 +178,12 @@ the first argument even if you only read in one frame with `read_next()`.  You
 can always get the *total* number of frames in a trajectory file object with the
 `nframes` member:
 
+If you want direct access to the object storing a coordinate, do the
+following use `trj%frameArray(i)%xyz(j,k)` where `i` is the frame
+number, `j` are the x, y, and z coordinates (so `1`, `2`, and `3`),
+and `k` is the atom number. The `x()` method is just a convenient way
+to get this object.
+
 ```fortran
 integer :: n
 ! ...
