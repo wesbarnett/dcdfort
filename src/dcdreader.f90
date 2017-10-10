@@ -164,9 +164,9 @@ contains
         read(this%u) box(3) ! C
         if (box(4) >= -1.0 .and. box(4) <= 1.0 .and. box(5) >= -1.0 .and. box(5) <= 1.0 .and. &
             box(6) >= -1.0 .and. box(6) <= 1.0) then
-            box(4) = 90.0 - asin(box(4)) * 90.0 / pi
-            box(5) = 90.0 - asin(box(5)) * 90.0 / pi
-            box(6) = 90.0 - asin(box(6)) * 90.0 / pi
+            box(4) = 90.0 - asin(box(4)) * 180.0 / pi
+            box(5) = 90.0 - asin(box(5)) * 180.0 / pi
+            box(6) = 90.0 - asin(box(6)) * 180.0 / pi
         end if
 
         ! 48 again
