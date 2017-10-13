@@ -21,7 +21,7 @@
 !> @file
 !> @author James W. Barnett, Columbia University
 !
-!> Module that contains Trajectory type
+!> @brief Module that contains Trajectory type
 
 ! TODO: groups/types, lammps file
 module dcdfort_trajectory
@@ -38,19 +38,26 @@ module dcdfort_trajectory
         real(8) :: box(6)
     end type
 
-    !> Trajectory class
+    !> @brief Trajectory class
     type, public :: Trajectory
-        type(dcdfile) :: dcd
-        type(Frame), allocatable :: frameArray(:)
-        type(IndexFile) :: ndx
+        !> number of trajectory frames (snapshots) in Trajectory object
         integer :: NFRAMES
-        integer :: NUMATOMS, N, frames_read
-        integer :: FRAMES_REMAINING
-        integer :: ISTART ! timestep of first frame in trajectory file
-        integer :: IEND  ! timestep of last frame in trajectory file
-        integer :: NEVERY ! frequency trajectory was saved (in time steps)
-        real :: timestep ! simulation time step
-        logical :: read_only_index_group
+        !> timestep of first frame in trajectory file
+        integer :: ISTART         
+        !> timestep of last frame in trajectory file
+        integer :: IEND  
+        !> frequency trajectory was saved (in time steps)
+        integer :: NEVERY 
+        !> simulation time step
+        real :: timestep
+        type(IndexFile), private :: ndx
+        type(dcdfile), private :: dcd
+        type(Frame), allocatable, private :: frameArray(:)
+        integer, private :: NUMATOMS
+        integer, private :: N
+        integer, private :: frames_read
+        integer, private :: FRAMES_REMAINING
+        logical, private :: read_only_index_group
     contains
         !> Trajectory class method which opens DCD file and optionally index file.
         procedure :: open => trajectory_open
