@@ -51,7 +51,7 @@ contains
         integer :: INDEX_FILE_UNIT, IO_STATUS, NGRPS, I, J, NCOLS
         integer, allocatable :: INDICES_TMP(:), TITLE_LOC(:), num_array(:)
         logical :: ex
-        integer, intent(in) :: N
+        integer, intent(in), optional :: N
 
         ! Does the file exist?
         inquire(file=trim(filename), exist=ex)
@@ -175,18 +175,19 @@ contains
             call error_stop_program("Index file does not match dcd file.")
         end if
 
-        do i = 1, NGRPS
+        if (present(N)) then
+            do i = 1, NGRPS
 
-            ! If number of atoms in index group is larger than number of atoms in dcd file
-            if (this%group(i)%numatoms .gt. N) call error_stop_program("Index file does not match dcd file.")
+                ! If number of atoms in index group is larger than number of atoms in dcd file
+                if (this%group(i)%numatoms .gt. N) call error_stop_program("Index file does not match dcd file.")
 
-            ! If a location number is greater than number of atoms in dcd file
-            do j = 1, this%group(i)%numatoms
-                if (this%group(i)%loc(j) .gt. N) call error_stop_program("Index file does not match dcd file.")
+                ! If a location number is greater than number of atoms in dcd file
+                do j = 1, this%group(i)%numatoms
+                    if (this%group(i)%loc(j) .gt. N) call error_stop_program("Index file does not match dcd file.")
+                end do
+
             end do
-
-        end do
-
+        end if
 
         close(INDEX_FILE_UNIT)
         

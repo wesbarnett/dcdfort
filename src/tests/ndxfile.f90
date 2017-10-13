@@ -21,6 +21,9 @@
 program ndxfile_test 
 
     use dcdfort_tests
+    use dcdfort_index
+
+    type(IndexFile) :: ndx
 
     call trj%read(dcdfile, ndxfile)
 
@@ -67,23 +70,25 @@ program ndxfile_test
     ans_val = 11
     call check(a, ans_val, passed, total) 
 
+    call ndx%read(ndxfile, trj%natoms())
+
     ! TEST 8
-    a = trj%ndx%get("gasGroup",99)
+    a = ndx%get("gasGroup",99)
     ans_val = 10099
     call check(a, ans_val, passed, total) 
 
     ! TEST 9
-    a = trj%ndx%get("gasGroup",100)
+    a = ndx%get("gasGroup",100)
     ans_val = 10100
     call check(a, ans_val, passed, total) 
 
     ! TEST 10
-    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup"))
+    a = ndx%get("gasGroup",trj%natoms("gasGroup"))
     ans_val = 10100
     call check(a, ans_val, passed, total) 
 
     ! TEST 11
-    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup")-1)
+    a = ndx%get("gasGroup",trj%natoms("gasGroup")-1)
     ans_val = 10099
     call check(a, ans_val, passed, total) 
 
