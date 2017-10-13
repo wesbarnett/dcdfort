@@ -10,6 +10,7 @@ Welcome to dcdfort's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   tajectory
 
 
 Indices and tables

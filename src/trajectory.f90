@@ -18,6 +18,11 @@
 ! with this program; if not, write to the Free Software Foundation, Inc.,
 ! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+!> @file
+!> @author James W. Barnett, Columbia University
+!
+!> Module that contains Trajectory type
+
 ! TODO: groups/types, lammps file
 module dcdfort_trajectory
 
@@ -33,6 +38,7 @@ module dcdfort_trajectory
         real(8) :: box(6)
     end type
 
+    !> Trajectory class
     type, public :: Trajectory
         type(dcdfile) :: dcd
         type(Frame), allocatable :: frameArray(:)
@@ -46,18 +52,31 @@ module dcdfort_trajectory
         real :: timestep ! simulation time step
         logical :: read_only_index_group
     contains
+        !> Trajectory class method which opens DCD file and optionally index file.
         procedure :: open => trajectory_open
-        procedure :: natoms => trajectory_get_natoms
+        !> Trajectory class method which reads a specified number of frames into memory after using the open() method
         procedure :: read_next => trajectory_read_next
-        procedure :: x => trajectory_get_xyz
-        procedure :: box => trajectory_get_box
-        procedure :: read => trajectory_read
-        procedure :: close => trajectory_close
+        !> Trajectory class method which skips a specified number of frames
         procedure :: skip_next => trajectory_skip_next
+        !> Trajectory class method which closes a DCD file which was opened with open()
+        procedure :: close => trajectory_close
+        !> Trajectory class method which opens, reads, and closes a trajectory file
+        procedure :: read => trajectory_read
+        !> Trajectory class method which returns the coordinates of a particle
+        procedure :: x => trajectory_get_xyz
+        !> Trajectory class method which returns the box from a simulation frame
+        procedure :: box => trajectory_get_box
+        !> Trajectory class method which gets the number of atoms in the system or an index group
+        procedure :: natoms => trajectory_get_natoms
     end type
 
 contains
 
+    !> @brief Trajectory class method which opens DCD file and optionally index file.
+    !
+    !> @param[inout] this the Trajectory object
+    !> @param[in] filename_in name of DCD file
+    !> @param[in] ndxfile name of GROMACS style index file
     subroutine trajectory_open(this, filename_in, ndxfile)
 
         implicit none
@@ -87,6 +106,11 @@ contains
 
     end subroutine trajectory_open
 
+    !> @brief Trajectory class method which gets the number of atoms in the system or an index group
+    !
+    !> @param[inout] this the Trajectory object
+    !> @param[in] group name of index group
+    !> @return number of atoms in index group (if specified) or in system
     function trajectory_get_natoms(this, group)
 
         implicit none
@@ -103,6 +127,11 @@ contains
 
     end function trajectory_get_natoms
 
+    !> @brief Trajectory class method which skips a specified number of frames
+    !
+    !> @param[inout] this Trajectory class
+    !> @param[in] F number of frames to skip; if not specified, 1 frame is skipped
+    !> @return number of frames skipped
     function trajectory_skip_next(this, F)
 
         class(Trajectory), intent(inout) :: this
@@ -129,6 +158,11 @@ contains
 
     end function trajectory_skip_next
 
+    !> @brief Trajectory class method which reads a specified number of frames into memory after using the open() method
+    !
+    !> @param[inout] this Trajectory class
+    !> @param[in] F number of frames to read in; if not specified, 1 frame is read
+    !> @return number of frames read in
     function trajectory_read_next(this, F, ndxgrp)
 
         implicit none
@@ -203,6 +237,14 @@ contains
 
     end subroutine print_frames_saved
 
+    !> @brief Trajectory class method which returns the coordinates of a particle
+    !> @details Gets the coordinates of a particle from the read in trajectory. Returns a real array with 3 elements (x, y, and z).
+    !! An optional index group can be specified; if so, the atomid is in relationship to the group.
+    !> @param[inout] this Trajectory class
+    !> @param[in] frame
+    !> @param[in] atom atomid of particle to get
+    !> @param[in] group optional index group
+    !> @return coordinate of the particle
     function trajectory_get_xyz(this, frame, atom, group)
 
         implicit none
@@ -233,6 +275,11 @@ contains
 
     end function trajectory_get_xyz
 
+    !> @brief Trajectory class method which opens, reads, and closes a trajectory file
+    !> @param[inout] this Trajectory class
+    !> @param[in] dcdfile Name of DCD trajectory file
+    !> @param[in] ndxfile Name of optional index file
+    !> @param[in] ndxgrp Name of optional group. If specified, only that group will be read into memory.
     subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp)
 
         implicit none
@@ -249,6 +296,11 @@ contains
 
     end subroutine trajectory_read
 
+    !> @brief Trajectory class method which returns the box from a simulation frame
+    !> @param[inout] this Trajectory class
+    !> @param[in] frame Which frame to return the box dimensions
+    !> @return A real(8) array with 6 elements containing the x, y, and z dimensions of the box as well as the alpha, beta, and
+    !! gamma angles
     function trajectory_get_box(this, frame)
 
         implicit none
@@ -276,6 +328,8 @@ contains
 
     end subroutine trajectory_check_frame
 
+    !> @brief Trajectory class method which closes a DCD file which was opened with open()
+    !> @param[inout] this Trajectory class
     subroutine trajectory_close(this)
 
         implicit none
