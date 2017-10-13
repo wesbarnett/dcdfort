@@ -237,7 +237,8 @@ delta = trj%timestep
 **Warning:** Some programs such as *catdcd* overwrite time step
 information. *dcdfort* outputs this information whenever it opens a
 file. If you intend on using this information in your analysis
-program, double check that it is correct.
+program, double check that it is correct. If you are only using LAMMPS
+output, you shouldn't have to worry about this.
 
 You can also get the number of atoms with the `natoms()` method:
 
@@ -285,6 +286,8 @@ If you do this, you only have access to the group above, and you should never
 pass an index group name to getters like x(), since only one group is available.
 If you do specify a group in a getter after already specifying it in `read()` or
 `read_next()`, you will get an error, and the program will stop.
+
+#### Utilities
 
 There are several functions and subroutines in the `dcdfort_utils` module,
 including periodic boundary and distance calculations. Check out the source file
