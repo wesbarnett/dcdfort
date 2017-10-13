@@ -22,6 +22,9 @@
 !> @author James W. Barnett, Columbia University
 !
 !> @brief Module that contains IndexFile type
+!> @details This module contains the IndexFile class which can be used to read in and process GROMACS-style index files. It should
+!!  not be necessary to create an object from this class independently from a Trajectory object, since it is included in the Trajectory
+!! class.
 
 module dcdfort_index
 
@@ -30,23 +33,34 @@ module dcdfort_index
     implicit none
     private
 
+    !> @brief ndxgroups class
+    !> @details Contains the indicies for each atom in an index group, as well as the number of atoms, and index title of a group.
+    !! Is part of the IndexFile class.
     type ndxgroups
         integer, allocatable :: LOC(:)
         integer :: NUMATOMS
         character (len=:), allocatable :: title
     end type ndxgroups
 
+    !> @brief IndexFile class
     type, public :: IndexFile
+        !> Object which contains information about all the index groups
         type (ndxgroups), allocatable :: group(:)
-        logical :: group_warning = .true.
+        logical, private :: group_warning = .true.
     contains
+        !> Open, read in, and process the GROMACS-style index file, storing information in memory
         procedure :: read => indexfile_read
+        !> Returns the overall index for atom specified in group.
         procedure :: get => indexfile_get
+        !> Gets the number of atoms in a group.
         procedure :: get_natoms => indexfile_get
     end type IndexFile
  
 contains
 
+    !> @brief Open, read in, and process the GROMACS-style index file, storing information in memory
+    !> @param[in] filename name of GROMACS-style index file
+    !> @param[in] N number of atoms in the entire system; used as a check
     subroutine indexfile_read(this, filename, N)
 
         implicit none
@@ -198,7 +212,10 @@ contains
         
     end subroutine indexfile_read
 
-    ! Gets the number of atoms in a group. If an atom is specified, integer returns the overall index for that atom.
+    !> @brief Gets the number of atoms in a group. 
+    !> @param[in] group_name index group title or name (in brackets in the index file)
+    !> @param[in] the location in the group
+    !> @return If an atom is specified, integer returns the overall index for that atom; otherwise, returns number of atoms in group
     function indexfile_get(this, group_name, I)
 
         implicit none
