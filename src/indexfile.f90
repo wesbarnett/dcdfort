@@ -18,6 +18,11 @@
 ! with this program; if not, write to the Free Software Foundation, Inc.,
 ! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+!> @file
+!> @author James W. Barnett, Columbia University
+!
+!> @brief Module that contains IndexFile type
+
 module dcdfort_index
 
     use dcdfort_common
