@@ -146,8 +146,3 @@ add_test ( "Index_file_groups" ndxfile_grp )
 # Copy over files needed for running the tests
 configure_file ( ${TESTDIR}/test.dcd ${CMAKE_CURRENT_BINARY_DIR}/test.dcd COPYONLY )
 configure_file ( ${TESTDIR}/test.ndx ${CMAKE_CURRENT_BINARY_DIR}/test.ndx COPYONLY )
-configure_file ( ${TESTDIR}/test2.dcd ${CMAKE_CURRENT_BINARY_DIR}/test2.dcd COPYONLY )
-configure_file ( ${TESTDIR}/test2.ndx ${CMAKE_CURRENT_BINARY_DIR}/test2.ndx COPYONLY )
-configure_file ( ${TESTDIR}/test3.dcd ${CMAKE_CURRENT_BINARY_DIR}/test3.dcd COPYONLY )
-configure_file ( ${TESTDIR}/test3.ndx ${CMAKE_CURRENT_BINARY_DIR}/test3.ndx COPYONLY )
-configure_file ( ${TESTDIR}/lj2.dcd ${CMAKE_CURRENT_BINARY_DIR}/lj2.dcd COPYONLY )

@@ -23,102 +23,68 @@ program ndxfile_test
     use dcdfort_tests
 
     call trj%read(dcdfile, ndxfile)
+
     ! TEST 1
-    x = trj%x(100, 100, "OW")
-    ans = [1.15, 10.48, 32.22]
+    x = trj%x(1, 10, "gasGroup")
+    ans = [0.128691, -8.314034, 6.497755]
+    call check(x, ans, passed, total)
+
+    x = trj%x(5, trj%natoms("monGroup")-5, "monGroup")
+    ans = [-10.029089, -1.459442, 5.690279]
+    call check(x, ans, passed, total)
+
+    x = trj%x(trj%NFRAMES, trj%natoms("gasGroup"), "gasGroup")
+    ans = [-4.320391, -5.902228, -8.670344]
     call check(x, ans, passed, total)
 
     ! TEST 2
-    box = trj%box(10)
-    ans_box = reshape((/49.6972179, 49.6972179, 49.6972179, 90.0, 90.0, 90.0/), shape(ans_box))
-    call check(box, ans_box, passed, total)
+    a = trj%natoms()
+    ans_val = 10100
+    call check(a, ans_val, passed, total) 
 
     ! TEST 3
-    a = trj%natoms()
-    ans_val = 16500
+    a = trj%natoms("System")
+    ans_val = 10100
     call check(a, ans_val, passed, total) 
 
     ! TEST 4
-    a = trj%natoms("System")
-    ans_val = 16500
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 5
-    a = trj%natoms("OW")
-    ans_val = 4125
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 6
-    a = trj%natoms("FOOBAR")
-    ans_val = 0
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 7
-    a = trj%natoms("TEST")
-    ans_val = 1
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 8
-    a = trj%nframes
-    ans_val = 101
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 9
-    a = trj%ndx%get("lastgroup",16)
-    ans_val = 16441
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 10
-    a = trj%ndx%get("lastgroup",17)
-    ans_val = 16445
-    call check(a, ans_val, passed, total) 
-
-    call trj%read(dcdfile2, ndxfile2)
-
-    ! TEST 11
-    a = trj%natoms("System")
-    ans_val = 60703
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 12
-    a = trj%natoms("monGroup")
-    ans_val = 60000
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 13
-    a = trj%natoms("gasGroup")
-    ans_val = 703
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 14
-    a = trj%ndx%get("lastgroup",13)
-    ans_val = 60702
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 15
-    a = trj%ndx%get("lastgroup",14)
-    ans_val = 60703
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 16
-    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup"))
-    ans_val = 60703
-    call check(a, ans_val, passed, total) 
-
-    ! TEST 17
-    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup")-1)
-    ans_val = 60702
-    call check(a, ans_val, passed, total) 
-
-    call trj%read(dcdfile3, ndxfile3)
-    ! TEST 18
     a = trj%natoms("gasGroup")
     ans_val = 100
     call check(a, ans_val, passed, total) 
 
-    ! TEST 18
+    ! TEST 5
+    a = trj%natoms("FOOBAR")
+    ans_val = 0
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 6
+    a = trj%natoms("TEST")
+    ans_val = 1
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 7
+    a = trj%nframes
+    ans_val = 11
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 8
+    a = trj%ndx%get("gasGroup",99)
+    ans_val = 10099
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 9
+    a = trj%ndx%get("gasGroup",100)
+    ans_val = 10100
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 10
     a = trj%ndx%get("gasGroup",trj%natoms("gasGroup"))
-    ans_val = 60100
+    ans_val = 10100
+    call check(a, ans_val, passed, total) 
+
+    ! TEST 11
+    a = trj%ndx%get("gasGroup",trj%natoms("gasGroup")-1)
+    ans_val = 10099
     call check(a, ans_val, passed, total) 
 
     call finished_tests(passed, total)

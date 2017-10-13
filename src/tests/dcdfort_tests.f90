@@ -29,11 +29,6 @@ module dcdfort_tests
     real(8), parameter :: PI = 2.0d0*acos(0.0d0)
     character (len=8), parameter :: dcdfile = "test.dcd"
     character (len=8), parameter :: ndxfile = "test.ndx"
-    character (len=9), parameter :: dcdfile2 = "test2.dcd"
-    character (len=9), parameter :: ndxfile2 = "test2.ndx"
-    character (len=9), parameter :: dcdfile3 = "test3.dcd"
-    character (len=9), parameter :: ndxfile3 = "test3.ndx"
-    character (len=7), parameter :: dcdfile4 = "lj2.dcd"
     real :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
     integer :: passed = 0, total = 0, a, ans_val, n
 

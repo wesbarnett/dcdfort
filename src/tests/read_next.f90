@@ -25,18 +25,23 @@ program read_next_test
     call trj%open(dcdfile)
 
     ! TEST 1
-    a = trj%skip_next(50)
-    a = trj%read_next(50)
-    x = trj%x(50, 100)
-    ans = [14.55, 3.74, 3.58]
+    a = trj%skip_next(4)
+    a = trj%read_next(6)
+    x = trj%x(6, 5)
+    ans = [-11.111647, -9.451539, 8.782396]
     call check(x, ans, passed, total)
 
     ! TEST 2
-    ans_val = 50
+    box = trj%box(1)
+    ans_box = reshape((/22.7259502, 22.4160500, 23.0503407, 90.0732346, 89.1723709, 90.7712402/), shape(ans_box))
+    call check(box, ans_box, passed, total)
+
+    ! TEST 2
+    ans_val = 6
     call check(a, ans_val, passed, total) 
 
     ! TEST 3
-    a = trj%read_next(200)
+    a = trj%read_next()
     ans_val = 1
     call check(a, ans_val, passed, total) 
 

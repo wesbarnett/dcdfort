@@ -23,14 +23,14 @@ program ndxfile_grp_test
     use dcdfort_tests
 
     ! TEST 1
-    call trj%read(dcdfile, ndxfile, "OW")
-    x = trj%x(100, 100)
-    ans = [1.15, 10.48, 32.22]
+    call trj%read(dcdfile, ndxfile, "gasGroup")
+    x = trj%x(10, 10)
+    ans = [-1.284096, -5.972089, 2.997065]
     call check(x, ans, passed, total)
 
     ! TEST 2
     a = trj%natoms()
-    ans_val = 4125
+    ans_val = 100
     call check(a, ans_val, passed, total) 
 
     call finished_tests(passed, total)
