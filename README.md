@@ -1,8 +1,8 @@
 # libdcdfort
 
-Fortran library for reading in DCD trajectory files generated from
-[LAMMPS](http://lammps.sandia.gov) simulations for analysis. Uses an
-object-oriented style.
+Fortran library for natively reading in DCD trajectory files generated
+from [LAMMPS](http://lammps.sandia.gov) simulations for analysis. Uses
+an object-oriented style.
 
 This is similar to my other project
 [libgmxfort](https://github.com/wesbarnett/libgmxfort).
@@ -35,7 +35,8 @@ If any tests do not pass, please file an issue.
 ## Installation
 
 The following will install the library to the location specified by
-`DCMAKE_INSTALL_PREFIX`.
+the cmake flag `-DCMAKE_INSTALL_PREFIX`, which is `/usr/local` by
+default.
 
 ```bash
 make install
@@ -51,13 +52,15 @@ where the modules files are even with all of the right environment variables set
 
 A file is included to easily link other cmake projects to the dcdfort
 installation. Use `find_package ( dcdfort )` and the variables
-`dcdfort_INCLUDE_DIRS` and `dcdfort_LIBRARIES`.
+`dcdfort_INCLUDE_DIRS` and `dcdfort_LIBRARIES` in your `CMakeLists.txt`.
 
 ### pkg-config
 
 A pkg-config file is included, so that it can
-be used in your program compilations. You may need to set `PKG_CONFIG_PATH` to
-find the file (by default in the directory `/usr/local/lib/pkgconfig`)
+be used in your program compilations. You may need to set the
+`PKG_CONFIG_PATH` environment variable to find the file (by default in
+the directory `/usr/local/lib/pkgconfig`). See `man 1 pkg-config` for
+more information.
 
 ### API
 
