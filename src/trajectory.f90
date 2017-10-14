@@ -169,6 +169,7 @@ contains
     !
     !> @param[inout] this Trajectory class
     !> @param[in] F number of frames to read in; if not specified, 1 frame is read
+    !> @param[in] ndxgrp read only this index group into memory
     !> @return number of frames read in
     function trajectory_read_next(this, F, ndxgrp)
 

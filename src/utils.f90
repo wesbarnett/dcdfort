@@ -1,3 +1,28 @@
+!
+! This file is part of libdcdfort
+! https://github.com/wesbarnett/dcdfort
+!
+! Copyright (c) 2017 by James W. Barnett
+!
+! This program is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation; either version 2 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License along
+! with this program; if not, write to the Free Software Foundation, Inc.,
+! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+!> @file
+!> @author James W. Barnett, Columbia University
+!
+!> @brief Module that contains some useful utilities
+
 module dcdfort_utils
 
     implicit none
@@ -7,6 +32,11 @@ module dcdfort_utils
  
 contains
 
+    !> @brief Corrects for the periodic boundary condition
+    !> @details Moves particle (or vector) the distance of half the box if it is more than half the distance of the box
+    !> @param[in] a original coordinates
+    !> @param[in] box simulation box
+    !> @return the shifted coordinates
     function pbc(a, box)
 
         implicit none
@@ -34,6 +64,10 @@ contains
 
     end function pbc
 
+    !> @brief Performs cross product between two vectors
+    !> @param[in] a first vector
+    !> @param[in] b second vector
+    !> @result resulting cross product
     function cross(a, b)
 
         implicit none
@@ -46,6 +80,11 @@ contains
 
     end function cross
 
+    !> @brief Calculates the distance squared between two points
+    !> @param[in] a first point
+    !> @param[in] b second point
+    !> @param[in] box box, if pbc to be accounted for
+    !> @result distance squared
     function distance2(a, b, box)
 
         implicit none
@@ -63,6 +102,11 @@ contains
 
     end function distance2
 
+    !> @brief Calculates the distance between two points
+    !> @param[in] a first point
+    !> @param[in] b second point
+    !> @param[in] box box, if pbc to be accounted for
+    !> @result distance 
     function distance(a, b, box)
 
         implicit none
@@ -78,6 +122,11 @@ contains
 
     end function distance
 
+    !> @brief Calculates the bond vector between two points
+    !> @param[in] a first point
+    !> @param[in] b second point
+    !> @param[in] box box, if pbc to be accounted for
+    !> @result bond vector pointing from a to b
     function bond_vector(a, b, box)
 
         implicit none
@@ -89,6 +138,9 @@ contains
 
     end function bond_vector
 
+    !> @brief Calculates the magnitude of a vector
+    !> @param[in] a vector
+    !> @result magnitude of a
     function magnitude(a)
 
         implicit none
@@ -99,6 +151,13 @@ contains
 
     end function magnitude
 
+    !> @brief Calculates the bond angle between two vectors
+    !> @details Calculates the angle between the vector formed by a-b and b-c.
+    !> @param[in] a first point
+    !> @param[in] b middle point
+    !> @param[in] c third point
+    !> @param[in] box box, if pbc to be accounted for
+    !> @result bond angle between a-b-c
     function bond_angle(a, b, c, box)
 
         implicit none
@@ -114,6 +173,14 @@ contains
 
     end function bond_angle
 
+    !> @brief Calculates the dihedral angle between two planes formed by four atoms
+    !> @details Calculates the dihedral angle between the vectors formed by i-j, j-k, k-l
+    !> @param[in] i first point
+    !> @param[in] j middle point
+    !> @param[in] k third point
+    !> @param[in] l fourth point
+    !> @param[in] box box, if pbc to be accounted for
+    !> @result dihedral angle forms by i-j-k-l
     function dihedral_angle(i, j, k, l, box)
 
         implicit none

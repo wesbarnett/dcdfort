@@ -59,6 +59,7 @@ module dcdfort_index
 contains
 
     !> @brief Open, read in, and process the GROMACS-style index file, storing information in memory
+    !> @param[inout] this IndexFile class
     !> @param[in] filename name of GROMACS-style index file
     !> @param[in] N number of atoms in the entire system; used as a check
     subroutine indexfile_read(this, filename, N)
@@ -213,8 +214,9 @@ contains
     end subroutine indexfile_read
 
     !> @brief Gets the number of atoms in a group. 
+    !> @param[inout] this IndexFile class
     !> @param[in] group_name index group title or name (in brackets in the index file)
-    !> @param[in] the location in the group
+    !> @param[in] I the location in the group
     !> @return If an atom is specified, integer returns the overall index for that atom; otherwise, returns number of atoms in group
     function indexfile_get(this, group_name, I)
 
