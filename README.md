@@ -75,7 +75,7 @@ the `Trajectory` class and `use dcdfort_utils` in order to use any of
 the other utilities.  There is an example in the `example` folder on
 how to do this.
 
-Full API document is
+Full API documentation is
 [here](https://cdn.rawgit.com/wesbarnett/dcdfort/f646e321/docs/html/index.html).
 
 #### Reading in trajectory and index files
