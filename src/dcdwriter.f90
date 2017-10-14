@@ -18,6 +18,11 @@
 ! with this program; if not, write to the Free Software Foundation, Inc.,
 ! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+!> @file
+!> @author James W. Barnett, Columbia University
+!
+!> @brief Module that contains dcdwriter class
+
 module dcdfort_writer
 
     use dcdfort_common
@@ -27,22 +32,33 @@ module dcdfort_writer
 
     real(8), parameter :: pi = 2.0d0*dacos(0.0d0)
 
+    !> @brief dcdwriter class
     type, public :: dcdwriter
-        integer :: u
-        integer :: nframes_pos, iend_pos, curr_pos, nframes, iend, nevery
+        integer, private :: u
+        integer, private :: nframes_pos, iend_pos, curr_pos
+        integer, private :: nframes
+        integer, private :: iend
+        integer, private :: nevery
     contains
+        !> Opens new file to write to
         procedure :: open => dcdwriter_open
+        !> Writes header to new DCD file
         procedure :: write_header => dcdwriter_write_header
+        !> Closes DCD file
         procedure :: close => dcdwriter_close
+        !> Writes header to new DCD file
         procedure :: write_next => dcdwriter_write_next
     end type dcdwriter
 
 contains
 
+    !> @brief Opens new file to write to
+    !> @param[inout] this dcdwriter object
+    !> @param[in] filename name of new DCD file to write to
     subroutine dcdwriter_open(this, filename)
 
         implicit none
-        character (len=*) :: filename
+        character (len=*), intent(in) :: filename
         class(dcdwriter), intent(inout) :: this
         integer :: filesize
         logical :: ex
@@ -51,12 +67,19 @@ contains
 
     end subroutine dcdwriter_open
 
+    !> @brief Writes header to new DCD file
+    !> @param[inout] this dcdwriter object
+    !> @param[in] istart first timestep in file 
+    !> @param[in] nevery how often snapshots written (in timesteps)
+    !> @param[in] timestep simulation timestep
+    !> @param[in] natoms number of atoms in each snapshot
     subroutine dcdwriter_write_header(this, istart, nevery, timestep, natoms)
 
         implicit none
 
-        integer :: dummy, istart, nevery, natoms, i, n
-        real :: timestep
+        integer :: dummy, i, n
+        integer, intent(in) :: istart, nevery, natoms
+        real, intent(in) :: timestep
         class(dcdwriter), intent(inout) :: this
         character (len=79) :: remarks1, remarks2
         character (len=8) :: date
@@ -120,6 +143,8 @@ contains
 
     end subroutine dcdwriter_write_header
 
+    !> @brief Closes DCD file
+    !> @param[inout] this dcdwriter object
     subroutine dcdwriter_close(this)
 
         implicit none
@@ -129,6 +154,11 @@ contains
 
     end subroutine dcdwriter_close
 
+    !> @brief Writes snapshot to an open DCD file
+    !> @details Writes a new snapshot to a DCD file. Header should have already been written.
+    !> @param[inout] this dcdwriter object
+    !> @param[in] xyz coordinates of all atoms in this snapshot
+    !> @param[in] box_in box dimensions for this snapshot
     subroutine dcdwriter_write_next(this, xyz, box_in)
 
         implicit none
@@ -177,6 +207,7 @@ contains
         this%nframes = this%nframes+1
         this%iend = this%iend + this%nevery
 
+        ! Go back and update header
         write(this%u, pos=this%nframes_pos) this%nframes
         write(this%u, pos=this%iend_pos) this%iend
         write(this%u, pos=this%curr_pos)

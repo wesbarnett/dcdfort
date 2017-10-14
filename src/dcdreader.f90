@@ -18,6 +18,11 @@
 ! with this program; if not, write to the Free Software Foundation, Inc.,
 ! 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+!> @file
+!> @author James W. Barnett, Columbia University
+!
+!> @brief Module that contains dcdreader class
+
 module dcdfort_reader
 
     use dcdfort_common
@@ -27,23 +32,32 @@ module dcdfort_reader
 
     real(8), parameter :: pi = 2.0d0*dacos(0.0d0)
 
+    !> @brief dcdwriter class
     type, public :: dcdfile
-        integer :: u
-        integer :: filesize
+        integer, private :: u
+        integer, private :: filesize
     contains
+        !> Opens file to read from
         procedure :: open => dcdfile_open
+        !> Reads header of open DCD file
         procedure :: read_header => dcdfile_read_header
+        !> Closes DCD file
         procedure :: close => dcdfile_close
+        !> Reads next frame into memory
         procedure :: read_next => dcdfile_read_next
+        !> Skips reading this frame into memory
         procedure :: skip_next => dcdfile_skip_next
     end type dcdfile
 
 contains
 
+    !> @brief Opens file to read from
+    !> @param[inout] this dcdreader object
+    !> @param[in] filename name of of DCD file to read from
     subroutine dcdfile_open(this, filename)
 
         implicit none
-        character (len=*) :: filename
+        character (len=*), intent(in) :: filename
         class(dcdfile), intent(inout) :: this
         integer :: filesize
         logical :: ex
@@ -58,15 +72,25 @@ contains
 
     end subroutine dcdfile_open
 
+    !> @brief Reads header of open DCD file
+    !> @details Should be called after open()
+    !> @param[inout] this dcdreader object
+    !> @param[in] nframes rnumber of frames (snapshots) in file
+    !> @param[out] istart first timestep of trajectory file
+    !> @param[out] nevery how often (in timesteps) file was written to
+    !> @param[out] iend last timestep of trajectory file
+    !> @param[out] timestep timestep of simulation
+    !> @param[out] natoms number of atoms in each snapshot
     subroutine dcdfile_read_header(this, nframes, istart, nevery, iend, timestep, natoms)
 
         implicit none
 
-        integer :: dummy, nframes, istart, nevery, iend, natoms, i, ntitle, n, framesize, nframes2
-        integer :: curr_pos
+        integer :: dummy
+        integer, intent(out) :: nframes, istart, nevery, iend, natoms
+        integer :: i, ntitle, n, framesize, nframes2, curr_pos
         character (len=4) :: cord_string
         character (len=80) :: title_string
-        real :: timestep
+        real, intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
 
         read(this%u) dummy
@@ -139,6 +163,8 @@ contains
 
     end subroutine dcdfile_read_header
 
+    !> @brief Closes DCD file
+    !> @param[inout] this dcdreader object
     subroutine dcdfile_close(this)
 
         implicit none
@@ -148,6 +174,10 @@ contains
 
     end subroutine dcdfile_close
 
+    !> @brief Reads next frame into memory
+    !> @param[inout] this dcdreader object
+    !> @param[inout] xyz coordinates of all atoms in snapshot
+    !> @param[inout] box dimensions of snapshot
     subroutine dcdfile_read_next(this, xyz, box)
 
         implicit none
@@ -194,6 +224,8 @@ contains
 
     end subroutine dcdfile_read_next
 
+    !> @brief Skips reading this frame into memory
+    !> @param[inout] this dcdreader object
     subroutine dcdfile_skip_next(this)
 
         implicit none
