@@ -80,11 +80,19 @@ install ( TARGETS ${CMAKE_PROJECT_NAME} LIBRARY DESTINATION lib )
 # Install the module files (in include directory)
 install ( DIRECTORY "${CMAKE_BINARY_DIR}/include" DESTINATION "${CMAKE_INSTALL_PREFIX}" )
 
+# Install the example program
 install ( DIRECTORY "${CMAKE_SOURCE_DIR}/example" DESTINATION
     "${CMAKE_INSTALL_PREFIX}/share/${PACKAGE_NAME}/" )
 
+# Install the license
 install ( FILES "${CMAKE_SOURCE_DIR}/LICENSE" DESTINATION
     "${CMAKE_INSTALL_PREFIX}/share/licenes/${PACKAGE_NAME}/" )
+
+# Install the docs
+install ( DIRECTORY "${CMAKE_SOURCE_DIR}/docs/html" DESTINATION
+    "${CMAKE_INSTALL_PREFIX}/share/docs/${PACKAGE_NAME}/" )
+install ( FILES "${CMAKE_SOURCE_DIR}/README.md" DESTINATION
+    "${CMAKE_INSTALL_PREFIX}/share/docs/${PACKAGE_NAME}/" )
 
 ####################################################################
 # Publicize installed location to other CMake projects and pkgconfig
