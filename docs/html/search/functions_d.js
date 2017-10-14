@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['trajectory_5fopen',['trajectory_open',['../namespacedcdfort__trajectory.html#a44c702cc8e9054e134780e1141ef61d9',1,'dcdfort_trajectory']]]
+  ['x',['x',['../structdcdfort__trajectory_1_1trajectory.html#a62167d7232406b232cfd3e869d92936f',1,'dcdfort_trajectory::trajectory']]]
 ];

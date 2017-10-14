@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['trajectory',['trajectory',['../structdcdfort__trajectory_1_1trajectory.html',1,'dcdfort_trajectory']]]
+  ['ndxgroups',['ndxgroups',['../structdcdfort__index_1_1ndxgroups.html',1,'dcdfort_index']]]
 ];
