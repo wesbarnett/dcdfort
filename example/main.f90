@@ -5,25 +5,20 @@ program main
     implicit none
 
     type(Trajectory) :: trj
-    integer :: i, j
     real(8) :: box(6)
+    real :: x(3)
 
-    ! Opens file, reads all atoms in, closes file
     call trj%read("dump.dcd")
 
-    ! Cycles through frames read in
-    ! Easy to parallelize this loop
+    ! Can parallelize this loop easily
     do i = 1, trj%nframes
 
-        ! Box for this frame
         box = trj%box(i)
-        write(*,*) box(1), box(2), box(3), box(4), box(5), box(6)
 
-        ! Cycles through all atoms
+        ! Do calculations here
         do j = 1, trj%natoms()
 
-            ! Do some calculations here
-            write(*,*) trj%x(i,j)
+            x = trj%x(i,j)
 
         end do
 
