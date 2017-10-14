@@ -1,6 +1,7 @@
 # libdcdfort
 
 Copyright (C) 2017 James W. Barnett
+
 http://github.com/wesbarnett/dcdfort
 
 ## About
