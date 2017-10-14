@@ -1,5 +1,10 @@
 # libdcdfort
 
+Copyright (C) 2017 James W. Barnett
+http://github.com/wesbarnett/dcdfort
+
+## About
+
 Fortran library for natively reading in DCD trajectory files generated
 from [LAMMPS](http://lammps.sandia.gov) simulations for analysis. Uses
 an object-oriented style.
