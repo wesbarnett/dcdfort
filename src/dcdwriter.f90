@@ -25,7 +25,6 @@
 
 module dcdfort_writer
 
-    use dcdfort_common
     use iso_c_binding, only: C_NULL_CHAR
 
     implicit none
@@ -60,8 +59,6 @@ contains
         implicit none
         character (len=*), intent(in) :: filename
         class(dcdwriter), intent(inout) :: this
-        integer :: filesize
-        logical :: ex
 
         open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", status="new")
 
@@ -77,7 +74,7 @@ contains
 
         implicit none
 
-        integer :: dummy, i, n
+        integer :: i
         integer, intent(in) :: istart, nevery, natoms
         real, intent(in) :: timestep
         class(dcdwriter), intent(inout) :: this
@@ -85,6 +82,10 @@ contains
         character (len=8) :: date
         character (len=10) :: time
 
+        do i = 1, 79
+            remarks1(i:i) = ' '
+            remarks2(i:i) = ' '
+        end do
         call date_and_time(date=date,time=time)
         remarks1 = "Created by libdcdfort"
         remarks2 = "REMARK Created on "//date//" "//time
@@ -110,17 +111,17 @@ contains
         ! Timestep of last snapshot
         write(this%u) this%iend
 
-        do i = 1, 4
+        do i = 1, 5
             write(this%u) 0
         end do
-
-        ! Has unit cell
-        write(this%u) 1
 
         ! Simulation timestep
         write(this%u) timestep
 
-        do i = 1, 9
+        ! Has unit cell
+        write(this%u) 1
+
+        do i = 1, 8
             write(this%u) 0
         end do
 
@@ -140,6 +141,8 @@ contains
         write(this%u) natoms
 
         write(this%u) 4
+
+        flush(this%u)
 
     end subroutine dcdwriter_write_header
 
@@ -165,7 +168,6 @@ contains
         real, intent(in) :: xyz(:,:)
         real(8), intent(in) :: box_in(6)
         real(8) :: box(6)
-        integer :: dummy
         class(dcdwriter), intent(inout) :: this
         integer :: coord_size
 
@@ -190,17 +192,17 @@ contains
 
         write(this%u) xyz(1,:)
 
-        write(this%u) 48
+        write(this%u) coord_size
         write(this%u) coord_size
 
         write(this%u) xyz(2,:)
 
-        write(this%u) 48
+        write(this%u) coord_size
         write(this%u) coord_size
 
         write(this%u) xyz(3,:)
 
-        write(this%u) 48
+        write(this%u) coord_size
 
         inquire(unit=this%u, pos=this%curr_pos)
 
@@ -211,6 +213,8 @@ contains
         write(this%u, pos=this%nframes_pos) this%nframes
         write(this%u, pos=this%iend_pos) this%iend
         write(this%u, pos=this%curr_pos)
+
+        flush(this%u)
 
     end subroutine dcdwriter_write_next
 
