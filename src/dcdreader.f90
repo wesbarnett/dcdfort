@@ -59,6 +59,7 @@ contains
         implicit none
         character (len=*), intent(in) :: filename
         class(dcdfile), intent(inout) :: this
+        integer :: dummy
         logical :: ex
 
         inquire(file=trim(filename), exist=ex, size=this%filesize)
@@ -68,6 +69,21 @@ contains
         end if
 
         open(newunit=this%u, file=trim(filename), form="unformatted", access="stream")
+
+        read(this%u,pos=1) dummy
+
+        if (dummy .ne. 84) then
+
+            ! Try converting to big endian
+            close(this%u)
+            open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", convert="big_endian")
+
+            read(this%u,pos=1) dummy
+            if (dummy .ne. 84) then
+                call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
+            end if
+
+        end if
 
     end subroutine dcdfile_open
 
@@ -92,7 +108,7 @@ contains
         real, intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
 
-        read(this%u) dummy
+        read(this%u, pos=1) dummy
         if (dummy .ne. 84) then
             call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
         end if
