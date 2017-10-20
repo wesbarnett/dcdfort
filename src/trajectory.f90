@@ -298,18 +298,24 @@ contains
     !> @param[in] ndxfile Name of optional index file
     !> @param[in] ndxgrp Name of optional group. If specified, only that group will be read into memory.
     !> @param[in] every Read in every so many frames
-    subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp, every)
+    !> @param[in] skip Skip this many frames at the beginning of the trajectory file
+    subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp, every, skip)
 
         implicit none
         class(Trajectory), intent(inout) :: this
         character (len=*), optional :: ndxfile, ndxgrp
         character (len=*) :: dcdfile
         integer :: N
-        integer, intent(in), optional :: every
+        integer, intent(in), optional :: every, skip
 
         call this%open(dcdfile, ndxfile)
 
-        N = this%read_next(this%NFRAMES, ndxgrp, every)
+        if (present(skip)) then
+            N = this%skip_next(skip)
+            N = this%read_next(this%NFRAMES-N, ndxgrp, every)
+        else
+            N = this%read_next(this%NFRAMES, ndxgrp, every)
+        end if
 
         call this%close()
 

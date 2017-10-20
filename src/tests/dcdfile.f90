@@ -79,10 +79,28 @@ program dcdfile_test
     c = 0.012
     call check(b, c, passed, total)
 
-    ! TEST 6
+    ! TEST 11
     call trj%read(dcdfile, every=2)
     x = trj%x(5, 5)
     print *, x
+    ans = [-11.111647, -9.451539, 8.782396]
+    call check(x, ans, passed, total)
+
+    ! TEST 12
+    call trj%read(dcdfile, skip=4)
+    x = trj%x(6, 5)
+    ans = [-11.111647, -9.451539, 8.782396]
+    call check(x, ans, passed, total)
+
+    ! TEST 13
+    call trj%read(dcdfile, skip=4, every=2)
+    x = trj%x(3, 5)
+    ans = [-11.111647, -9.451539, 8.782396]
+    call check(x, ans, passed, total)
+
+    ! TEST 13
+    call trj%read(dcdfile, skip=5, every=5)
+    x = trj%x(1, 5)
     ans = [-11.111647, -9.451539, 8.782396]
     call check(x, ans, passed, total)
 
