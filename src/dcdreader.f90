@@ -86,7 +86,7 @@ contains
 
         integer :: dummy
         integer, intent(out) :: nframes, istart, nevery, iend, natoms
-        integer :: i, ntitle, n, framesize, nframes2, curr_pos
+        integer :: i, ntitle, n, framesize, nframes2
         character (len=4) :: cord_string
         character (len=80) :: title_string
         real, intent(out) :: timestep
@@ -148,14 +148,12 @@ contains
 
         read(this%u) dummy
 
-        inquire(unit=this%u, pos=curr_pos)
-
-        curr_pos = curr_pos + 1
-        ! Each frame has natoms*3 (4 bytes each), plus 6 box dimensions (8 bytes each)
+        ! Each frame has natoms*3 (4 bytes each) = natoms*12
+        ! plus 6 box dimensions (8 bytes each) = 48
         ! Additionally there are 32 bytes of file information in each frame
-        framesize = natoms*12 + 48 + 32
-        ! Just an estimate
-        nframes2 = (this%filesize-curr_pos)/framesize
+        framesize = natoms*12 + 80
+        ! Header is 276 bytes
+        nframes2 = (this%filesize-276)/framesize
         if ( nframes2 .ne. nframes) then
             write(error_unit,'(a,i0,a,i0,a)') "WARNING: Header indicates ", nframes, &
                 &" frames, but file size indicates ", nframes2, "." 
