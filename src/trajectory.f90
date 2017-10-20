@@ -170,19 +170,22 @@ contains
     !> @param[inout] this Trajectory class
     !> @param[in] F number of frames to read in; if not specified, 1 frame is read
     !> @param[in] ndxgrp read only this index group into memory
+    !> @param[in] every Read in every so many frames
     !> @return number of frames read in
-    function trajectory_read_next(this, F, ndxgrp)
+    function trajectory_read_next(this, F, ndxgrp, every)
 
         implicit none
         integer :: trajectory_read_next
         class(Trajectory), intent(inout) :: this
-        integer, intent(in), optional :: F
+        integer, intent(in), optional :: F, every
         character (len=*), optional :: ndxgrp
-        integer :: I, J, N, STAT
+        integer :: I, J, N, STAT, S
         real, allocatable :: xyz(:,:)
 
         ! If the user specified how many frames to read and it is greater than one, use it
         N = merge(F, 1, present(F))
+        if (present(every)) N = N / every
+        S = merge(every, 1, present(every)) - 1
 
         ! Are we near the end of the file?
         N = min(this%FRAMES_REMAINING, N)
@@ -204,6 +207,9 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
+                do J = 1, S
+                    call this%dcd%skip_next()
+                end do
                 call this%dcd%read_next(xyz, this%frameArray(I)%box)
 
                 do J = 1, size(this%ndx%group)
@@ -225,6 +231,9 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
+                do J = 1, S
+                    call this%dcd%skip_next()
+                end do
                 call this%dcd%read_next(this%frameArray(I)%xyz, this%frameArray(I)%box)
 
             end do
@@ -288,17 +297,19 @@ contains
     !> @param[in] dcdfile Name of DCD trajectory file
     !> @param[in] ndxfile Name of optional index file
     !> @param[in] ndxgrp Name of optional group. If specified, only that group will be read into memory.
-    subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp)
+    !> @param[in] every Read in every so many frames
+    subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp, every)
 
         implicit none
         class(Trajectory), intent(inout) :: this
         character (len=*), optional :: ndxfile, ndxgrp
         character (len=*) :: dcdfile
         integer :: N
+        integer, intent(in), optional :: every
 
         call this%open(dcdfile, ndxfile)
 
-        N = this%read_next(this%NFRAMES, ndxgrp)
+        N = this%read_next(this%NFRAMES, ndxgrp, every)
 
         call this%close()
 

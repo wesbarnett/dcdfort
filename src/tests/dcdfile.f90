@@ -79,6 +79,13 @@ program dcdfile_test
     c = 0.012
     call check(b, c, passed, total)
 
+    ! TEST 6
+    call trj%read(dcdfile, every=2)
+    x = trj%x(5, 5)
+    print *, x
+    ans = [-11.111647, -9.451539, 8.782396]
+    call check(x, ans, passed, total)
+
     call finished_tests(passed, total)
 
 end program dcdfile_test
