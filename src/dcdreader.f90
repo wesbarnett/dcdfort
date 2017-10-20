@@ -76,7 +76,7 @@ contains
 
             ! Try converting to big endian
             close(this%u)
-            open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", convert="big_endian")
+            open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", convert="swap")
 
             read(this%u,pos=1) dummy
             if (dummy .ne. 84) then
