@@ -35,7 +35,7 @@ module dcdfort_reader
     !> @brief dcdwriter class
     type, public :: dcdfile
         integer, private :: u
-        integer, private :: filesize
+        integer(8), private :: filesize
     contains
         !> Opens file to read from
         procedure :: open => dcdfile_open
@@ -59,7 +59,6 @@ contains
         implicit none
         character (len=*), intent(in) :: filename
         class(dcdfile), intent(inout) :: this
-        integer :: filesize
         logical :: ex
 
         inquire(file=trim(filename), exist=ex, size=this%filesize)
