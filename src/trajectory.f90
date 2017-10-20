@@ -101,8 +101,8 @@ contains
 
         write(error_unit,'(i0,a)') this%NUMATOMS, " atoms present in system."
         write(error_unit,'(i0,a)') this%NFRAMES, " frames present in trajectory file."
-        write(error_unit,'(a,i0)') "First timestep saved: ", this%ISTART
-        write(error_unit,'(a,i0)') "Last timestep saved: ", this%IEND
+        write(error_unit,'(a,i0)') "First timestep in trajectory file: ", this%ISTART
+        write(error_unit,'(a,i0)') "Last timestep in strajectory file: ", this%IEND
         write(error_unit,'(a,f12.6)') "Simulation timestep: ", this%timestep
         write(error_unit,'(a,i0,a)') "Trajectory written every ", this%nevery, " timesteps."
 
@@ -310,6 +310,12 @@ contains
 
         call this%open(dcdfile, ndxfile)
 
+        if (present(every)) then
+            write(error_unit,'(a,i0,a)') "Saving ", every, " snapshots into memory."
+        end if
+        if (present(skip)) then
+            write(error_unit,'(a,i0,a)') "Skipping first ", skip, " snapshots."
+        end if
         if (present(skip)) then
             N = this%skip_next(skip)
             N = this%read_next(this%NFRAMES-N, ndxgrp, every)
