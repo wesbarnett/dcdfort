@@ -14,7 +14,8 @@ This is similar to my other project
 [libgmxfort](https://github.com/wesbarnett/libgmxfort).
 
 **Note:** DCD files generated from simulation packages other than
-LAMMPS may not work correctly with this library.
+LAMMPS may not work correctly with this library. It should work with
+32-bit DCD files with native or opposite endianness.
 
 ## Compilation
 
