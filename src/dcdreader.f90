@@ -150,8 +150,10 @@ contains
 
         inquire(unit=this%u, pos=curr_pos)
 
+        curr_pos = curr_pos + 1
         ! Each frame has natoms*3 (4 bytes each), plus 6 box dimensions (8 bytes each)
-        framesize = natoms*12 + 48
+        ! Additionally there are 32 bytes of file information in each frame
+        framesize = natoms*12 + 48 + 32
         ! Just an estimate
         nframes2 = (this%filesize-curr_pos)/framesize
         if ( nframes2 .ne. nframes) then
