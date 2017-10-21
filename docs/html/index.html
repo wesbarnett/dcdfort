@@ -68,7 +68,7 @@ $(function() {
 <h2>About</h2>
 <p>Fortran library for natively reading in DCD trajectory files generated from <a href="http://lammps.sandia.gov">LAMMPS</a> simulations for analysis. Uses an object-oriented style.</p>
 <p>This is similar to my other project <a href="https://github.com/wesbarnett/libgmxfort">libgmxfort</a>.</p>
-<p><b>Note:</b> DCD files generated from simulation packages other than LAMMPS may not work correctly with this library.</p>
+<p><b>Note:</b> DCD files generated from simulation packages other than LAMMPS may not work correctly with this library. It should work with 32-bit DCD files with native or opposite endianness.</p>
 <h2>Compilation</h2>
 <p>After cloning the repository, or extracting the release tarball, cd into the repository. Then:</p>
 <div class="fragment"><div class="line">mkdir build</div><div class="line">cd build</div><div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local</div><div class="line">make</div></div><!-- fragment --><h2>Testing</h2>
