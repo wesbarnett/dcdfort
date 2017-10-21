@@ -33,7 +33,7 @@ contains
         character (len=*), intent(in) :: message
 
         write(error_unit,*)
-        write(error_unit,'(a, a)') "LIBDCDFORT ERROR: ", message
+        write(error_unit,'(a, a)') "dcdfort >> ERROR: ", message
         write(error_unit,*)
         stop 1
 

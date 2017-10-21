@@ -57,10 +57,14 @@ contains
     subroutine dcdfile_open(this, filename)
 
         implicit none
+        character (len=4), parameter :: magic_string = "CORD"
+        integer, parameter :: magic_number = 84
         character (len=*), intent(in) :: filename
         class(dcdfile), intent(inout) :: this
-        integer :: dummy
+        integer :: line1
+        character (len=4) :: line2
         logical :: ex
+        character (len=256) :: endian
 
         inquire(file=trim(filename), exist=ex, size=this%filesize)
 
@@ -69,21 +73,33 @@ contains
         end if
 
         open(newunit=this%u, file=trim(filename), form="unformatted", access="stream")
+        inquire(this%u, convert=endian)
 
-        read(this%u,pos=1) dummy
+        read(this%u,pos=1) line1
+        read(this%u) line2
 
-        if (dummy .ne. 84) then
+        if (line1 .ne. magic_number .or. line2 .ne. magic_string) then
 
-            ! Try converting to big endian
+            ! Try converting to the reverse endianness
             close(this%u)
             open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", convert="swap")
+            inquire(this%u, convert=endian)
 
-            read(this%u,pos=1) dummy
-            if (dummy .ne. 84) then
+            read(this%u,pos=1) line2
+            read(this%u) line2
+
+            if (line1 .ne. magic_number .or. line2 .ne. magic_string) then
                 call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
             end if
 
+            write(error_unit, '(a)') "dcdfort >> Detected opposite endianness ("//trim(endian)//")."
+
+        else
+
+            write(error_unit, '(a)') "dcdfort >> Detected native endianness ("//trim(endian)//")."
+
         end if
+
 
     end subroutine dcdfile_open
 
@@ -108,15 +124,9 @@ contains
         real, intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
 
+        ! Already checked above
         read(this%u, pos=1) dummy
-        if (dummy .ne. 84) then
-            call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
-        end if
-
         read(this%u) cord_string
-        if (cord_string .ne. "CORD") then
-            call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
-        end if
 
         ! Number of snapshots in file
         read(this%u) nframes
@@ -150,7 +160,7 @@ contains
                 n = n + 1
             end do
 
-            write(error_unit,'(a)') trim(title_string(1:n))
+            write(error_unit,'(a)') "dcdfort >> "//trim(title_string(1:n))
         end do
 
         read(this%u) dummy
@@ -171,7 +181,7 @@ contains
         ! Header is 276 bytes
         nframes2 = (this%filesize-276)/framesize
         if ( nframes2 .ne. nframes) then
-            write(error_unit,'(a,i0,a,i0,a)') "WARNING: Header indicates ", nframes, &
+            write(error_unit,'(a,i0,a,i0,a)') "dcdfort >> WARNING: Header indicates ", nframes, &
                 &" frames, but file size indicates ", nframes2, "." 
             nframes = nframes2
         end if
