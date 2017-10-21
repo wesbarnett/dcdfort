@@ -92,11 +92,11 @@ contains
                 call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
             end if
 
-            write(error_unit, '(a)') "dcdfort >> Detected opposite endianness ("//trim(endian)//")."
+            write(error_unit, '(a)') prompt//"Detected opposite endianness ("//trim(endian)//")."
 
         else
 
-            write(error_unit, '(a)') "dcdfort >> Detected native endianness ("//trim(endian)//")."
+            write(error_unit, '(a)') prompt//"Detected native endianness ("//trim(endian)//")."
 
         end if
 
@@ -160,7 +160,7 @@ contains
                 n = n + 1
             end do
 
-            write(error_unit,'(a)') "dcdfort >> "//trim(title_string(1:n))
+            write(error_unit,'(a)') prompt//trim(title_string(1:n))
         end do
 
         read(this%u) dummy
@@ -181,7 +181,7 @@ contains
         ! Header is 276 bytes
         nframes2 = (this%filesize-276)/framesize
         if ( nframes2 .ne. nframes) then
-            write(error_unit,'(a,i0,a,i0,a)') "dcdfort >> WARNING: Header indicates ", nframes, &
+            write(error_unit,'(a,i0,a,i0,a)') prompt//"WARNING: Header indicates ", nframes, &
                 &" frames, but file size indicates ", nframes2, "." 
             nframes = nframes2
         end if

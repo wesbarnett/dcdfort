@@ -96,15 +96,15 @@ contains
 
         call this%dcd%open(trim(filename_in))
 
-        write(error_unit,'(a)') "dcdfort >> Opened "//trim(filename_in)//" for reading."
+        write(error_unit,'(a)') prompt//"Opened "//trim(filename_in)//" for reading."
         call this%dcd%read_header(this%nframes, this%istart, this%nevery, this%iend, this%timestep, this%NUMATOMS)
 
-        write(error_unit,'(a,i0,a)') "dcdfort >> ", this%NUMATOMS, " atoms present in system."
-        write(error_unit,'(a,i0,a)') "dcdfort >> ", this%NFRAMES, " frames present in trajectory file."
-        write(error_unit,'(a,i0)') "dcdfort >> First timestep in trajectory file: ", this%ISTART
-        write(error_unit,'(a,i0)') "dcdfort >> Last timestep in strajectory file: ", this%IEND
-        write(error_unit,'(a,f12.6)') "dcdfort >> Simulation timestep: ", this%timestep
-        write(error_unit,'(a,i0,a)') "dcdfort >> Trajectory written every ", this%nevery, " timesteps."
+        write(error_unit,'(a,i0,a)') prompt, this%NUMATOMS, " atoms present in system."
+        write(error_unit,'(a,i0,a)') prompt, this%NFRAMES, " frames present in trajectory file."
+        write(error_unit,'(a,i0)') prompt//"First timestep in trajectory file: ", this%ISTART
+        write(error_unit,'(a,i0)') prompt//"Last timestep in strajectory file: ", this%IEND
+        write(error_unit,'(a,f12.6)') prompt//"Simulation timestep: ", this%timestep
+        write(error_unit,'(a,i0,a)') prompt//"Trajectory written every ", this%nevery, " timesteps."
 
         this%FRAMES_REMAINING = this%NFRAMES
 
@@ -155,12 +155,12 @@ contains
         do i = 1, N
             call this%dcd%skip_next()
             if (stat .ne. 0) then
-                write(error_unit,'(a,i0,a)') "dcdfort >> Skipped ", i-1, " frames."
+                write(error_unit,'(a,i0,a)') prompt//"Skipped ", i-1, " frames."
                 trajectory_skip_next = i-1
                 exit
             end if
         end do
-        write(error_unit,'(a,i0,a)') "dcdfort >> Skipped ", N, " frames."
+        write(error_unit,'(a,i0,a)') prompt//"Skipped ", N, " frames."
         trajectory_skip_next = N
 
     end function trajectory_skip_next
@@ -250,7 +250,7 @@ contains
 
         implicit none
         integer, intent(in) :: I
-        write(error_unit,'(a,i0)') achar(27)//"[1A"//achar(27)//"[K"//"dcdfort >> Frames saved: ", I
+        write(error_unit,'(a,i0)') achar(27)//"[1A"//achar(27)//"[K"//prompt//"Frames saved: ", I
 
     end subroutine print_frames_saved
 
@@ -311,10 +311,10 @@ contains
         call this%open(dcdfile, ndxfile)
 
         if (present(every)) then
-            write(error_unit,'(a,i0,a)') "dcdfort >> Saving ", every, " snapshots into memory."
+            write(error_unit,'(a,i0,a)') prompt//"Saving ", every, " snapshots into memory."
         end if
         if (present(skip)) then
-            write(error_unit,'(a,i0,a)') "dcdfort >> Skipping first ", skip, " snapshots."
+            write(error_unit,'(a,i0,a)') prompt//"Skipping first ", skip, " snapshots."
         end if
         if (present(skip)) then
             N = this%skip_next(skip)

@@ -25,6 +25,8 @@ module dcdfort_common
     implicit none
     public
 
+    character (len=*), parameter :: prompt = "dcdfort >> "
+
 contains
 
     subroutine error_stop_program(message)
