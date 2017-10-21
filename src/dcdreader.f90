@@ -61,23 +61,24 @@ contains
         integer, parameter :: magic_number = 84
         character (len=*), intent(in) :: filename
         class(dcdfile), intent(inout) :: this
-        integer :: line1
+        integer :: line1, charmm_version, has_extra_block, four_dimensions
         character (len=4) :: line2
         logical :: ex
-        character (len=256) :: endian
 
+        ! Does file exist?
         inquire(file=trim(filename), exist=ex, size=this%filesize)
-
         if (ex .eqv. .false.) then
             call error_stop_program(trim(filename)//" does not exist.")
         end if
 
+        ! Open file in native endinness
         open(newunit=this%u, file=trim(filename), form="unformatted", access="stream")
-        inquire(this%u, convert=endian)
 
+        ! Read in magic number of magic string
         read(this%u,pos=1) line1
         read(this%u) line2
 
+        ! Ensure the magic number and string are correct, if not we'll swap the endinness
         if (line1 .ne. magic_number .or. line2 .ne. magic_string) then
 
             ! Try converting to the reverse endianness
@@ -88,18 +89,32 @@ contains
             read(this%u,pos=1) line2
             read(this%u) line2
 
+            ! We tried both native and reverse endiness and didn't have magic number or string
             if (line1 .ne. magic_number .or. line2 .ne. magic_string) then
-                call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
+                call error_stop_program("This DCD file format is not supported, or the file header is corrupt.")
             end if
-
-            write(error_unit, '(a)') prompt//"Detected opposite endianness ("//trim(endian)//")."
-
-        else
-
-            write(error_unit, '(a)') prompt//"Detected native endianness ("//trim(endian)//")."
 
         end if
 
+        ! Check if the file identifies as CHARMM (LAMMPS pretends to be CHARMM v. 24)
+        read(this%u, pos=85) charmm_version
+        if (charmm_version .eq. 0) then
+            call error_stop_program("DCD file indicates it is not CHARMM. Only CHARMM-style DCD files are supported.")
+        end if
+
+        ! We only support files with the extra unitcell block
+        read(this%u, pos=49) has_extra_block
+        if (has_extra_block .ne. 1) then
+            call error_stop_program("DCD file indicates it does not have unit cell information. Only DCD files with&
+                & unit cell information are supported.")
+        end if
+
+        ! We don't support files with four dimensions
+        read(this%u) four_dimensions
+        if (four_dimensions .eq. 1) then
+            call error_stop_program("DCD file indicates it has four dimensions. Only DCD files with three dimensions&
+                & are supported.")
+        end if
 
     end subroutine dcdfile_open
 
@@ -116,20 +131,14 @@ contains
 
         implicit none
 
-        integer :: dummy
         integer, intent(out) :: nframes, istart, nevery, iend, natoms
-        integer :: i, ntitle, n, framesize, nframes2
-        character (len=4) :: cord_string
+        integer :: i, ntitle, n, framesize, nframes2, dummy
         character (len=80) :: title_string
         real, intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
 
-        ! Already checked above
-        read(this%u, pos=1) dummy
-        read(this%u) cord_string
-
         ! Number of snapshots in file
-        read(this%u) nframes
+        read(this%u, pos=9) nframes
 
         ! Timestep of first snapshot
         read(this%u) istart
@@ -140,18 +149,10 @@ contains
         ! Timestep of last snapshot
         read(this%u) iend
 
-        do i = 1, 5
-            read(this%u) dummy
-        end do
-
         ! Simulation timestep
-        read(this%u) timestep
+        read(this%u, pos=45) timestep
 
-        do i = 1, 12
-            read(this%u) dummy
-        end do
-
-        read(this%u) ntitle
+        read(this%u, pos=97) ntitle
         if (ntitle > 0) then
             write(error_unit,'(a)') prompt//"The following titles were found:"
         end if
@@ -169,13 +170,15 @@ contains
         read(this%u) dummy
         read(this%u) dummy
         if (dummy .ne. 4) then
-            call error_stop_program("This dcd file format is not supported, or the file header is corrupt.")
+            call error_stop_program("This DCD file format is not supported, or the file header is corrupt.")
         end if
 
         ! Number of atoms in each snapshot
         read(this%u) natoms
-
         read(this%u) dummy
+        if (dummy .ne. 4) then
+            call error_stop_program("This DCD file format is not supported, or the file header is corrupt.")
+        end if
 
         ! Each frame has natoms*3 (4 bytes each) = natoms*12
         ! plus 6 box dimensions (8 bytes each) = 48
