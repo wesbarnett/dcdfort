@@ -57,7 +57,7 @@ contains
     subroutine dcdfile_open(this, filename)
 
         implicit none
-        character (len=4), parameter :: magic_string = "CORD"
+        character (len=*), parameter :: magic_string = "CORD"
         integer, parameter :: magic_number = 84
         character (len=*), intent(in) :: filename
         class(dcdfile), intent(inout) :: this
@@ -152,6 +152,9 @@ contains
         end do
 
         read(this%u) ntitle
+        if (ntitle > 0) then
+            write(error_unit,'(a)') prompt//"The following titles were found:"
+        end if
         do i = 1, ntitle
             read(this%u) title_string
 
@@ -160,7 +163,7 @@ contains
                 n = n + 1
             end do
 
-            write(error_unit,'(a)') prompt//trim(title_string(1:n))
+            write(error_unit,'(a)') prompt//"  "//trim(title_string(1:n))
         end do
 
         read(this%u) dummy
