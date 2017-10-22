@@ -228,7 +228,8 @@ contains
 
         implicit none
         real :: real_dummy
-        integer :: dummy, i, pos, newpos
+        integer :: dummy, i
+        integer(8) :: pos, newpos
         integer, intent(in), optional :: n
         real(8) :: box_dummy(6)
         class(dcdfile), intent(inout) :: this
