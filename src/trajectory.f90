@@ -177,12 +177,13 @@ contains
 
         ! If the user specified how many frames to read and it is greater than one, use it
         N = merge(F, 1, present(F))
-        if (present(every)) N = N / every
         S = merge(every, 1, present(every)) - 1
 
         ! Are we near the end of the file?
         N = min(this%FRAMES_REMAINING, N)
         this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
+
+        if (present(every)) N = N / every
 
         if (allocated(this%frameArray)) deallocate(this%frameArray)
         allocate(this%frameArray(N))
