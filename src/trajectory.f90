@@ -152,14 +152,7 @@ contains
         N = min(this%FRAMES_REMAINING, N)
         this%FRAMES_REMAINING = this%FRAMES_REMAINING - N
 
-        do i = 1, N
-            call this%dcd%skip_next()
-            if (stat .ne. 0) then
-                write(error_unit,'(a,i0,a)') prompt//"Skipped ", i-1, " frames."
-                trajectory_skip_next = i-1
-                exit
-            end if
-        end do
+        call this%dcd%skip_next(N)
         write(error_unit,'(a,i0,a)') prompt//"Skipped ", N, " frames."
         trajectory_skip_next = N
 
@@ -207,9 +200,7 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
-                do J = 1, S
-                    call this%dcd%skip_next()
-                end do
+                call this%dcd%skip_next(S)
                 call this%dcd%read_next(xyz, this%frameArray(I)%box)
 
                 do J = 1, size(this%ndx%group)
@@ -231,9 +222,7 @@ contains
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
-                do J = 1, S
-                    call this%dcd%skip_next()
-                end do
+                call this%dcd%skip_next(S)
                 call this%dcd%read_next(this%frameArray(I)%xyz, this%frameArray(I)%box)
 
             end do

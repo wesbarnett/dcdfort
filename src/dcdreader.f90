@@ -31,11 +31,12 @@ module dcdfort_reader
     implicit none
 
     real(8), parameter :: pi = 2.0d0*dacos(0.0d0)
+    real(8), parameter :: OneEightyOverPi = 180.0d0/pi
 
     !> @brief dcdwriter class
     type, public :: dcdfile
         integer, private :: u
-        integer(8), private :: filesize
+        integer(8), private :: filesize, framesize
     contains
         !> Opens file to read from
         procedure :: open => dcdfile_open
@@ -136,19 +137,8 @@ contains
         real, intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
 
-        ! Number of snapshots in file
-        read(this%u, pos=9) nframes
+        read(this%u, pos=9) nframes, istart, nevery, iend
 
-        ! Timestep of first snapshot
-        read(this%u) istart
-
-        ! Save snapshots every this many steps
-        read(this%u) nevery
-
-        ! Timestep of last snapshot
-        read(this%u) iend
-
-        ! Simulation timestep
         read(this%u, pos=45) timestep
 
         read(this%u, pos=97) ntitle
@@ -166,15 +156,13 @@ contains
             write(error_unit,'(a)') prompt//"  "//trim(title_string(1:n))
         end do
 
-        read(this%u) dummy
-        read(this%u) dummy
+        read(this%u) dummy, dummy
         if (dummy .ne. 4) then
             call error_stop_program("This DCD file format is not supported, or the file header is corrupt.")
         end if
 
         ! Number of atoms in each snapshot
-        read(this%u) natoms
-        read(this%u) dummy
+        read(this%u) natoms, dummy
         if (dummy .ne. 4) then
             call error_stop_program("This DCD file format is not supported, or the file header is corrupt.")
         end if
@@ -182,9 +170,9 @@ contains
         ! Each frame has natoms*3 (4 bytes each) = natoms*12
         ! plus 6 box dimensions (8 bytes each) = 48
         ! Additionally there are 32 bytes of file information in each frame
-        framesize = natoms*12 + 80
+        this%framesize = natoms*12 + 80
         ! Header is 276 bytes
-        nframes2 = (this%filesize-276)/framesize
+        nframes2 = (this%filesize-276)/this%framesize
         if ( nframes2 .ne. nframes) then
             write(error_unit,'(a,i0,a,i0,a)') prompt//"WARNING: Header indicates ", nframes, &
                 &" frames, but file size indicates ", nframes2, "." 
@@ -213,87 +201,45 @@ contains
         implicit none
         real, allocatable, intent(inout) :: xyz(:,:)
         real(8), intent(inout) :: box(6)
-        integer :: dummy
+        integer :: dummy(2)
         class(dcdfile), intent(inout) :: this
     
         ! Should be 48
-        read(this%u) dummy
+        read(this%u) dummy(1)
 
-        read(this%u) box(1) ! A
-        read(this%u) box(6) ! gamma
-        read(this%u) box(2) ! B
-        read(this%u) box(5) ! beta
-        read(this%u) box(4) ! alpha
-        read(this%u) box(3) ! C
+        !            A       gamma   B       beta    alpha   C
+        read(this%u) box(1), box(6), box(2), box(5), box(4), box(3)
         if (box(4) >= -1.0 .and. box(4) <= 1.0 .and. box(5) >= -1.0 .and. box(5) <= 1.0 .and. &
             box(6) >= -1.0 .and. box(6) <= 1.0) then
-            box(4) = 90.0 - asin(box(4)) * 180.0 / pi
-            box(5) = 90.0 - asin(box(5)) * 180.0 / pi
-            box(6) = 90.0 - asin(box(6)) * 180.0 / pi
+            box(4:6) = 90.0 - asin(box(4:6)) * OneEightyOverPi
         end if
 
-        ! 48 again
-        read(this%u) dummy
-        read(this%u) dummy
+        ! 48, then no. of bytes for x coordinates, x coordinates (repeat for y and z coordinates)
+        read(this%u) dummy, xyz(1,:), dummy, xyz(2,:), dummy, xyz(3,:)
 
-        read(this%u) xyz(1,:)
-
-        ! 48 again
-        read(this%u) dummy
-        read(this%u) dummy
-
-        read(this%u) xyz(2,:)
-
-        ! 48 again
-        read(this%u) dummy
-        read(this%u) dummy
-
-        read(this%u) xyz(3,:)
-
-        read(this%u) dummy
+        read(this%u) dummy(1)
 
     end subroutine dcdfile_read_next
 
     !> @brief Skips reading this frame into memory
     !> @param[inout] this dcdreader object
-    subroutine dcdfile_skip_next(this)
+    subroutine dcdfile_skip_next(this, n)
 
         implicit none
         real :: real_dummy
-        integer :: dummy, i
+        integer :: dummy, i, pos, newpos
+        integer, intent(in), optional :: n
         real(8) :: box_dummy(6)
         class(dcdfile), intent(inout) :: this
-    
-        ! Should be 48
-        read(this%u) dummy
-
-        read(this%u) box_dummy
-
-        ! 48 again
-        read(this%u) dummy
-        read(this%u) dummy
-
-        do i = 1, dummy/4
-            read(this%u) real_dummy
-        end do
-
-        ! 48 again
-        read(this%u) dummy
-        read(this%u) dummy
-
-        do i = 1, dummy/4
-            read(this%u) real_dummy
-        end do
-
-        ! 48 again
-        read(this%u) dummy
-        read(this%u) dummy
-
-        do i = 1, dummy/4
-            read(this%u) real_dummy
-        end do
-
-        read(this%u) dummy
+   
+        inquire(unit=this%u, pos=pos)
+        if (.not. present(n)) then
+            newpos = pos + this%framesize - 4
+        else
+            newpos = pos + this%framesize*n - 4
+        end if
+        
+        read(this%u, pos=newpos) dummy
 
     end subroutine dcdfile_skip_next
 
