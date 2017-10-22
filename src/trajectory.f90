@@ -172,7 +172,7 @@ contains
         class(Trajectory), intent(inout) :: this
         integer, intent(in), optional :: F, every
         character (len=*), optional :: ndxgrp
-        integer :: I, J, N, STAT, S
+        integer :: I, J, N, STAT, S, K
         real, allocatable :: xyz(:,:)
 
         ! If the user specified how many frames to read and it is greater than one, use it
@@ -206,7 +206,12 @@ contains
 
                 do J = 1, size(this%ndx%group)
                     if (trim(this%ndx%group(J)%title) .eq. trim(ndxgrp)) then
-                        this%frameArray(I)%xyz = xyz(this%ndx%group(J)%LOC,:)
+                        ! Tends to be faster to list this out individually
+                        do K = 1, this%NUMATOMS
+                            this%frameArray(I)%xyz(K,1) = xyz(this%ndx%group(J)%LOC(K),1)
+                            this%frameArray(I)%xyz(K,2) = xyz(this%ndx%group(J)%LOC(K),2)
+                            this%frameArray(I)%xyz(K,3) = xyz(this%ndx%group(J)%LOC(K),3)
+                        end do
                         exit
                     end if
                 end do
@@ -278,7 +283,10 @@ contains
             call error_stop_program(trim(message))
         end if
 
-        trajectory_get_xyz = this%frameArray(frame)%xyz(atom_tmp,:)
+        ! Faster to list individually
+        trajectory_get_xyz(1) = this%frameArray(frame)%xyz(atom_tmp,1)
+        trajectory_get_xyz(2) = this%frameArray(frame)%xyz(atom_tmp,2)
+        trajectory_get_xyz(3) = this%frameArray(frame)%xyz(atom_tmp,3)
 
     end function trajectory_get_xyz
 
@@ -328,9 +336,12 @@ contains
         real(8) :: trajectory_get_box(6)
         class(Trajectory), intent(in) :: this
         integer, intent(in) :: frame
+        integer :: i
 
         call trajectory_check_frame(this, frame)
-        trajectory_get_box = this%frameArray(frame)%box
+        do i = 1, 6
+            trajectory_get_box(i) = this%frameArray(frame)%box(i)
+        end do
 
     end function trajectory_get_box
 
