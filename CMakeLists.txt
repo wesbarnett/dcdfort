@@ -140,7 +140,7 @@ add_library ( dcdfort_tests SHARED "${CMAKE_CURRENT_SOURCE_DIR}/src/tests/dcdfor
 target_link_libraries ( dcdfort_tests ${CMAKE_PROJECT_NAME} )
 
 # Create the test programs and link them to the test library
-foreach ( TESTNAME dcdfile read_next utils ndxfile ndxfile_grp )
+foreach ( TESTNAME dcdfile read_next utils ndxfile ndxfile_grp speed )
     add_executable ( ${TESTNAME} ${TESTDIR}/${TESTNAME}.f90 )
     target_link_libraries ( ${TESTNAME} dcdfort_tests )
 endforeach ( TESTNAME )

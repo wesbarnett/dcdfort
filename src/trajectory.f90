@@ -194,19 +194,19 @@ contains
 
         if (present(ndxgrp)) then
 
-            allocate(xyz(3,this%N))
+            allocate(xyz(this%N,3))
             this%NUMATOMS = this%natoms(trim(ndxgrp))
             do I = 1, N
 
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
-                allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
+                allocate(this%frameArray(I)%xyz(this%NUMATOMS,3))
                 call this%dcd%skip_next(S)
                 call this%dcd%read_next(xyz, this%frameArray(I)%box)
 
                 do J = 1, size(this%ndx%group)
                     if (trim(this%ndx%group(J)%title) .eq. trim(ndxgrp)) then
-                        this%frameArray(I)%xyz = xyz(:,this%ndx%group(J)%LOC)
+                        this%frameArray(I)%xyz = xyz(this%ndx%group(J)%LOC,:)
                         exit
                     end if
                 end do
@@ -222,7 +222,7 @@ contains
 
                 if (modulo(I, 1000) .eq. 0) call print_frames_saved(I)
 
-                allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
+                allocate(this%frameArray(I)%xyz(this%NUMATOMS,3))
                 call this%dcd%skip_next(S)
                 call this%dcd%read_next(this%frameArray(I)%xyz, this%frameArray(I)%box)
 
@@ -278,7 +278,7 @@ contains
             call error_stop_program(trim(message))
         end if
 
-        trajectory_get_xyz = this%frameArray(frame)%xyz(:,atom_tmp)
+        trajectory_get_xyz = this%frameArray(frame)%xyz(atom_tmp,:)
 
     end function trajectory_get_xyz
 

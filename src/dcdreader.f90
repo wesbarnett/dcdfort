@@ -36,7 +36,7 @@ module dcdfort_reader
     !> @brief dcdwriter class
     type, public :: dcdfile
         integer, private :: u
-        integer(8), private :: filesize, framesize
+        integer(8) :: filesize, framesize
     contains
         !> Opens file to read from
         procedure :: open => dcdfile_open
@@ -215,7 +215,7 @@ contains
         end if
 
         ! 48, then no. of bytes for x coordinates, x coordinates (repeat for y and z coordinates)
-        read(this%u) dummy, xyz(1,:), dummy, xyz(2,:), dummy, xyz(3,:)
+        read(this%u) dummy, xyz(:,1), dummy, xyz(:,2), dummy, xyz(:,3)
 
         read(this%u) dummy(1)
 
@@ -223,6 +223,7 @@ contains
 
     !> @brief Skips reading this frame into memory
     !> @param[inout] this dcdreader object
+    !> @param[in] n number of frames to skip
     subroutine dcdfile_skip_next(this, n)
 
         implicit none
@@ -233,6 +234,8 @@ contains
         class(dcdfile), intent(inout) :: this
    
         inquire(unit=this%u, pos=pos)
+
+        ! We subtract 4 bytes so that the next read of the 4-byte integer will line things up properly for the next read
         if (.not. present(n)) then
             newpos = pos + this%framesize - 4
         else
