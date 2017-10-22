@@ -198,7 +198,7 @@ contains
             this%NUMATOMS = this%natoms(trim(ndxgrp))
             do I = 1, N
 
-                if (modulo(I*S, 1000) .eq. 0) call print_frames_saved(I)
+                if (modulo(I*every, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(this%NUMATOMS,3))
                 call this%dcd%skip_next(S)
@@ -220,7 +220,7 @@ contains
 
             do I = 1, N
 
-                if (modulo(I*S, 1000) .eq. 0) call print_frames_saved(I)
+                if (modulo(I*every, 1000) .eq. 0) call print_frames_saved(I)
 
                 allocate(this%frameArray(I)%xyz(this%NUMATOMS,3))
                 call this%dcd%skip_next(S)
