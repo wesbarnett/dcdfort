@@ -27,8 +27,6 @@ module dcdfort_utils
 
     implicit none
     public
-    real(8), private, parameter :: pi = 2.0d0*acos(0.0d0)
-    real(8), private, parameter :: degreesToRadians = pi/180.0d0
  
 contains
 
@@ -44,38 +42,55 @@ contains
         real(8) :: pbc(3), tbox(3,3) = 0.0d0
         integer :: I, shift
 
-        ! A = box(1)
-        ! B = box(2)
-        ! C = box(3)
+        ! A = box(1), length of unit cell vector along x-axis;
+        ! B = box(2), length of unit cell vector in xy-plane;
+        ! C = box(3), length of unit cell vector in yz-plane;
         ! alpha = box(4), cosine of angle between B and C
-        ! beta = box(5), cosine of angle between A and C
+        ! beta  = box(5), cosine of angle between A and C
         ! gamma = box(6), cosine of angle between A and B
+
+        ! New matrix made up of box vectors:
 
         !  ax  bx  cx
         !   0  by  cy
         !   0   0  cz
 
         ! convert angles to box vectors
+        
+        ! A**2 = ax**2 + ay**2 + az**2
+        ! A**2 = ax**2 + (0)**2 + (0)**2
         ! ax = A
         tbox(1,1) = box(1)
 
+        ! dot(A_vec,B_vec) = ax*bx + ay*by + az*bz
+        ! dot(A_vec,B_vec) = ax*bx + (0)*by + (0)*bz
+        ! A*B*gamma = ax*bx
         ! bx = B*gamma
         tbox(1,2) = box(2)*box(6)
 
+        ! dot(A_vec,C_vec) = ax*cx + ay*cy + az*cz
+        ! dot(A_vec,C_vec) = ax*cx + (0)*cy + (0)*cz
+        ! A*C*beta = ax*cx
         ! cx = C*beta
         tbox(1,3) = box(3)*box(5)
 
-        ! by = B*sin(gamma) = sqrt(B**2 - bx**2)
+        ! B**2 = bx**2 + by**2 + bz**2
+        ! B**2 = bx**2 + by**2 + (0)**2
+        ! by = sqrt(B**2 - bx**2)
         tbox(2,2) = dsqrt(box(2)**2-tbox(1,2)**2)
 
-        ! cy = (dot(B,C) - bx*cx) / by = (B*C*alpha - bx*cx) / by
+        ! dot(B_vec,C_vec) = bx*cx + by*cy + (0)*cz
+        ! B*C*alpha = bx*cx + by*cy
+        ! cy = (B*C*alpha - bx*cx) / by
         tbox(2,3) = (box(2)*box(3)*box(4) - tbox(1,2)*tbox(1,3))/tbox(2,2)
 
+        ! C = cx**2 + cy**2 + cz**2
         ! cz = sqrt(C**2 - cx**2 - cy**2)
         tbox(3,3) = dsqrt(box(3)**2-tbox(1,3)**2-tbox(2,3)**2)
 
         pbc = a
 
+        ! Now perform PBC calculation
         shift = nint(pbc(3) / tbox(3,3))
         if (shift .ne. 0) then
             pbc(3) = pbc(3) - tbox(3,3) * shift
