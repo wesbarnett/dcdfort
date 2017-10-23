@@ -42,10 +42,18 @@ contains
         implicit none
         real(8), intent(in) :: a(3), box(6)
         real(8) :: pbc(3), tbox(3,3) = 0.0d0
-        integer :: I
+        integer :: I, shift
 
-        ! A = box(1), B = box(2), C = box(3)
-        ! alpha = box(4), beta = box(5), gamma = box(6)
+        ! A = box(1)
+        ! B = box(2)
+        ! C = box(3)
+        ! alpha = box(4)
+        ! beta = box(5)
+        ! gamma = box(6)
+
+        !  ax  bx  cx
+        !   0  by  cy
+        !   0   0  cz
 
         ! convert angles to box vectors
         ! ax = A
@@ -67,9 +75,24 @@ contains
         tbox(3,3) = dsqrt(box(3)**2-tbox(1,3)**2-tbox(2,3)**2)
 
         pbc = a
-        do I = 3, 1, -1
-            pbc(1:I) = pbc(1:I) - tbox(1:I,I) * nint(pbc(I) / tbox(I,I))
-        end do
+
+        shift = nint(pbc(3) / tbox(3,3))
+        if (shift .ne. 0) then
+            pbc(3) = pbc(3) - tbox(3,3) * shift
+            pbc(2) = pbc(2) - tbox(2,3) * shift
+            pbc(1) = pbc(1) - tbox(1,3) * shift
+        end if
+
+        shift = nint(pbc(2) / tbox(2,2))
+        if (shift .ne. 0) then
+            pbc(2) = pbc(2) - tbox(2,2) * shift
+            pbc(1) = pbc(1) - tbox(1,2) * shift
+        end if
+
+        shift = nint(pbc(1) / tbox(1,1))
+        if (shift .ne. 0) then
+            pbc(1) = pbc(1) - tbox(1,1) * shift
+        end if
 
     end function pbc
 
