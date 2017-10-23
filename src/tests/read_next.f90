@@ -33,7 +33,7 @@ program read_next_test
 
     ! TEST 2
     box = trj%box(1)
-    ans_box = reshape((/22.7259502, 22.4160500, 23.0503407, 90.0732346, 89.1723709, 90.7712402/), shape(ans_box))
+    ans_box = reshape((/22.7259502, 22.4160500, 23.0503407, -1.27812114E-03, 1.44443186E-02, -1.34603372E-02/), shape(ans_box))
     call check(box, ans_box, passed, total)
 
     ! TEST 2

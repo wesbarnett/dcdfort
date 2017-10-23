@@ -41,17 +41,19 @@ program dcdfile_test
 
     ! TEST 4
     box = trj%box(1)
-    ans_box = reshape((/22.7344379, 22.7344379, 22.7344379, 90.0000000, 90.0000000, 90.0000000/), shape(ans_box))
+    ans_box = reshape((/22.7344379, 22.7344379, 22.7344379, 0.0000000, 0.0000000, 0.0000000/), shape(ans_box))
     call check(box, ans_box, passed, total)
 
     ! TEST 5
     box = trj%box(5)
-    ans_box = reshape((/22.7259502, 22.4160500, 23.0503407, 90.0732346, 89.1723709, 90.7712402/), shape(ans_box))
+    ans_box = reshape((/22.7259502, 22.4160500, 23.0503407, -1.27812114E-03, 1.44443186E-02, -1.34603372E-02/), shape(ans_box))
+    print *, box
     call check(box, ans_box, passed, total)
 
     ! TEST 5
     box = trj%box(trj%NFRAMES)
-    ans_box = reshape((/22.8251362, 22.3129768, 23.0636845, 90.1219635, 90.0261078, 90.6143799/), shape(ans_box))
+    ans_box = reshape((/22.8251362, 22.3129768, 23.0636845, -2.12868047E-03, -4.55634348E-04, -1.07227890E-02/), shape(ans_box))
+    print *, box
     call check(box, ans_box, passed, total)
 
     ! TEST 6

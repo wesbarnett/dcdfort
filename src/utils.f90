@@ -47,9 +47,9 @@ contains
         ! A = box(1)
         ! B = box(2)
         ! C = box(3)
-        ! alpha = box(4)
-        ! beta = box(5)
-        ! gamma = box(6)
+        ! alpha = box(4), cosine of angle between B and C
+        ! beta = box(5), cosine of angle between A and C
+        ! gamma = box(6), cosine of angle between A and B
 
         !  ax  bx  cx
         !   0  by  cy
@@ -59,17 +59,17 @@ contains
         ! ax = A
         tbox(1,1) = box(1)
 
-        ! bx = B*cos(gamma)
-        tbox(1,2) = box(2)*dcos(box(6)*degreesToRadians)
+        ! bx = B*gamma
+        tbox(1,2) = box(2)*box(6)
 
-        ! cx = C*cos(beta)
-        tbox(1,3) = box(3)*dcos(box(5)*degreesToRadians)
+        ! cx = C*beta
+        tbox(1,3) = box(3)*box(5)
 
         ! by = B*sin(gamma) = sqrt(B**2 - bx**2)
         tbox(2,2) = dsqrt(box(2)**2-tbox(1,2)**2)
 
-        ! cy = (dot(B,C) - bx*cx) / by = (B*C*cos(alpha) - bx*cx) / by
-        tbox(2,3) = (box(2)*box(3)*dcos(box(4)*degreesToRadians) - tbox(1,2)*tbox(1,3))/tbox(2,2)
+        ! cy = (dot(B,C) - bx*cx) / by = (B*C*alpha - bx*cx) / by
+        tbox(2,3) = (box(2)*box(3)*box(4) - tbox(1,2)*tbox(1,3))/tbox(2,2)
 
         ! cz = sqrt(C**2 - cx**2 - cy**2)
         tbox(3,3) = dsqrt(box(3)**2-tbox(1,3)**2-tbox(2,3)**2)

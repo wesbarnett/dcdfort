@@ -26,7 +26,7 @@ program utils_test
     ! TEST 1
     x = [5.5, 5.5, 3.5]
     y = [3.6, 4.7, 5.0]
-    box = [ 3.5, 4.5, 4.0, 90.0, 90.0, 90.0 ]
+    box = [ 3.5, 4.5, 4.0, 0.0, 0.0, 0.0 ]
     b = distance(dble(x), dble(y), dble(box))
     call check(b, 2.33452, passed, total)
 
@@ -54,42 +54,42 @@ program utils_test
     ! TEST 6
     x = [0.0, 0.0, 0.0]
     y = [1.1, 1.1, 1.1]
-    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
     b = distance(dble(x), dble(y), dble(box))
     call check(b, sqrt(3.0*0.1**2), passed, total)
 
     ! TEST 7
     x = [0.0, 0.0, 0.0]
     y = [1.1, 1.1, 1.1]
-    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
     b = distance(dble(x), dble(y), dble(box))
     call check(b, sqrt(3.0*0.1**2), passed, total)
 
     ! TEST 8
     x = [0.0, 0.0, 0.0]
     y = [1.1, 1.0, 1.0]
-    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
     b = distance(dble(x), dble(y), dble(box))
     call check(b, 0.1, passed, total)
 
     ! TEST 9
     x = [0.0, 0.0, 0.0]
     y = [1.0, 1.1, 1.0]
-    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
     b = distance(dble(x), dble(y), dble(box))
     call check(b, 0.1, passed, total)
 
     ! TEST 10
     x = [0.0, 0.0, 0.0]
     y = [0.0, 0.7, 0.0]
-    box = [ 1.0, 1.0, 1.0, 60.0, 90.0, 90.0 ]
+    box = [ 1.0, 1.0, 1.0, 0.5, 0.0, 0.0 ]
     b = distance(dble(x), dble(y), dble(box))
     call check(b, 0.3, passed, total)
 
     ! TEST 11
     x = [0.0, 0.0, 0.0]
     y = [0.6, 0.966025, 0.0]
-    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 60.00 ]
+    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.5 ]
     z = pbc(dble(y)-dble(x), dble(box))
     ans = [0.1, 0.1, 0.0]
     call check(z, ans, passed, total) 
@@ -97,7 +97,7 @@ program utils_test
     ! TEST 12
     x = [0.0, 0.0, 0.0]
     y = [0.4, 0.533, 0.0]
-    box = [ 1.0, 0.5, 1.0, 90.0, 90.0, 60.00 ]
+    box = [ 1.0, 0.5, 1.0, 0.0, 0.0, 0.5 ]
     z = pbc(dble(y)-dble(x), dble(box))
     ans = [0.15, 0.1, 0.0]
     call check(z, ans, passed, total) 
@@ -105,7 +105,7 @@ program utils_test
     ! TEST 13
     x = [0.0, 0.0, 0.0]
     y = [0.6, 0.6, 0.0]
-    box = [ 1.0, 1.0, 1.0, 90.0, 60.0, 90.00 ]
+    box = [ 1.0, 1.0, 1.0, 0.0, 0.5, 0.0 ]
     z = pbc(dble(y)-dble(x), dble(box))
     ans = [-0.4, -0.4, 0.0]
     call check(z, ans, passed, total) 
@@ -113,7 +113,7 @@ program utils_test
     ! TEST 14
     x = [0.0, 0.0, 0.0]
     y = [0.6, 0.6, 0.566]
-    box = [ 1.0, 1.0, 1.0, 90.0, 60.0, 90.00 ]
+    box = [ 1.0, 1.0, 1.0, 0.0, 0.5, 0.0 ]
     z = pbc(dble(y)-dble(x), dble(box))
     ans = [0.1, -0.4, -0.3]
     call check(z, ans, passed, total) 
@@ -121,7 +121,7 @@ program utils_test
     ! TEST 15
     x = [0.0, 0.0, 0.0]
     y = [0.0, 0.0, 0.566]
-    box = [ 1.0, 1.0, 1.0, 60.0, 90.0, 90.00 ]
+    box = [ 1.0, 1.0, 1.0, 0.5, 0.0, 0.0 ]
     z = pbc(dble(y)-dble(x), dble(box))
     ans = [0.0, 0.5, -0.3]
     call check(z, ans, passed, total) 

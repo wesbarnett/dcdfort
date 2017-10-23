@@ -30,9 +30,6 @@ module dcdfort_reader
 
     implicit none
 
-    real(8), parameter :: pi = 2.0d0*dacos(0.0d0)
-    real(8), parameter :: OneEightyOverPi = 180.0d0/pi
-
     !> @brief dcdwriter class
     type, public :: dcdfile
         integer, private :: u
@@ -209,10 +206,6 @@ contains
 
         !            A       gamma   B       beta    alpha   C
         read(this%u) box(1), box(6), box(2), box(5), box(4), box(3)
-        if (box(4) >= -1.0 .and. box(4) <= 1.0 .and. box(5) >= -1.0 .and. box(5) <= 1.0 .and. &
-            box(6) >= -1.0 .and. box(6) <= 1.0) then
-            box(4:6) = 90.0 - asin(box(4:6)) * OneEightyOverPi
-        end if
 
         ! 48, then no. of bytes for x coordinates, x coordinates (repeat for y and z coordinates)
         read(this%u) dummy, xyz(:,1), dummy, xyz(:,2), dummy, xyz(:,3)
