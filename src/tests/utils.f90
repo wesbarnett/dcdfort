@@ -118,6 +118,14 @@ program utils_test
     ans = [0.1, -0.4, -0.3]
     call check(z, ans, passed, total) 
 
+    ! TEST 15
+    x = [0.0, 0.0, 0.0]
+    y = [0.0, 0.0, 0.566]
+    box = [ 1.0, 1.0, 1.0, 60.0, 90.0, 90.00 ]
+    z = pbc(dble(y)-dble(x), dble(box))
+    ans = [0.0, 0.5, -0.3]
+    call check(z, ans, passed, total) 
+
     call finished_tests(passed, total)
 
 end program utils_test
