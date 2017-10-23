@@ -23,7 +23,6 @@
 !
 !> @brief Module that contains Trajectory type
 
-! TODO: groups/types, lammps file
 module dcdfort_trajectory
 
     use, intrinsic :: iso_fortran_env
@@ -82,21 +81,21 @@ contains
     !> @brief Trajectory class method which opens DCD file and optionally index file.
     !
     !> @param[inout] this the Trajectory object
-    !> @param[in] filename_in name of DCD file
+    !> @param[in] filename name of DCD file
     !> @param[in] ndxfile name of GROMACS style index file
-    subroutine trajectory_open(this, filename_in, ndxfile)
+    subroutine trajectory_open(this, filename, ndxfile)
 
         implicit none
         class(Trajectory), intent(inout) :: this
-        character (len=*), intent(in) :: filename_in
+        character (len=*), intent(in) :: filename
         character (len=*), intent(in), optional :: ndxfile
         character (len=206) :: filetype
         logical :: ex
         integer :: i, j
 
-        call this%dcd%open(trim(filename_in))
+        call this%dcd%open(trim(filename))
 
-        write(error_unit,'(a)') prompt//"Opened "//trim(filename_in)//" for reading."
+        write(error_unit,'(a)') prompt//"Opened "//trim(filename)//" for reading."
         call this%dcd%read_header(this%nframes, this%istart, this%nevery, this%iend, this%timestep, this%NUMATOMS)
 
         write(error_unit,'(a,i0,a)') prompt, this%NUMATOMS, " atoms present in system."
@@ -163,7 +162,7 @@ contains
     !> @param[inout] this Trajectory class
     !> @param[in] F number of frames to read in; if not specified, 1 frame is read
     !> @param[in] ndxgrp read only this index group into memory
-    !> @param[in] every Read in every so many frames
+    !> @param[in] every Read in every this many frames; default is to read in every frame
     !> @return number of frames read in
     function trajectory_read_next(this, F, ndxgrp, every)
 
@@ -198,7 +197,7 @@ contains
             this%NUMATOMS = this%natoms(trim(ndxgrp))
             do I = 1, N
 
-                if (modulo(I*(S+1), 1000) .eq. 0) call print_frames_saved(I)
+                if (modulo(I*(S+1), 1000) .eq. 0) call print_frames_saved(I, ndxgrp)
 
                 allocate(this%frameArray(I)%xyz(this%NUMATOMS,3))
                 call this%dcd%skip_next(S)
@@ -237,15 +236,22 @@ contains
 
         this%frames_read = N
         trajectory_read_next = N
-        call print_frames_saved(N)
+        call print_frames_saved(N, ndxgrp)
 
     end function trajectory_read_next
 
-    subroutine print_frames_saved(I)
+    subroutine print_frames_saved(I, ndxgrp)
 
         implicit none
         integer, intent(in) :: I
-        write(error_unit,'(a,i0)') achar(27)//"[1A"//achar(27)//"[K"//prompt//"Frames saved: ", I
+        character (len=*), intent(in), optional :: ndxgrp
+
+        if (present(ndxgrp)) then
+            write(error_unit,'(a,i0)') achar(27)//"[1A"//achar(27)//"[K"//prompt//"Frames saved &
+                &from index group '"//trim(ndxgrp)//"': ", I
+        else
+            write(error_unit,'(a,i0)') achar(27)//"[1A"//achar(27)//"[K"//prompt//"Frames saved: ", I
+        end if
 
     end subroutine print_frames_saved
 
@@ -294,9 +300,10 @@ contains
     !> @param[inout] this Trajectory class
     !> @param[in] dcdfile Name of DCD trajectory file
     !> @param[in] ndxfile Name of optional index file
-    !> @param[in] ndxgrp Name of optional group. If specified, only that group will be read into memory.
-    !> @param[in] every Read in every so many frames
-    !> @param[in] skip Skip this many frames at the beginning of the trajectory file
+    !> @param[in] ndxgrp Name of optional group. If specified, only that group will be read into memory; otherwise, all particles
+    !> read into memory.
+    !> @param[in] every Read in every this many frames; default is 1
+    !> @param[in] skip Skip this many frames at the beginning of the trajectory file; default is 0
     subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp, every, skip)
 
         implicit none
@@ -314,6 +321,7 @@ contains
         if (present(skip)) then
             write(error_unit,'(a,i0,a)') prompt//"Skipping first ", skip, " snapshots."
         end if
+
         if (present(skip)) then
             N = this%skip_next(skip)
             N = this%read_next(this%NFRAMES-N, ndxgrp, every)
@@ -328,8 +336,13 @@ contains
     !> @brief Trajectory class method which returns the box from a simulation frame
     !> @param[inout] this Trajectory class
     !> @param[in] frame Which frame to return the box dimensions
-    !> @return A real(8) array with 6 elements containing the x, y, and z dimensions of the box as well as the alpha, beta, and
-    !! gamma angles
+    !> @return  box dimensions of specified snapshot. Array containing 6 elements, ordered as A, B, C, alpha, beta, gamma.
+    !! A = length of unit cell vector along x-axis;
+    !! B = length of unit cell vector in xy-plane;
+    !! C = length of unit cell vector in yz-plane;
+    !! alpha = cosine of angle between B and C;
+    !! beta = cosine of angle between A and C;
+    !! gamma = cosine of angle between A and B;
     function trajectory_get_box(this, frame)
 
         implicit none

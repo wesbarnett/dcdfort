@@ -33,7 +33,7 @@ module dcdfort_reader
     !> @brief dcdwriter class
     type, public :: dcdfile
         integer, private :: u
-        integer(8) :: filesize, framesize
+        integer(8), private :: filesize, framesize
     contains
         !> Opens file to read from
         procedure :: open => dcdfile_open
@@ -50,6 +50,7 @@ module dcdfort_reader
 contains
 
     !> @brief Opens file to read from
+    !> @details Also detects if the DCD file is compatible with this library and swaps endinness if necessary.
     !> @param[inout] this dcdreader object
     !> @param[in] filename name of of DCD file to read from
     subroutine dcdfile_open(this, filename)
@@ -191,8 +192,16 @@ contains
 
     !> @brief Reads next frame into memory
     !> @param[inout] this dcdreader object
-    !> @param[inout] xyz coordinates of all atoms in snapshot
-    !> @param[inout] box dimensions of snapshot
+    !> @param[inout] xyz coordinates of all atoms in snapshot. First dimension is atom number, 
+    !! second dimension is x, y, or z !coordinate.
+    !> @param[inout] box dimensions of snapshot. Array containing 6 elements, ordered as A, B, C, alpha, beta, gamma.
+    !! A = length of unit cell vector along x-axis;
+    !! B = length of unit cell vector in xy-plane;
+    !! C = length of unit cell vector in yz-plane;
+    !! alpha = cosine of angle between B and C;
+    !! beta = cosine of angle between A and C;
+    !! gamma = cosine of angle between A and B;
+
     subroutine dcdfile_read_next(this, xyz, box)
 
         implicit none
@@ -227,6 +236,7 @@ contains
         real(8) :: box_dummy(6)
         class(dcdfile), intent(inout) :: this
    
+        ! Where are we?
         inquire(unit=this%u, pos=pos)
 
         ! We subtract 4 bytes so that the next read of the 4-byte integer will line things up properly for the next read

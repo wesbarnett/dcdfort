@@ -73,6 +73,8 @@ contains
         logical :: ex
         integer, intent(in), optional :: N
 
+        write(error_unit,'(a)') prompt//"Reading in "//trim(filename)//"."
+
         ! Does the file exist?
         inquire(file=trim(filename), exist=ex)
         if (ex .eqv. .false.) call error_stop_program(trim(filename)//" does not exist.")
@@ -210,6 +212,8 @@ contains
         end if
 
         close(INDEX_FILE_UNIT)
+
+        write(error_unit,'(a,i0,a)') prompt//"Read in ", NGRPS, " index groups."
         
     end subroutine indexfile_read
 
