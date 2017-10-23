@@ -33,7 +33,7 @@ module dcdfort_reader
     !> @brief dcdwriter class
     type, public :: dcdfile
         integer, private :: u
-        integer(8), private :: filesize, framesize
+        integer(8) :: filesize, framesize
     contains
         !> Opens file to read from
         procedure :: open => dcdfile_open
