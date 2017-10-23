@@ -24,16 +24,6 @@ program utils_test
     use dcdfort_tests
 
     ! TODO with alpha, beta, gamma
-    ! TEST 1
-!   x = [5.5, 5.5, 3.5]
-!   box = reshape((/5.0, 0.0, 0.0, &
-!                   0.0, 5.0, 0.0, &
-!                   2.5, 2.5, 3.5/), shape(box))
-!   x = pbc(dble(x), dble(box))
-!   ans = [-2.000, -2.000, 0.000]
-!   call check(x, ans, passed, total) 
-
-    ! TODO with alpha, beta, gamma
     ! TEST 2
 !   x = [5.5, 5.5, 3.5]
 !   b = distance(dble(x), dble(ans), dble(box))
@@ -97,10 +87,18 @@ program utils_test
 
     ! TEST 10
     x = [0.0, 0.0, 0.0]
-    y = [1.0, 1.0, 1.1]
-    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    y = [0.0, 0.7, 0.0]
+    box = [ 1.0, 1.0, 1.0, 60.0, 90.0, 90.0 ]
     b = distance(dble(x), dble(y), dble(box))
-    call check(b, 0.1, passed, total)
+    call check(b, 0.3, passed, total)
+
+    ! TEST 11
+    x = [0.0, 0.0, 0.0]
+    y = [0.6, 0.966025, 0.0]
+    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 60.00 ]
+    z = pbc(dble(y)-dble(x), dble(box))
+    ans = [0.1, 0.1, 0.0]
+    call check(z, ans, passed, total) 
 
     call finished_tests(passed, total)
 
