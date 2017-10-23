@@ -74,6 +74,34 @@ program utils_test
     b = distance(dble(x), dble(y), dble(box))
     call check(b, sqrt(3.0*0.1**2), passed, total)
 
+    ! TEST 7
+    x = [0.0, 0.0, 0.0]
+    y = [1.1, 1.1, 1.1]
+    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    b = distance(dble(x), dble(y), dble(box))
+    call check(b, sqrt(3.0*0.1**2), passed, total)
+
+    ! TEST 8
+    x = [0.0, 0.0, 0.0]
+    y = [1.1, 1.0, 1.0]
+    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    b = distance(dble(x), dble(y), dble(box))
+    call check(b, 0.1, passed, total)
+
+    ! TEST 9
+    x = [0.0, 0.0, 0.0]
+    y = [1.0, 1.1, 1.0]
+    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    b = distance(dble(x), dble(y), dble(box))
+    call check(b, 0.1, passed, total)
+
+    ! TEST 10
+    x = [0.0, 0.0, 0.0]
+    y = [1.0, 1.0, 1.1]
+    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    b = distance(dble(x), dble(y), dble(box))
+    call check(b, 0.1, passed, total)
+
     call finished_tests(passed, total)
 
 end program utils_test

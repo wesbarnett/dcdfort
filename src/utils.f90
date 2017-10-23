@@ -48,14 +48,23 @@ contains
         ! alpha = box(4), beta = box(5), gamma = box(6)
 
         ! convert angles to box vectors
+        ! ax = A
         tbox(1,1) = box(1)
 
+        ! bx = B*cos(gamma)
         tbox(1,2) = box(2)*dcos(box(6)*degreesToRadians)
+
+        ! cx = C*cos(beta)
+        tbox(1,3) = box(3)*dcos(box(5)*degreesToRadians)
+
+        ! by = B*sin(gamma) = sqrt(B**2 - bx**2)
         tbox(2,2) = dsqrt(box(2)**2-tbox(1,2)**2)
 
-        tbox(1,3) = box(3)*dcos(box(5)*degreesToRadians)
+        ! cy = (dot(B,C) - bx*cx) / by = (B*C*cos(alpha) - bx*cx) / by
         tbox(2,3) = (box(2)*box(3)*dcos(box(4)*degreesToRadians) - tbox(1,2)*tbox(1,3))/tbox(2,2)
-        tbox(3,3) = dsqrt(box(2)**2-tbox(1,3)**2-tbox(2,3)**2)
+
+        ! cz = sqrt(C**2 - cx**2 - cy**2)
+        tbox(3,3) = dsqrt(box(3)**2-tbox(1,3)**2-tbox(2,3)**2)
 
         pbc = a
         do I = 3, 1, -1
