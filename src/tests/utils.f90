@@ -39,33 +39,40 @@ program utils_test
 !   b = distance(dble(x), dble(ans), dble(box))
 !   call check(b, 0.0, passed, total)
 
-    ! TEST 3
+    ! TEST 1
     x = [5.5, 5.5, 3.5]
     y = [3.6, 4.7, 5.0]
     box = [ 3.5, 4.5, 4.0, 90.0, 90.0, 90.0 ]
     b = distance(dble(x), dble(y), dble(box))
     call check(b, 2.33452, passed, total)
 
-    ! TEST 4
+    ! TEST 2
     b = magnitude(dble(x))
     call check(b, 8.52936, passed, total)
 
-    ! TEST 5
+    ! TEST 3
     x = [0.0, 0.0, 0.0]
     y = [0.0, 1.0, 0.0]
     z = [1.0, 1.0, 0.0]
     b = bond_angle(dble(x), dble(y), dble(z), dble(box))
     call check(b, real(PI/2.0d0), passed, total)
 
-    ! TEST 6
+    ! TEST 4
     w = [1.0, 1.0, 1.0]
     b = dihedral_angle(dble(x), dble(y), dble(z), dble(w), dble(box))
     call check(b, real(PI/2.0d0), passed, total)
 
-    ! TEST 7
+    ! TEST 5
     w = [1.0, 1.0, -1.0]
     b = dihedral_angle(dble(x), dble(y), dble(z), dble(w), dble(box))
     call check(b, real(-PI/2.0d0), passed, total)
+
+    ! TEST 6
+    x = [0.0, 0.0, 0.0]
+    y = [1.1, 1.1, 1.1]
+    box = [ 1.0, 1.0, 1.0, 90.0, 90.0, 90.0 ]
+    b = distance(dble(x), dble(y), dble(box))
+    call check(b, sqrt(3.0*0.1**2), passed, total)
 
     call finished_tests(passed, total)
 

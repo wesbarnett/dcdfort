@@ -41,7 +41,7 @@ contains
 
         implicit none
         real(8), intent(in) :: a(3), box(6)
-        real(8) :: pbc(3), tbox(3,3) = 0.0
+        real(8) :: pbc(3), tbox(3,3) = 0.0d0
         integer :: I
 
         ! A = box(1), B = box(2), C = box(3)
@@ -50,12 +50,12 @@ contains
         ! convert angles to box vectors
         tbox(1,1) = box(1)
 
-        tbox(1,2) = box(2)*cos(box(6)*degreesToRadians)
-        tbox(2,2) = sqrt(box(2)**2-tbox(1,2)**2)
+        tbox(1,2) = box(2)*dcos(box(6)*degreesToRadians)
+        tbox(2,2) = dsqrt(box(2)**2-tbox(1,2)**2)
 
-        tbox(1,3) = box(3)*cos(box(5)*degreesToRadians)
-        tbox(2,3) = (box(2)*box(3)*cos(box(4)*degreesToRadians) - tbox(1,2)*tbox(1,3))/tbox(2,2)
-        tbox(3,3) = sqrt(box(2)**2-tbox(1,3)**2-tbox(2,3)**2)
+        tbox(1,3) = box(3)*dcos(box(5)*degreesToRadians)
+        tbox(2,3) = (box(2)*box(3)*dcos(box(4)*degreesToRadians) - tbox(1,2)*tbox(1,3))/tbox(2,2)
+        tbox(3,3) = dsqrt(box(2)**2-tbox(1,3)**2-tbox(2,3)**2)
 
         pbc = a
         do I = 3, 1, -1
