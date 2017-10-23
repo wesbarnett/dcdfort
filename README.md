@@ -280,8 +280,15 @@ real(8) :: mybox(6)
 mybox = trj%box(2)
 ```
 
-The first three elements of the array are the x, y, and z dimensions. The last
-three elements are the alpha, beta, and gamma angles.
+The first three elements of the array are the lengths of the unit
+cell. In an orthogonal simulation these are equivalent to the x, y,
+and z dimensions. With a triclinic box, these are the length of the
+unit cell vector along the x-axis (A), the length of the unit cell
+vector in the xy-plane (B), and the length of the unit cell vector in
+the yz-plane (C). The last three elements are the **cosine** of the
+box angles alpha, beta, and gamma. alpha is the angle between B and C,
+beta is the angle between A and C, and gamma is the angle between A
+and B.
 
 #### Reading in specific groups only
 
