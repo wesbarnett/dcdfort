@@ -8,10 +8,24 @@ http://github.com/wesbarnett/dcdfort
 
 Fortran library for natively reading in DCD trajectory files generated
 from [LAMMPS](http://lammps.sandia.gov) simulations for analysis. Uses
-an object-oriented style.
+an object-oriented style. For example, you can simply read in all
+simulation snapshots from a DCD file by adding the following lines:
+
+```fortran
+using dcdfort_trajectory
+type(Trajectory) :: trj
+
+call trj%read("mytrajectoryfile.dcd")
+```
+
+Now all information from the trajectory file (atom coordinates, box
+dimensions) is accessible via object getters. See the [API](#API)
+below.
 
 This is similar to my other project
-[libgmxfort](https://github.com/wesbarnett/libgmxfort).
+[libgmxfort](https://github.com/wesbarnett/libgmxfort), except that
+this project does not require any plugins to read the binary
+trajectory files.
 
 **Note:** DCD files generated from simulation packages other than
 LAMMPS will probably not work with this library. LAMMPS outputs DCD
@@ -55,8 +69,9 @@ make install
 
 ## Usage
 
-Compile your program with `-ldcdfort`. You may also need to use `-I` to point to
-where the modules files are even with all of the right environment variables set
+Compile your Fortran trajectory analysis program with `-ldcdfort`. You
+may also need to use `-I` to point to where the modules files are even
+with all of the right environment variables set
 (by default at `/usr/local/include`). 
 
 ### Linking other cmake projects
@@ -112,6 +127,21 @@ in some of the following methods.
 The `read()` method opens the dcd file, reads in all information, and then
 closes it. The `trj` object in this example now stores all of the coordinates and
 information from the .dcd file.
+
+To skip the first portion of a trajectory file with `read()` use the
+`skip` argument. The following skips the first `100` frames before
+reading them into memory.
+
+```fortran
+call trj%read("traj.dcd", "index.ndx", skip=100)
+```
+
+To only ready in every so many frames, use the `nevery` argument. The
+following reads in only every 10th snapshot into memory:
+
+```fortran
+call trj%read("traj.dcd", "index.ndx", nevery=10)
+```
 
 If you want to read in the trajectory file in frame-by-frame use `read_next()`
 instead of `read()`. To use this, you must additionally open and close the dcd
