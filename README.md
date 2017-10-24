@@ -19,7 +19,7 @@ call trj%read("mytrajectoryfile.dcd")
 ```
 
 Now all information from the trajectory file (atom coordinates, box
-dimensions) is accessible via object getters. See the [API](#API)
+dimensions) is accessible via object getters. See the [API](#api)
 below.
 
 This is similar to my other project
