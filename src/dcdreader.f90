@@ -130,7 +130,7 @@ contains
         implicit none
 
         integer, intent(out) :: nframes, istart, nevery, iend, natoms
-        integer :: i, ntitle, n, framesize, nframes2, dummy
+        integer :: i, ntitle, n, framesize, nframes2, dummy, pos
         character (len=80) :: title_string
         real, intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
@@ -165,12 +165,15 @@ contains
             call error_stop_program("This DCD file format is not supported, or the file header is corrupt.")
         end if
 
+        inquire(unit=this%u, pos=pos)
+        pos = pos - 1
+
         ! Each frame has natoms*3 (4 bytes each) = natoms*12
         ! plus 6 box dimensions (8 bytes each) = 48
         ! Additionally there are 32 bytes of file information in each frame
         this%framesize = natoms*12 + 80
-        ! Header is 276 bytes
-        nframes2 = (this%filesize-276)/this%framesize
+        ! Header is typically 276 bytes, but inquire gives us exact size
+        nframes2 = (this%filesize-pos)/this%framesize
         if ( nframes2 .ne. nframes) then
             write(error_unit,'(a,i0,a,i0,a)') prompt//"WARNING: Header indicates ", nframes, &
                 &" frames, but file size indicates ", nframes2, "." 
