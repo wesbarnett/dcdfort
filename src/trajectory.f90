@@ -29,6 +29,7 @@ module dcdfort_trajectory
     use dcdfort_common
     use dcdfort_index
     use dcdfort_reader
+    use dcdfort_utils
     implicit none
     private
 
@@ -74,6 +75,7 @@ module dcdfort_trajectory
         procedure :: box => trajectory_get_box
         !> Trajectory class method which gets the number of atoms in the system or an index group
         procedure :: natoms => trajectory_get_natoms
+        procedure :: vol => trajectory_vol
     end type
 
 contains
@@ -383,5 +385,20 @@ contains
         call this%dcd%close()
 
     end subroutine trajectory_close
+
+    !> @brief Trajectory class method which returns the volume of the box
+    !> @param[inout] this Trajectory class
+    !> @param[in] frame snapshot to get box volume of
+    !> @return the volume of the box of the frame specified
+    function trajectory_vol(this, frame)
+
+        implicit none
+        class(Trajectory), intent(inout) :: this
+        integer, intent(in) :: frame
+        real(8) :: trajectory_vol
+
+        trajectory_vol = vol(this%box(frame))
+
+    end function
 
 end module dcdfort_trajectory
