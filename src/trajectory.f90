@@ -399,6 +399,6 @@ contains
 
         trajectory_vol = vol(this%box(frame))
 
-    end function
+    end function trajectory_vol
 
 end module dcdfort_trajectory
