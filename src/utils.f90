@@ -37,7 +37,10 @@ contains
         real(8) :: vol
 
         ! Triple product gets the volume
-        vol = box(1)*box(2)*box(3)*dsqrt(1-box(4)**2-box(5)**2-box(6)**2+2.0d0*box(4)*box(5)*box(6))
+        ! V = A_vec .dot. (B_vec .cross. C_vec)
+        !   = ax*by*cz
+        !   = A*B*C*sqrt(1 - alpha**2 - beta**2 -gamma**2 + 2*alpha*beta*gamma)
+        vol = box(1)*box(2)*box(3)*dsqrt(1 - box(4)**2 - box(5)**2 - box(6)**2 + 2.0d0*box(4)*box(5)*box(6))
 
     end function vol
 
