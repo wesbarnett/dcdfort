@@ -67,7 +67,7 @@ contains
         ! Does file exist?
         inquire(file=trim(filename), exist=ex, size=this%filesize)
         if (ex .eqv. .false.) then
-            call error_stop_program(trim(filename)//" does not exist.")
+            call error_stop_program("The specified DCD file '"//trim(filename)//"' does not exist.")
         end if
 
         ! Open file in native endinness

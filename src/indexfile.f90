@@ -77,12 +77,13 @@ contains
 
         ! Does the file exist?
         inquire(file=trim(filename), exist=ex)
-        if (ex .eqv. .false.) call error_stop_program(trim(filename)//" does not exist.")
+        if (ex .eqv. .false.) call error_stop_program("The specified index file '"//trim(filename)//"' does not exist.")
 
         ! Is in index file?
         open(newunit=INDEX_FILE_UNIT, file=trim(filename), status="old")
         read(INDEX_FILE_UNIT, '(a)', iostat=IO_STATUS) line
-        if (index(line, "[") .eq. 0) call error_stop_program(trim(filename)//" is not a valid index file.")
+        if (index(line, "[") .eq. 0) call error_stop_program("The specified index file '"&
+            //trim(filename)//"' is not a valid index file.")
 
         ! How many groups are in it?
         rewind INDEX_FILE_UNIT
@@ -119,7 +120,8 @@ contains
 
 200     continue
 
-        if (this%group(1)%title .ne. "System") call error_stop_program("Index file does not have 'System' group as first group.")
+        if (this%group(1)%title .ne. "System") call error_stop_program("The specified index file '"&
+            //trim(filename)//"' does not have 'System' group as first group.")
 
         ! Index files can have a varying number of columns. This attempts to
         ! detect the correct number by reading in the second line of the file,
@@ -194,14 +196,14 @@ contains
 
         ! If the number of atoms is not the same in the System group (first group) and dcd file
         if (this%group(1)%numatoms .ne. N .or. this%group(1)%loc(this%group(1)%numatoms) .ne. N) then
-            call error_stop_program("Index file does not match dcd file.")
+            call error_stop_program("Index file does not match DCD file.")
         end if
 
         if (present(N)) then
             do i = 1, NGRPS
 
                 ! If number of atoms in index group is larger than number of atoms in dcd file
-                if (this%group(i)%numatoms .gt. N) call error_stop_program("Index file does not match dcd file.")
+                if (this%group(i)%numatoms .gt. N) call error_stop_program("Index file does not match DCD file.")
 
                 ! If a location number is greater than number of atoms in dcd file
                 do j = 1, this%group(i)%numatoms
@@ -254,7 +256,7 @@ contains
             indexfile_get = 0
         else
             indexfile_get = -1
-            write(error_unit, '(a)') prompt//"ERROR: "//trim(group_name)//" is not in index file. The groups available are:"
+            write(error_unit, '(a)') prompt//"ERROR: "//trim(group_name)//" is not in the index file. The groups available are:"
             do J = 1, size(this%group)
                 write(error_unit,'(a10,a,i0,a)') this%group(J)%title, " (", this%group(J)%NUMATOMS, ")"
             end do
