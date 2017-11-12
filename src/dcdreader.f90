@@ -71,7 +71,7 @@ contains
         end if
 
         ! Open file in native endinness
-        open(newunit=this%u, file=trim(filename), form="unformatted", access="stream")
+        open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", status="old")
 
         ! Read in magic number of magic string
         read(this%u,pos=1) line1
@@ -210,19 +210,44 @@ contains
         implicit none
         real, allocatable, intent(inout) :: xyz(:,:)
         real(8), intent(inout) :: box(6)
-        integer :: dummy(2)
+        integer :: dummy(6), nbytes, ndims, i
         class(dcdfile), intent(inout) :: this
+
+        nbytes = size(xyz,1)*4
+        ndims = size(xyz,2)
+
+        if (ndims /= 3) then
+            call error_stop_program("Number of dimensions of xyz array is incorrect.")
+        end if
     
-        ! Should be 48
         read(this%u) dummy(1)
+        if (dummy(1) /= 48) then
+            call error_stop_program("Problem reading in DCD snapshot.")
+        end if
 
         !            A       gamma   B       beta    alpha   C
         read(this%u) box(1), box(6), box(2), box(5), box(4), box(3)
+        if (box(1) < 0 .or. box(2) < 0 .or. box(3) < 0) then
+            call error_stop_program("Problem reading in DCD snapshot box dimensions.")
+        end if
 
         ! 48, then no. of bytes for x coordinates, x coordinates (repeat for y and z coordinates)
-        read(this%u) dummy, xyz(:,1), dummy, xyz(:,2), dummy, xyz(:,3)
+        read(this%u) dummy(1:2), xyz(:,1), dummy(3:4), xyz(:,2), dummy(5:6), xyz(:,3)
+
+        if (dummy(1) /= 48) then
+            call error_stop_program("Problem reading in DCD snapshot coordinates.")
+        end if
+
+        do i = 2, 6
+            if (dummy(i) /= nbytes) then
+                call error_stop_program("Number of bytes in DCD snapshot is incorrect for size of xyz array passed.")
+            end if
+        end do
 
         read(this%u) dummy(1)
+        if (dummy(1) .ne. nbytes) then
+            call error_stop_program("Problem reading in DCD snapshot.")
+        end if
 
     end subroutine dcdfile_read_next
 
@@ -232,11 +257,9 @@ contains
     subroutine dcdfile_skip_next(this, n)
 
         implicit none
-        real :: real_dummy
-        integer :: dummy, i
+        integer :: dummy
         integer(8) :: pos, newpos
         integer, intent(in), optional :: n
-        real(8) :: box_dummy(6)
         class(dcdfile), intent(inout) :: this
    
         ! Where are we?

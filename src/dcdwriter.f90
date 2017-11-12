@@ -60,7 +60,7 @@ contains
         character (len=*), intent(in) :: filename
         class(dcdwriter), intent(inout) :: this
 
-        open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", status="new")
+        open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", status="replace")
 
     end subroutine dcdwriter_open
 
