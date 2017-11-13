@@ -82,7 +82,7 @@ contains
 
             ! Try converting to the reverse endianness
             close(this%u)
-            open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", convert="swap")
+            open(newunit=this%u, file=trim(filename), form="unformatted", access="stream", status="old", convert="swap")
 
             read(this%u,pos=1) line2
             read(this%u) line2
