@@ -90,7 +90,6 @@ contains
         class(Trajectory), intent(inout) :: this
         character(len=*), intent(in) :: filename
         character(len=*), intent(in), optional :: ndxfile
-        character(len=206) :: filetype
 
         call this%dcd%open(trim(filename))
 
@@ -141,7 +140,7 @@ contains
 
         class(Trajectory), intent(inout) :: this
         integer(kind=int32), intent(in), optional :: F
-        integer(kind=int32) :: trajectory_skip_next, i, stat, N
+        integer(kind=int32) :: trajectory_skip_next, N
 
         ! If the user specified how many frames to read and it is greater than one, use it
         N = merge(F, 1, present(F))
@@ -170,7 +169,7 @@ contains
         class(Trajectory), intent(inout) :: this
         integer(kind=int32), intent(in), optional :: F, every
         character(len=*), optional :: ndxgrp
-        integer(kind=int32) :: I, J, N, STAT, S, K
+        integer(kind=int32) :: I, J, N, S, K
         real(kind=real32), allocatable :: xyz(:,:)
 
         ! If the user specified how many frames to read and it is greater than one, use it

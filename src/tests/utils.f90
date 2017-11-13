@@ -24,114 +24,114 @@ program utils_test
     use dcdfort_tests
 
     ! TEST 1
-    x = [5.5, 5.5, 3.5]
-    y = [3.6, 4.7, 5.0]
-    box = [ 3.5, 4.5, 4.0, 0.0, 0.0, 0.0 ]
-    b = distance(dble(x), dble(y), dble(box))
-    call check(b, 2.33452, passed, total)
+    x = [5.5d0, 5.5d0, 3.5d0]
+    y = [3.6d0, 4.7d0, 5.0d0]
+    box = [ 3.5d0, 4.5d0, 4.0d0, 0.0d0, 0.0d0, 0.0d0 ]
+    b = distance(x, y, box)
+    call check(b, 2.33452d0, passed, total)
 
     ! TEST 2
-    b = magnitude(dble(x))
-    call check(b, 8.52936, passed, total)
+    b = magnitude(x)
+    call check(b, 8.52936d0, passed, total)
 
     ! TEST 3
-    x = [0.0, 0.0, 0.0]
-    y = [0.0, 1.0, 0.0]
-    z = [1.0, 1.0, 0.0]
-    b = bond_angle(dble(x), dble(y), dble(z), dble(box))
-    call check(b, real(PI/2.0d0), passed, total)
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.0d0, 1.0d0, 0.0d0]
+    z = [1.0d0, 1.0d0, 0.0d0]
+    b = bond_angle(x, y, z, box)
+    call check(b, PI/2.0d0, passed, total)
 
     ! TEST 4
-    w = [1.0, 1.0, 1.0]
-    b = dihedral_angle(dble(x), dble(y), dble(z), dble(w), dble(box))
-    call check(b, real(PI/2.0d0), passed, total)
+    w = [1.0d0, 1.0d0, 1.0d0]
+    b = dihedral_angle(x, y, z, w, box)
+    call check(b, PI/2.0d0, passed, total)
 
     ! TEST 5
-    w = [1.0, 1.0, -1.0]
-    b = dihedral_angle(dble(x), dble(y), dble(z), dble(w), dble(box))
-    call check(b, real(-PI/2.0d0), passed, total)
+    w = [1.0d0, 1.0d0, -1.0d0]
+    b = dihedral_angle(x, y, dble(z), dble(w), box)
+    call check(b, -PI/2.0d0, passed, total)
 
     ! TEST 6
-    x = [0.0, 0.0, 0.0]
-    y = [1.1, 1.1, 1.1]
-    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
-    b = distance(dble(x), dble(y), dble(box))
-    call check(b, sqrt(3.0*0.1**2), passed, total)
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [1.1d0, 1.1d0, 1.1d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.0d0, 0.0d0, 0.0d0 ]
+    b = distance(x, y, box)
+    call check(b, dsqrt(3.0d0*0.1d0**2), passed, total)
 
     ! TEST 7
-    x = [0.0, 0.0, 0.0]
-    y = [1.1, 1.1, 1.1]
-    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
-    b = distance(dble(x), dble(y), dble(box))
-    call check(b, sqrt(3.0*0.1**2), passed, total)
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [1.1d0, 1.1d0, 1.1d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.0d0, 0.0d0, 0.0d0 ]
+    b = distance(x, y, box)
+    call check(b, sqrt(3.0d0*0.1d0**2), passed, total)
 
     ! TEST 8
-    x = [0.0, 0.0, 0.0]
-    y = [1.1, 1.0, 1.0]
-    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
-    b = distance(dble(x), dble(y), dble(box))
-    call check(b, 0.1, passed, total)
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [1.1d0, 1.0d0, 1.0d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.0d0, 0.0d0, 0.0d0 ]
+    b = distance(x, y, box)
+    call check(b, 0.1d0, passed, total)
 
     ! TEST 9
-    x = [0.0, 0.0, 0.0]
-    y = [1.0, 1.1, 1.0]
-    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 ]
-    b = distance(dble(x), dble(y), dble(box))
-    call check(b, 0.1, passed, total)
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [1.0d0, 1.1d0, 1.0d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.0d0, 0.0d0, 0.0d0 ]
+    b = distance(x, y, box)
+    call check(b, 0.1d0, passed, total)
 
     ! TEST 10
-    x = [0.0, 0.0, 0.0]
-    y = [0.0, 0.7, 0.0]
-    box = [ 1.0, 1.0, 1.0, 0.5, 0.0, 0.0 ]
-    b = distance(dble(x), dble(y), dble(box))
-    call check(b, 0.3, passed, total)
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.0d0, 0.7d0, 0.0d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.5d0, 0.0d0, 0.0d0 ]
+    b = distance(x, y, box)
+    call check(b, 0.3d0, passed, total)
 
     ! TEST 11
-    x = [0.0, 0.0, 0.0]
-    y = [0.6, 0.966025, 0.0]
-    box = [ 1.0, 1.0, 1.0, 0.0, 0.0, 0.5 ]
-    z = pbc(dble(y)-dble(x), dble(box))
-    ans = [0.1, 0.1, 0.0]
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.6d0, 0.966025d0, 0.0d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.0d0, 0.0d0, 0.5d0 ]
+    z = pbc(y-x, box)
+    ans = [0.1d0, 0.1d0, 0.0d0]
     call check(z, ans, passed, total) 
 
     ! TEST 12
-    x = [0.0, 0.0, 0.0]
-    y = [0.4, 0.533, 0.0]
-    box = [ 1.0, 0.5, 1.0, 0.0, 0.0, 0.5 ]
-    z = pbc(dble(y)-dble(x), dble(box))
-    ans = [0.15, 0.1, 0.0]
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.4d0, 0.533d0, 0.0d0]
+    box = [ 1.0d0, 0.5d0, 1.0d0, 0.0d0, 0.0d0, 0.5d0 ]
+    z = pbc(y-x, box)
+    ans = [0.15d0, 0.1d0, 0.0d0]
     call check(z, ans, passed, total) 
 
     ! TEST 13
-    x = [0.0, 0.0, 0.0]
-    y = [0.6, 0.6, 0.0]
-    box = [ 1.0, 1.0, 1.0, 0.0, 0.5, 0.0 ]
-    z = pbc(dble(y)-dble(x), dble(box))
-    ans = [-0.4, -0.4, 0.0]
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.6d0, 0.6d0, 0.0d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.0d0, 0.5d0, 0.0d0 ]
+    z = pbc(y-x, box)
+    ans = [-0.4d0, -0.4d0, 0.0d0]
     call check(z, ans, passed, total) 
 
     ! TEST 14
-    x = [0.0, 0.0, 0.0]
-    y = [0.6, 0.6, 0.566]
-    box = [ 1.0, 1.0, 1.0, 0.0, 0.5, 0.0 ]
-    z = pbc(dble(y)-dble(x), dble(box))
-    ans = [0.1, -0.4, -0.3]
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.6d0, 0.6d0, 0.566d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.0d0, 0.5d0, 0.0d0 ]
+    z = pbc(y-x, box)
+    ans = [0.1d0, -0.4d0, -0.3d0]
     call check(z, ans, passed, total) 
 
     ! TEST 15
-    x = [0.0, 0.0, 0.0]
-    y = [0.0, 0.0, 0.566]
-    box = [ 1.0, 1.0, 1.0, 0.5, 0.0, 0.0 ]
-    z = pbc(dble(y)-dble(x), dble(box))
-    ans = [0.0, 0.5, -0.3]
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.0d0, 0.0d0, 0.566d0]
+    box = [ 1.0d0, 1.0d0, 1.0d0, 0.5d0, 0.0d0, 0.0d0 ]
+    z = pbc(y-x, box)
+    ans = [0.0d0, 0.5d0, -0.3d0]
     call check(z, ans, passed, total) 
 
     ! TEST 16
-    x = [0.0, 0.0, 0.0]
-    y = [0.1, 0.5, -0.6]
-    box = [ 0.95, 0.9, 0.8, 0.3, -0.6, -0.3 ]
-    z = pbc(dble(y)-dble(x), dble(box))
-    ans = [-0.11, -0.2579, 3.2038E-02]
+    x = [0.0d0, 0.0d0, 0.0d0]
+    y = [0.1d0, 0.5d0, -0.6d0]
+    box = [ 0.95d0, 0.9d0, 0.8d0, 0.3d0, -0.6d0, -0.3d0 ]
+    z = pbc(y-x, box)
+    ans = [-0.11d0, -0.2579d0, 3.2038d-02]
     call check(z, ans, passed, total) 
 
     call finished_tests(passed, total)

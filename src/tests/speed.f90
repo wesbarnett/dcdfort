@@ -5,7 +5,7 @@ program speed
 
     implicit none
     type(dcdfile) :: dcd
-    integer(kind=int32) :: nframes, istart, nevery, iend, natoms, i, j, k
+    integer(kind=int32) :: nframes, istart, nevery, iend, natoms, i, j
     character(len=1024) :: filename
     real(kind=real32) :: timestep, start, finish
     real(kind=real32), allocatable :: xyz(:,:), xyz2(:)

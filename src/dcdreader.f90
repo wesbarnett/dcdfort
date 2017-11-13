@@ -130,7 +130,8 @@ contains
         implicit none
 
         integer(kind=int32), intent(out) :: nframes, istart, nevery, iend, natoms
-        integer(kind=int32) :: i, ntitle, n, framesize, nframes2, dummy, pos
+        integer(kind=int32) :: i, ntitle, n, dummy, pos
+        integer(kind=int64) :: nframes2
         character(len=80) :: title_string
         real(kind=real32), intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
@@ -177,7 +178,7 @@ contains
         if ( nframes2 .ne. nframes) then
             write(error_unit,'(a,i0,a,i0,a)') prompt//"WARNING: Header indicates ", nframes, &
                 &" frames, but file size indicates ", nframes2, "." 
-            nframes = nframes2
+            nframes = int(nframes2)
         end if
 
     end subroutine dcdfile_read_header

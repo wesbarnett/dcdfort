@@ -29,7 +29,7 @@ module dcdfort_tests
     real(kind=real64), parameter :: PI = 2.0d0*dacos(0.0d0)
     character(len=8), parameter :: dcdfile = "test.dcd"
     character(len=8), parameter :: ndxfile = "test.ndx"
-    real(kind=real32) :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
+    real(kind=real64) :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
     integer(kind=int32) :: passed = 0, total = 0, a, ans_val, n
 
     interface check
@@ -70,8 +70,8 @@ contains
         implicit none
 
         integer(kind=int32), intent(inout) :: total, passed
-        real(kind=real32), intent(in) :: x, y
-        real(kind=real32) :: tol = 1e-4
+        real(kind=real64), intent(in) :: x, y
+        real(kind=real64) :: tol = 1e-4
 
         call do_output(total, passed, abs(x-y) .le. tol)
 
@@ -82,8 +82,8 @@ contains
         implicit none
 
         integer(kind=int32), intent(inout) :: total, passed
-        real(kind=real32), intent(in) :: x(:), y(:)
-        real(kind=real32) :: tol = 1e-4
+        real(kind=real64), intent(in) :: x(:), y(:)
+        real(kind=real64) :: tol = 1e-4
 
         call do_output(total, passed, all(abs(x - y) .le. tol))
 
@@ -94,8 +94,8 @@ contains
         implicit none
 
         integer(kind=int32), intent(inout) :: total, passed
-        real(kind=real32), intent(in) :: x(:,:), y(:,:)
-        real(kind=real32) :: tol = 1e-6
+        real(kind=real64), intent(in) :: x(:,:), y(:,:)
+        real(kind=real64) :: tol = 1e-6
 
         call do_output(total, passed, all(abs(x - y) .le. tol))
 
