@@ -56,6 +56,9 @@ if ( NOT CMAKE_BUILD_TYPE )
   set ( CMAKE_BUILD_TYPE "Release" )
 endif ()
 
+set ( CMAKE_Fortran_FLAGS_RELEASE "-g -O2 -Wall -Wextra -Wunreachable-code" )
+set ( CMAKE_Fortran_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wunreachable-code -pedantic" )
+
 ####################################################################
 # Create library
 ####################################################################
