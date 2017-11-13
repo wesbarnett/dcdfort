@@ -79,9 +79,9 @@ program dcdfile_test
     call check(n, a, passed, total)
 
     ! TEST 10
-    b = trj%timestep
-    c = 0.012
-    call check(b, c, passed, total)
+    a1 = trj%timestep
+    a2 = 0.012
+    call check(a1, a2, passed, total)
 
     ! TEST 11
     call trj%read(dcdfile, every=2)
