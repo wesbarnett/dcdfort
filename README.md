@@ -47,6 +47,10 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
 make
 ```
 
+The code does use one GNU extension with the
+[`convert`](https://gcc.gnu.org/onlinedocs/gfortran/CONVERT-specifier.html) specifier when
+opening a DCD file, so `gfortran` is required.
+
 ## Testing
 
 To test your build, do:
