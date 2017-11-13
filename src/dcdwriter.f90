@@ -177,9 +177,9 @@ contains
         ! Should be 48 (6 double precision floats)
         write(this%u) 48
 
-        box(4) = (90.0 - box(4)) * dsin(pi/180.0)
-        box(5) = (90.0 - box(5)) * dsin(pi/180.0)
-        box(6) = (90.0 - box(6)) * dsin(pi/180.0)
+        box(4) = (90.0d0 - box(4)) * dsin(pi/180.0d0)
+        box(5) = (90.0d0 - box(5)) * dsin(pi/180.0d0)
+        box(6) = (90.0d0 - box(6)) * dsin(pi/180.0d0)
         write(this%u) box(1) ! A
         write(this%u) box(6) ! gamma
         write(this%u) box(2) ! B
