@@ -29,11 +29,12 @@ module dcdfort_tests
     real(kind=real64), parameter :: PI = 2.0d0*dacos(0.0d0)
     character(len=8), parameter :: dcdfile = "test.dcd"
     character(len=8), parameter :: ndxfile = "test.ndx"
-    real(kind=real64) :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
+    real(kind=real32) :: x(3), y(3), z(3), w(3), ans(3)
+    real(kind=real64) :: box(6), ans_box(6), b, c
     integer(kind=int32) :: passed = 0, total = 0, a, ans_val, n
 
     interface check
-        module procedure check_int, check_real, check_array, check_array_2d
+        module procedure check_int, check_real, check_dble, check_array64, check_array_2d, check_array32
     end interface check
 
 contains
@@ -61,33 +62,57 @@ contains
         integer(kind=int32), intent(inout) :: total, passed
         integer(kind=int32), intent(in) :: x, y
 
-        call do_output(total, passed, x .eq. y)
+        call do_output(total, passed, x == y)
 
     end subroutine check_int
+
+    subroutine check_dble(x, y, passed, total)
+
+        implicit none
+
+        integer(kind=int32), intent(inout) :: total, passed
+        real(kind=real64), intent(in) :: x, y
+        real(kind=real64) :: tol = 1e-14
+
+        call do_output(total, passed, x - y < tol)
+
+    end subroutine check_dble
 
     subroutine check_real(x, y, passed, total)
 
         implicit none
 
         integer(kind=int32), intent(inout) :: total, passed
-        real(kind=real64), intent(in) :: x, y
-        real(kind=real64) :: tol = 1e-4
+        real(kind=real32), intent(in) :: x, y
+        real(kind=real32) :: tol = 1e-6
 
-        call do_output(total, passed, abs(x-y) .le. tol)
+        call do_output(total, passed, x-y < tol)
 
     end subroutine check_real
 
-    subroutine check_array(x, y, passed, total)
+    subroutine check_array64(x, y, passed, total)
 
         implicit none
 
         integer(kind=int32), intent(inout) :: total, passed
         real(kind=real64), intent(in) :: x(:), y(:)
-        real(kind=real64) :: tol = 1e-4
+        real(kind=real64) :: tol = 1e-15
 
-        call do_output(total, passed, all(abs(x - y) .le. tol))
+        call do_output(total, passed, all((x - y) < tol))
 
-    end subroutine check_array
+    end subroutine check_array64
+
+    subroutine check_array32(x, y, passed, total)
+
+        implicit none
+
+        integer(kind=int32), intent(inout) :: total, passed
+        real(kind=real32), intent(in) :: x(:), y(:)
+        real(kind=real32) :: tol = 1e-6
+
+        call do_output(total, passed, all((x - y) < tol))
+
+    end subroutine check_array32
 
     subroutine check_array_2d(x, y, passed, total)
 
@@ -95,9 +120,10 @@ contains
 
         integer(kind=int32), intent(inout) :: total, passed
         real(kind=real64), intent(in) :: x(:,:), y(:,:)
-        real(kind=real64) :: tol = 1e-6
+        real(kind=real64) :: tol = 1e-15
 
-        call do_output(total, passed, all(abs(x - y) .le. tol))
+        print *, x
+        call do_output(total, passed, all((x - y) < tol))
 
     end subroutine check_array_2d
 

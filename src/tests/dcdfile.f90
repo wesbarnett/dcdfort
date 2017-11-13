@@ -41,19 +41,21 @@ program dcdfile_test
 
     ! TEST 4
     box = trj%box(1)
-    ans_box = reshape((/22.7344379, 22.7344379, 22.7344379, 0.0000000, 0.0000000, 0.0000000/), shape(ans_box))
+    ans_box = reshape((/22.734438235370995d0, 22.734438235370995d0, 22.734438235370995d0, 0.0d0, 0.0d0, 0.0d0/), shape(ans_box))
     call check(box, ans_box, passed, total)
 
     ! TEST 5
     box = trj%box(5)
-    ans_box = reshape((/22.7259502, 22.4160500, 23.0503407, -1.27812114E-03, 1.44443186E-02, -1.34603372E-02/), shape(ans_box))
-    print *, box
+    ans_box = reshape((/22.725949956792412d0, 22.416050319868443d0, 23.050339930644768d0, &
+        -1.2781211362092404d-003, 1.4444318634328334d-002, -1.3460336751738845d-002/), &
+        shape(ans_box))
     call check(box, ans_box, passed, total)
 
     ! TEST 5
     box = trj%box(trj%NFRAMES)
-    ans_box = reshape((/22.8251362, 22.3129768, 23.0636845, -2.12868047E-03, -4.55634348E-04, -1.07227890E-02/), shape(ans_box))
-    print *, box
+    ans_box = reshape((/22.825135714633518d0, 22.312977215060247d0, 23.063685023095289d0, &
+        -2.1286804723239386d-003, -4.5563434429383672d-004,  -1.0722788675108733d-002 /), &
+        shape(ans_box))
     call check(box, ans_box, passed, total)
 
     ! TEST 6
@@ -84,7 +86,6 @@ program dcdfile_test
     ! TEST 11
     call trj%read(dcdfile, every=2)
     x = trj%x(5, 5)
-    print *, x
     ans = [-11.111647, -9.451539, 8.782396]
     call check(x, ans, passed, total)
 
