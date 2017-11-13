@@ -4,12 +4,12 @@
 !
 ! Copyright (c) 2017 James W. Barnett
 !
-! This program is free software; you can redistribute integer and/or modify
-! integer under the terms of the GNU General Public License as published by
+! This program is free software; you can redistribute integer(kind=int32) and/or modify
+! integer(kind=int32) under the terms of the GNU General Public License as published by
 ! the Free Software Foundation; either version 2 of the License, or
 ! (at your option) any later version.
 !
-! This program is distributed in the hope that integer will be useful,
+! This program is distributed in the hope that integer(kind=int32) will be useful,
 ! but WITHOUT ANY WARRANTY; without even the implied warranty of
 ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ! GNU General Public License for more details.
@@ -20,17 +20,17 @@
 
 module dcdfort_tests
 
-    use, intrinsic :: iso_fortran_env
+    use dcdfort_common
     use dcdfort_trajectory
 
     implicit none
 
     type(Trajectory) :: trj
-    real(8), parameter :: PI = 2.0d0*acos(0.0d0)
-    character (len=8), parameter :: dcdfile = "test.dcd"
-    character (len=8), parameter :: ndxfile = "test.ndx"
-    real :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
-    integer :: passed = 0, total = 0, a, ans_val, n
+    real(kind=real64), parameter :: PI = 2.0d0*dacos(0.0d0)
+    character(len=8), parameter :: dcdfile = "test.dcd"
+    character(len=8), parameter :: ndxfile = "test.ndx"
+    real(kind=real32) :: x(3), y(3), z(3), w(3), ans(3), box(6), ans_box(6), b, c
+    integer(kind=int32) :: passed = 0, total = 0, a, ans_val, n
 
     interface check
         module procedure check_int, check_real, check_array, check_array_2d
@@ -41,9 +41,9 @@ contains
     subroutine do_output(total, passed, test_result)
 
         implicit none
-        integer, intent(inout) :: total, passed
+        integer(kind=int32), intent(inout) :: total, passed
         logical, intent(in) :: test_result
-        integer :: I
+        integer(kind=int32) :: I
         character (len=6) :: passfail(0:1) = ["FAILED", "PASSED"]
         
         I = merge(1, 0, test_result)
@@ -58,8 +58,8 @@ contains
 
         implicit none
 
-        integer, intent(inout) :: total, passed
-        integer, intent(in) :: x, y
+        integer(kind=int32), intent(inout) :: total, passed
+        integer(kind=int32), intent(in) :: x, y
 
         call do_output(total, passed, x .eq. y)
 
@@ -69,9 +69,9 @@ contains
 
         implicit none
 
-        integer, intent(inout) :: total, passed
-        real, intent(in) :: x, y
-        real :: tol = 1e-4
+        integer(kind=int32), intent(inout) :: total, passed
+        real(kind=real32), intent(in) :: x, y
+        real(kind=real32) :: tol = 1e-4
 
         call do_output(total, passed, abs(x-y) .le. tol)
 
@@ -81,9 +81,9 @@ contains
 
         implicit none
 
-        integer, intent(inout) :: total, passed
-        real, intent(in) :: x(:), y(:)
-        real :: tol = 1e-4
+        integer(kind=int32), intent(inout) :: total, passed
+        real(kind=real32), intent(in) :: x(:), y(:)
+        real(kind=real32) :: tol = 1e-4
 
         call do_output(total, passed, all(abs(x - y) .le. tol))
 
@@ -93,9 +93,9 @@ contains
 
         implicit none
 
-        integer, intent(inout) :: total, passed
-        real, intent(in) :: x(:,:), y(:,:)
-        real :: tol = 1e-6
+        integer(kind=int32), intent(inout) :: total, passed
+        real(kind=real32), intent(in) :: x(:,:), y(:,:)
+        real(kind=real32) :: tol = 1e-6
 
         call do_output(total, passed, all(abs(x - y) .le. tol))
 
@@ -105,7 +105,7 @@ contains
 
         implicit none
 
-        integer, intent(inout) :: total, passed
+        integer(kind=int32), intent(inout) :: total, passed
         
         write(output_unit,*)
         write(output_unit,'(a,i0,a,i0,a)') "Passed ", passed, " out of ", total, " tests"

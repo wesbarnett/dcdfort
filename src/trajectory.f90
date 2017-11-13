@@ -25,7 +25,6 @@
 
 module dcdfort_trajectory
 
-    use, intrinsic :: iso_fortran_env
     use dcdfort_common
     use dcdfort_index
     use dcdfort_reader
@@ -34,30 +33,30 @@ module dcdfort_trajectory
     private
 
     type :: Frame
-        real, allocatable :: xyz(:,:)
-        real(8) :: box(6)
+        real(kind=real32), allocatable :: xyz(:,:)
+        real(kind=real64) :: box(6)
     end type
 
     !> @brief Trajectory class
     type, public :: Trajectory
         !> number of trajectory frames (snapshots) in Trajectory object
-        integer :: NFRAMES
+        integer(kind=int32) :: NFRAMES
         !> timestep of first frame in trajectory file
-        integer :: ISTART         
+        integer(kind=int32) :: ISTART         
         !> timestep of last frame in trajectory file
-        integer :: IEND  
+        integer(kind=int32) :: IEND  
         !> frequency trajectory was saved (in time steps)
-        integer :: NEVERY 
+        integer(kind=int32) :: NEVERY 
         !> simulation time step
-        real :: timestep
+        real(kind=real32) :: timestep
         type(IndexFile), private :: ndx
         type(dcdfile), private :: dcd
         type(Frame), allocatable, private :: frameArray(:)
-        integer, private :: NUMATOMS
-        integer, private :: N
-        integer, private :: frames_read
-        integer, private :: FRAMES_REMAINING
-        logical, private :: read_only_index_group
+        integer(kind=int32), private :: NUMATOMS
+        integer(kind=int32), private :: N
+        integer(kind=int32), private :: frames_read
+        integer(kind=int32), private :: FRAMES_REMAINING
+        logical(kind=int32), private :: read_only_index_group
     contains
         !> Trajectory class method which opens DCD file and optionally index file.
         procedure :: open => trajectory_open
@@ -89,11 +88,9 @@ contains
 
         implicit none
         class(Trajectory), intent(inout) :: this
-        character (len=*), intent(in) :: filename
-        character (len=*), intent(in), optional :: ndxfile
-        character (len=206) :: filetype
-        logical :: ex
-        integer :: i, j
+        character(len=*), intent(in) :: filename
+        character(len=*), intent(in), optional :: ndxfile
+        character(len=206) :: filetype
 
         call this%dcd%open(trim(filename))
 
@@ -122,9 +119,9 @@ contains
     function trajectory_get_natoms(this, group)
 
         implicit none
-        integer :: trajectory_get_natoms
+        integer(kind=int32) :: trajectory_get_natoms
         class(Trajectory), intent(inout) :: this
-        character (len=*), intent(in), optional :: group
+        character(len=*), intent(in), optional :: group
 
         if (this%read_only_index_group .and. present(group)) then
             call error_stop_program("Do not specify an index group in natoms() when already specifying an & 
@@ -143,8 +140,8 @@ contains
     function trajectory_skip_next(this, F)
 
         class(Trajectory), intent(inout) :: this
-        integer, intent(in), optional :: F
-        integer :: trajectory_skip_next, i, stat, N
+        integer(kind=int32), intent(in), optional :: F
+        integer(kind=int32) :: trajectory_skip_next, i, stat, N
 
         ! If the user specified how many frames to read and it is greater than one, use it
         N = merge(F, 1, present(F))
@@ -169,12 +166,12 @@ contains
     function trajectory_read_next(this, F, ndxgrp, every)
 
         implicit none
-        integer :: trajectory_read_next
+        integer(kind=int32) :: trajectory_read_next
         class(Trajectory), intent(inout) :: this
-        integer, intent(in), optional :: F, every
-        character (len=*), optional :: ndxgrp
-        integer :: I, J, N, STAT, S, K
-        real, allocatable :: xyz(:,:)
+        integer(kind=int32), intent(in), optional :: F, every
+        character(len=*), optional :: ndxgrp
+        integer(kind=int32) :: I, J, N, STAT, S, K
+        real(kind=real32), allocatable :: xyz(:,:)
 
         ! If the user specified how many frames to read and it is greater than one, use it
         N = merge(F, 1, present(F))
@@ -245,8 +242,8 @@ contains
     subroutine print_frames_saved(I, ndxgrp)
 
         implicit none
-        integer, intent(in) :: I
-        character (len=*), intent(in), optional :: ndxgrp
+        integer(kind=int32), intent(in) :: I
+        character(len=*), intent(in), optional :: ndxgrp
 
         if (present(ndxgrp)) then
             write(error_unit,'(a,i0)') achar(27)//"[1A"//achar(27)//"[K"//prompt//"Frames saved &
@@ -268,12 +265,12 @@ contains
     function trajectory_get_xyz(this, frame, atom, group)
 
         implicit none
-        real :: trajectory_get_xyz(3)
-        integer, intent(in) :: frame, atom
-        integer :: atom_tmp, natoms
+        real(kind=real32) :: trajectory_get_xyz(3)
+        integer(kind=int32), intent(in) :: frame, atom
+        integer(kind=int32) :: atom_tmp, natoms
         class(Trajectory), intent(inout) :: this
-        character (len=1024) :: message
-        character (len=*), intent(in), optional :: group
+        character(len=1024) :: message
+        character(len=*), intent(in), optional :: group
 
         call trajectory_check_frame(this, frame)
 
@@ -310,10 +307,10 @@ contains
 
         implicit none
         class(Trajectory), intent(inout) :: this
-        character (len=*), optional :: ndxfile, ndxgrp
-        character (len=*) :: dcdfile
-        integer :: N
-        integer, intent(in), optional :: every, skip
+        character(len=*), optional :: ndxfile, ndxgrp
+        character(len=*) :: dcdfile
+        integer(kind=int32) :: N
+        integer(kind=int32), intent(in), optional :: every, skip
 
         call this%open(dcdfile, ndxfile)
 
@@ -348,10 +345,10 @@ contains
     function trajectory_get_box(this, frame)
 
         implicit none
-        real(8) :: trajectory_get_box(6)
+        real(kind=real64) :: trajectory_get_box(6)
         class(Trajectory), intent(in) :: this
-        integer, intent(in) :: frame
-        integer :: i
+        integer(kind=int32), intent(in) :: frame
+        integer(kind=int32) :: i
 
         call trajectory_check_frame(this, frame)
         do i = 1, 6
@@ -364,8 +361,8 @@ contains
 
         implicit none
         class(Trajectory), intent(in) :: this
-        integer, intent(in) :: frame
-        character (len=1024) :: message
+        integer(kind=int32), intent(in) :: frame
+        character(len=1024) :: message
 
         if (frame > this%frames_read .or. frame < 1) then
             write(message, "(a,i0,a,i0,a)") "Tried to access frame number ", frame, " when there are ", &
@@ -394,8 +391,8 @@ contains
 
         implicit none
         class(Trajectory), intent(inout) :: this
-        integer, intent(in) :: frame
-        real(8) :: trajectory_vol
+        integer(kind=int32), intent(in) :: frame
+        real(kind=real64) :: trajectory_vol
 
         trajectory_vol = vol(this%box(frame))
 

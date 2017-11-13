@@ -25,19 +25,20 @@
 
 module dcdfort_writer
 
+    use dcdfort_common
     use iso_c_binding, only: C_NULL_CHAR
 
     implicit none
 
-    real(8), parameter :: pi = 2.0d0*dacos(0.0d0)
+    real(kind=real64), parameter :: pi = 2.0d0*dacos(0.0d0)
 
     !> @brief dcdwriter class
     type, public :: dcdwriter
-        integer, private :: u
-        integer, private :: nframes_pos, iend_pos, curr_pos
-        integer, private :: nframes
-        integer, private :: iend
-        integer, private :: nevery
+        integer(kind=int32), private :: u
+        integer(kind=int32), private :: nframes_pos, iend_pos, curr_pos
+        integer(kind=int32), private :: nframes
+        integer(kind=int32), private :: iend
+        integer(kind=int32), private :: nevery
     contains
         !> Opens new file to write to
         procedure :: open => dcdwriter_open
@@ -74,9 +75,9 @@ contains
 
         implicit none
 
-        integer :: i
-        integer, intent(in) :: istart, nevery, natoms
-        real, intent(in) :: timestep
+        integer(kind=int32) :: i
+        integer(kind=int32), intent(in) :: istart, nevery, natoms
+        real(kind=real32), intent(in) :: timestep
         class(dcdwriter), intent(inout) :: this
         character (len=79) :: remarks1, remarks2
         character (len=8) :: date
@@ -165,11 +166,11 @@ contains
     subroutine dcdwriter_write_next(this, xyz, box_in)
 
         implicit none
-        real, intent(in) :: xyz(:,:)
-        real(8), intent(in) :: box_in(6)
-        real(8) :: box(6)
+        real(kind=real32), intent(in) :: xyz(:,:)
+        real(kind=real64), intent(in) :: box_in(6)
+        real(kind=real64) :: box(6)
         class(dcdwriter), intent(inout) :: this
-        integer :: coord_size
+        integer(kind=int32) :: coord_size
 
         coord_size = size(xyz,2)*4
         box = box_in

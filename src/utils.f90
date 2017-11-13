@@ -25,6 +25,8 @@
 
 module dcdfort_utils
 
+    use dcdfort_common
+
     implicit none
     public
  
@@ -33,8 +35,8 @@ contains
     function vol(box)
 
         implicit none
-        real(8), intent(in) :: box(6)
-        real(8) :: vol
+        real(kind=real64), intent(in) :: box(6)
+        real(kind=real64) :: vol
 
         ! Triple product gets the volume
         ! V = A_vec .dot. (B_vec .cross. C_vec)
@@ -52,9 +54,9 @@ contains
     function pbc(a, box)
 
         implicit none
-        real(8), intent(in) :: a(3), box(6)
-        real(8) :: pbc(3), tbox(3,3) = 0.0d0
-        integer :: I, shift
+        real(kind=real64), intent(in) :: a(3), box(6)
+        real(kind=real64) :: pbc(3), tbox(3,3) = 0.0d0
+        integer(kind=int32) :: shift
 
         ! A = box(1), length of unit cell vector along x-axis;
         ! B = box(2), length of unit cell vector in xy-plane;
@@ -132,8 +134,8 @@ contains
     function cross(a, b)
 
         implicit none
-        real(8) :: cross(3)
-        real(8), intent(in), dimension(3) :: a, b
+        real(kind=real64) :: cross(3)
+        real(kind=real64), intent(in), dimension(3) :: a, b
 
         cross(1) = a(2) * b(3) - a(3) * b(2)
         cross(2) = a(3) * b(1) - a(1) * b(3)
@@ -149,10 +151,10 @@ contains
     function distance2(a, b, box)
 
         implicit none
-        real(8) :: distance2
-        real(8), intent(in), dimension(3) :: a, b
-        real(8) :: c(3)
-        real(8), intent(in), optional :: box(6)
+        real(kind=real64) :: distance2
+        real(kind=real64), intent(in), dimension(3) :: a, b
+        real(kind=real64) :: c(3)
+        real(kind=real64), intent(in), optional :: box(6)
 
         if (present(box)) then
             c = pbc(a - b, box)
@@ -171,9 +173,9 @@ contains
     function distance(a, b, box)
 
         implicit none
-        real(8) :: distance
-        real(8), intent(in), dimension(3) :: a, b
-        real(8), intent(in), optional :: box(6)
+        real(kind=real64) :: distance
+        real(kind=real64), intent(in), dimension(3) :: a, b
+        real(kind=real64), intent(in), optional :: box(6)
 
         if (present(box)) then
             distance = dsqrt(distance2(a, b, box))
@@ -191,9 +193,9 @@ contains
     function bond_vector(a, b, box)
 
         implicit none
-        real(8) :: bond_vector(3)
-        real(8), intent(in), dimension(3) :: a, b
-        real(8), intent(in) :: box(6)
+        real(kind=real64) :: bond_vector(3)
+        real(kind=real64), intent(in), dimension(3) :: a, b
+        real(kind=real64), intent(in) :: box(6)
 
         bond_vector = pbc(a-b, box)
 
@@ -205,8 +207,8 @@ contains
     function magnitude(a)
 
         implicit none
-        real(8) :: magnitude
-        real(8), intent(in) :: a(3)
+        real(kind=real64) :: magnitude
+        real(kind=real64), intent(in) :: a(3)
 
         magnitude = dsqrt(dot_product(a, a))
 
@@ -222,10 +224,10 @@ contains
     function bond_angle(a, b, c, box)
 
         implicit none
-        real(8) :: bond_angle
-        real(8), intent(in), dimension(3) :: a, b, c
-        real(8), intent(in) :: box(6)
-        real(8), dimension(3) :: bond1, bond2
+        real(kind=real64) :: bond_angle
+        real(kind=real64), intent(in), dimension(3) :: a, b, c
+        real(kind=real64), intent(in) :: box(6)
+        real(kind=real64), dimension(3) :: bond1, bond2
 
         bond1 = bond_vector(b, a, box)
         bond2 = bond_vector(b, c, box)
@@ -245,11 +247,11 @@ contains
     function dihedral_angle(i, j, k, l, box)
 
         implicit none
-        real(8) :: dihedral_angle
-        real(8), intent(in), dimension(3) :: i, j, k, l
-        real(8), intent(in), dimension(6) :: box
-        real(8) :: A_mag, B_mag, G_mag
-        real(8), dimension(3) :: H, G, F, A, B, cross_BA
+        real(kind=real64) :: dihedral_angle
+        real(kind=real64), intent(in), dimension(3) :: i, j, k, l
+        real(kind=real64), intent(in), dimension(6) :: box
+        real(kind=real64) :: A_mag, B_mag, G_mag
+        real(kind=real64), dimension(3) :: H, G, F, A, B, cross_BA
 
         H = bond_vector(k, l, box)
         G = bond_vector(k, j, box)

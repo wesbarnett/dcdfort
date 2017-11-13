@@ -37,8 +37,8 @@ module dcdfort_index
     !> @details Contains the indicies for each atom in an index group, as well as the number of atoms, and index title of a group.
     !! Is part of the IndexFile class.
     type ndxgroups
-        integer, allocatable :: LOC(:)
-        integer :: NUMATOMS
+        integer(kind=int32), allocatable :: LOC(:)
+        integer(kind=int32) :: NUMATOMS
         character (len=:), allocatable :: title
     end type ndxgroups
 
@@ -68,10 +68,10 @@ contains
         class(IndexFile), intent(inout) :: this
         character (len=*), intent(in) :: filename
         character (len=2048) :: line, NCOLS_string, fmt_string
-        integer :: INDEX_FILE_UNIT, IO_STATUS, NGRPS, I, J, NCOLS
-        integer, allocatable :: INDICES_TMP(:), TITLE_LOC(:), num_array(:)
+        integer(kind=int32) :: INDEX_FILE_UNIT, IO_STATUS, NGRPS, I, J, NCOLS
+        integer(kind=int32), allocatable :: INDICES_TMP(:), TITLE_LOC(:), num_array(:)
         logical :: ex
-        integer, intent(in), optional :: N
+        integer(kind=int32), intent(in), optional :: N
 
         write(error_unit,'(a)') prompt//"Reading in "//trim(filename)//"."
 
@@ -227,11 +227,11 @@ contains
     function indexfile_get(this, group_name, I)
 
         implicit none
-        integer :: indexfile_get
+        integer(kind=int32) :: indexfile_get
         class(IndexFile), intent(inout) :: this
         character (len=*), intent(in) :: group_name
-        integer, intent(in), optional :: I
-        integer :: J
+        integer(kind=int32), intent(in), optional :: I
+        integer(kind=int32) :: J
 
         do J = 1, size(this%group)
 

@@ -32,8 +32,8 @@ module dcdfort_reader
 
     !> @brief dcdwriter class
     type, public :: dcdfile
-        integer, private :: u
-        integer(8) :: filesize, framesize
+        integer(kind=int32), private :: u
+        integer(kind=int64) :: filesize, framesize
     contains
         !> Opens file to read from
         procedure :: open => dcdfile_open
@@ -56,12 +56,12 @@ contains
     subroutine dcdfile_open(this, filename)
 
         implicit none
-        character (len=*), parameter :: magic_string = "CORD"
-        integer, parameter :: magic_number = 84
-        character (len=*), intent(in) :: filename
+        character(len=*), parameter :: magic_string = "CORD"
+        integer(int32), parameter :: magic_number = 84
+        character(len=*), intent(in) :: filename
         class(dcdfile), intent(inout) :: this
-        integer :: line1, charmm_version, has_extra_block, four_dimensions
-        character (len=4) :: line2
+        integer(kind=int32) :: line1, charmm_version, has_extra_block, four_dimensions
+        character(len=4) :: line2
         logical :: ex
 
         ! Does file exist?
@@ -129,10 +129,10 @@ contains
 
         implicit none
 
-        integer, intent(out) :: nframes, istart, nevery, iend, natoms
-        integer :: i, ntitle, n, framesize, nframes2, dummy, pos
-        character (len=80) :: title_string
-        real, intent(out) :: timestep
+        integer(kind=int32), intent(out) :: nframes, istart, nevery, iend, natoms
+        integer(kind=int32) :: i, ntitle, n, framesize, nframes2, dummy, pos
+        character(len=80) :: title_string
+        real(kind=real32), intent(out) :: timestep
         class(dcdfile), intent(inout) :: this
 
         read(this%u, pos=9) nframes, istart, nevery, iend
@@ -208,9 +208,9 @@ contains
     subroutine dcdfile_read_next(this, xyz, box)
 
         implicit none
-        real, allocatable, intent(inout) :: xyz(:,:)
-        real(8), intent(inout) :: box(6)
-        integer :: dummy(6), nbytes, ndims, i
+        real(kind=real32), allocatable, intent(inout) :: xyz(:,:)
+        real(kind=real64), intent(inout) :: box(6)
+        integer(kind=int32) :: dummy(6), nbytes, ndims, i
         class(dcdfile), intent(inout) :: this
 
         nbytes = size(xyz,1)*4
@@ -257,9 +257,9 @@ contains
     subroutine dcdfile_skip_next(this, n)
 
         implicit none
-        integer :: dummy
-        integer(8) :: pos, newpos
-        integer, intent(in), optional :: n
+        integer(kind=int32) :: dummy
+        integer(kind=int64) :: pos, newpos
+        integer(kind=int32), intent(in), optional :: n
         class(dcdfile), intent(inout) :: this
    
         ! Where are we?

@@ -1,14 +1,15 @@
 program speed
 
+    use dcdfort_common
     use dcdfort_reader
 
     implicit none
     type(dcdfile) :: dcd
-    integer :: nframes, istart, nevery, iend, natoms, i, j, k
-    character (len=1024) :: filename
-    real :: timestep, start, finish
-    real, allocatable :: xyz(:,:), xyz2(:)
-    real(8) :: box(6)
+    integer(kind=int32) :: nframes, istart, nevery, iend, natoms, i, j, k
+    character(len=1024) :: filename
+    real(kind=real32) :: timestep, start, finish
+    real(kind=real32), allocatable :: xyz(:,:), xyz2(:)
+    real(kind=real64) :: box(6)
 
     call get_command_argument(1,filename)
 
