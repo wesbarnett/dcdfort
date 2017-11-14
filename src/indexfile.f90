@@ -224,11 +224,11 @@ contains
     !> @param[in] group_name index group title or name (in brackets in the index file)
     !> @param[in] I the location in the group
     !> @return If an atom is specified, integer returns the overall index for that atom; otherwise, returns number of atoms in group
-    function indexfile_get(this, group_name, I)
+    pure function indexfile_get(this, group_name, I)
 
         implicit none
         integer(kind=int32) :: indexfile_get
-        class(IndexFile), intent(inout) :: this
+        class(IndexFile), intent(in) :: this
         character (len=*), intent(in) :: group_name
         integer(kind=int32), intent(in), optional :: I
         integer(kind=int32) :: J
@@ -252,19 +252,10 @@ contains
         ! in the index file, just return 0. If the user specified an atom number, then throw an error,
         ! since the overall index cannot be returned in that case
         if (.not. present(I)) then
-            if (this%group_warning) then
-                write(error_unit, '(a)') prompt//"WARNING: No atoms found in index group '"//trim(group_name)//"'."
-                write(error_unit, '(a)') prompt//"This warning will not appear again for any other index groups."
-                this%group_warning = .false.
-            end if
             indexfile_get = 0
         else
             indexfile_get = -1
-            write(error_unit, '(a)') prompt//"ERROR: "//trim(group_name)//" is not in the index file. The groups available are:"
-            do J = 1, size(this%group)
-                write(error_unit,'(a10,a,i0,a)') this%group(J)%title, " (", this%group(J)%NUMATOMS, ")"
-            end do
-            stop 1
+            call error_stop_program(trim(group_name)//" is not in the index file.")
         end if
 
     end function indexfile_get

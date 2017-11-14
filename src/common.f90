@@ -29,15 +29,12 @@ module dcdfort_common
 
 contains
 
-    subroutine error_stop_program(message)
+    pure subroutine error_stop_program(message)
 
         implicit none
         character (len=*), intent(in) :: message
 
-        write(error_unit,*)
-        write(error_unit,'(a, a)') "dcdfort >> ERROR: ", message
-        write(error_unit,*)
-        stop 1
+        error stop prompt//"ERROR: "//message
 
     end subroutine error_stop_program
 
