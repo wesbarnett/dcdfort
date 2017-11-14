@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['magnitude',['magnitude',['../namespacedcdfort__utils.html#a7a343d3126ec7e7e8633af0e74ace984',1,'dcdfort_utils']]]
+  ['magnitude',['magnitude',['../namespacedcdfort__utils.html#abc5171d8e28087ccaeb87111d4b9a596',1,'dcdfort_utils']]]
 ];

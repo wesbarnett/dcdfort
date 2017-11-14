@@ -37,6 +37,9 @@ Full API documentation is
 
 ## Compilation
 
+A couple of GNU Fortran extensions are used, so the GNU Fortran
+compiler is required.
+
 After cloning the repository, or extracting the release tarball, cd into the
 repository. Then:
 
@@ -46,10 +49,6 @@ cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
 make
 ```
-
-The code does use one GNU extension with the
-[`convert`](https://gcc.gnu.org/onlinedocs/gfortran/CONVERT-specifier.html) specifier when
-opening a DCD file, so `gfortran` is required.
 
 ## Testing
 

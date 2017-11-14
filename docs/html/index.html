@@ -72,6 +72,7 @@ $(function() {
 <p><b>Note:</b> DCD files generated from simulation packages other than LAMMPS will probably not work with this library. LAMMPS outputs DCD files as 32-bit CHARMM files with a unit cell and three dimensions, which is what this library can read in.</p>
 <p>Full API documentation is <a href="https://cdn.rawgit.com/wesbarnett/dcdfort/1.1/docs/html/index.html">here</a>.</p>
 <h2>Compilation</h2>
+<p>A couple of GNU Fortran extensions are used, so the GNU Fortran compiler is required.</p>
 <p>After cloning the repository, or extracting the release tarball, cd into the repository. Then:</p>
 <div class="fragment"><div class="line">mkdir build</div><div class="line">cd build</div><div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local</div><div class="line">make</div></div><!-- fragment --><h2>Testing</h2>
 <p>To test your build, do:</p>
