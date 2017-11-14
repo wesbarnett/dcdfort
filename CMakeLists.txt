@@ -26,6 +26,13 @@ list ( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 project ( dcdfort NONE )
 
 ####################################################################
+# Check if GNU Fortran compiler is used
+####################################################################
+if ( NOT "${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU" )
+    message ( FATAL_ERROR "${CMAKE_Fortran_COMPILER_ID} compiler is not supported. GNU Fortran compiler is required.")
+endif ()
+
+####################################################################
 # Set project info
 ####################################################################
 set ( PROJECT_DESCRIPTION "Fortran toolkit for analyzing DCD trajectory files" )
