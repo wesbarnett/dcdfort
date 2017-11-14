@@ -32,7 +32,7 @@ module dcdfort_utils
  
 contains
 
-    function vol(box)
+    pure function vol(box)
 
         implicit none
         real(kind=real64), intent(in) :: box(6)
@@ -51,12 +51,14 @@ contains
     !> @param[in] a original coordinates
     !> @param[in] box simulation box
     !> @return the shifted coordinates
-    function pbc(a, box)
+    pure function pbc(a, box)
 
         implicit none
         real(kind=real64), intent(in) :: a(3), box(6)
-        real(kind=real64) :: pbc(3), tbox(3,3) = 0.0d0
+        real(kind=real64) :: pbc(3), tbox(3,3)
         integer(kind=int32) :: shift
+
+        tbox = 0.0d0
 
         ! A = box(1), length of unit cell vector along x-axis;
         ! B = box(2), length of unit cell vector in xy-plane;
@@ -131,7 +133,7 @@ contains
     !> @param[in] a first vector
     !> @param[in] b second vector
     !> @result resulting cross product
-    function cross(a, b)
+    pure function cross(a, b)
 
         implicit none
         real(kind=real64) :: cross(3)
@@ -148,7 +150,7 @@ contains
     !> @param[in] b second point
     !> @param[in] box box, if pbc to be accounted for
     !> @result distance squared
-    function distance2(a, b, box)
+    pure function distance2(a, b, box)
 
         implicit none
         real(kind=real64) :: distance2
@@ -170,7 +172,7 @@ contains
     !> @param[in] b second point
     !> @param[in] box box, if pbc to be accounted for
     !> @result distance 
-    function distance(a, b, box)
+    pure function distance(a, b, box)
 
         implicit none
         real(kind=real64) :: distance
@@ -190,7 +192,7 @@ contains
     !> @param[in] b second point
     !> @param[in] box box, if pbc to be accounted for
     !> @result bond vector pointing from a to b
-    function bond_vector(a, b, box)
+    pure function bond_vector(a, b, box)
 
         implicit none
         real(kind=real64) :: bond_vector(3)
@@ -204,7 +206,7 @@ contains
     !> @brief Calculates the magnitude of a vector
     !> @param[in] a vector
     !> @result magnitude of a
-    function magnitude(a)
+    pure function magnitude(a)
 
         implicit none
         real(kind=real64) :: magnitude
@@ -221,7 +223,7 @@ contains
     !> @param[in] c third point
     !> @param[in] box box, if pbc to be accounted for
     !> @result bond angle between a-b-c
-    function bond_angle(a, b, c, box)
+    pure function bond_angle(a, b, c, box)
 
         implicit none
         real(kind=real64) :: bond_angle
@@ -244,7 +246,7 @@ contains
     !> @param[in] l fourth point
     !> @param[in] box box, if pbc to be accounted for
     !> @result dihedral angle forms by i-j-k-l
-    function dihedral_angle(i, j, k, l, box)
+    pure function dihedral_angle(i, j, k, l, box)
 
         implicit none
         real(kind=real64) :: dihedral_angle

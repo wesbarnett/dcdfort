@@ -389,7 +389,7 @@ contains
     function trajectory_vol(this, frame)
 
         implicit none
-        class(Trajectory), intent(inout) :: this
+        class(Trajectory), intent(in) :: this
         integer(kind=int32), intent(in) :: frame
         real(kind=real64) :: trajectory_vol
 
