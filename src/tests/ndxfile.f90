@@ -23,6 +23,7 @@ program ndxfile_test
     use dcdfort_tests
     use dcdfort_index, only: IndexFile
 
+    implicit none
     type(IndexFile) :: ndx
 
     call trj%read(dcdfile, ndxfile)

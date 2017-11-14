@@ -22,6 +22,8 @@ program dcdfile_test
 
     use dcdfort_tests
 
+    implicit none
+
     call trj%read(dcdfile)
 
     ! TEST 1

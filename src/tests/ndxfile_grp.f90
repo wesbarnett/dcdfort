@@ -22,6 +22,8 @@ program ndxfile_grp_test
 
     use dcdfort_tests
 
+    implicit none
+
     ! TEST 1
     call trj%read(dcdfile, ndxfile, "gasGroup")
     x = trj%x(10, 10)

@@ -138,6 +138,7 @@ contains
     !> @return number of frames skipped
     function trajectory_skip_next(this, F)
 
+        implicit none
         class(Trajectory), intent(inout) :: this
         integer(kind=int32), intent(in), optional :: F
         integer(kind=int32) :: trajectory_skip_next, N

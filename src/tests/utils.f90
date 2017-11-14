@@ -20,8 +20,10 @@
 
 program utils_test 
 
-    use dcdfort_utils
+    use dcdfort_utils, only: distance, magnitude, bond_angle, dihedral_angle, pbc
     use dcdfort_tests
+
+    implicit none
 
     ! TEST 1
     x = [5.5, 5.5, 3.5]

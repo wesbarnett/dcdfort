@@ -22,6 +22,8 @@ program read_next_test
 
     use dcdfort_tests
 
+    implicit none
+
     call trj%open(dcdfile)
 
     ! TEST 1
