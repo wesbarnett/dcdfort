@@ -386,7 +386,7 @@ contains
     !> @param[inout] this Trajectory class
     !> @param[in] frame snapshot to get box volume of
     !> @return the volume of the box of the frame specified
-    function trajectory_vol(this, frame)
+    pure function trajectory_vol(this, frame)
 
         implicit none
         class(Trajectory), intent(in) :: this

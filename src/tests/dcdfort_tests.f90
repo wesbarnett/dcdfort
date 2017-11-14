@@ -124,8 +124,7 @@ contains
         write(output_unit,*)
 
         if (passed .ne. total) then
-            write(output_unit, '(a)') "WARNING: Some tests failed!"
-            stop 1
+            error stop "WARNING: Some tests failed!"
         end if
 
     end subroutine finished_tests
