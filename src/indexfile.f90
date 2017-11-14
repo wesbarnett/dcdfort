@@ -237,7 +237,11 @@ contains
 
             if (trim(this%group(J)%title) .eq. trim(group_name)) then
 
-                indexfile_get = merge(this%group(J)%LOC(I), this%group(J)%NUMATOMS, present(I))
+                if (present(I)) then
+                    indexfile_get = this%group(J)%LOC(I)
+                else 
+                    indexfile_get = this%group(J)%NUMATOMS
+                end if
                 return
 
             end if
