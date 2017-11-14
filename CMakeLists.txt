@@ -50,14 +50,14 @@ string ( TOLOWER ${CMAKE_PROJECT_NAME} PACKAGE_NAME )
 set ( PACKAGE_VERSION "${PACKAGE_NAME}-${VERSION}" )
 
 ####################################################################
-# Go ahead and set this, even though it may never be used
+# Set flags based on build type
 ####################################################################
 if ( NOT CMAKE_BUILD_TYPE )
   set ( CMAKE_BUILD_TYPE "Release" )
 endif ()
 
-set ( CMAKE_Fortran_FLAGS_RELEASE "-g -O2 -Wall -Wextra -Wunreachable-code" )
-set ( CMAKE_Fortran_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wunreachable-code -pedantic -fcheck=all" )
+set ( CMAKE_Fortran_FLAGS_RELEASE "-g -O3 -Wall -fno-f2c" )
+set ( CMAKE_Fortran_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wunreachable-code -Wimplicit-interface -Wimplicit-procedure -pedantic -fcheck=all" )
 
 ####################################################################
 # Create library
