@@ -20,7 +20,7 @@
 
 module dcdfort_common
 
-    use, intrinsic :: iso_fortran_env
+    use, intrinsic :: iso_fortran_env, only: error_unit, output_unit, real32, real64, int32, int64
 
     implicit none
     public

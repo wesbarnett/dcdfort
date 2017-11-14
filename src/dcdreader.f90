@@ -29,6 +29,7 @@ module dcdfort_reader
     use iso_c_binding, only: C_NULL_CHAR
 
     implicit none
+    private
 
     !> @brief dcdwriter class
     type, public :: dcdfile

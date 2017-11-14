@@ -21,7 +21,7 @@
 program ndxfile_test 
 
     use dcdfort_tests
-    use dcdfort_index
+    use dcdfort_index, only: IndexFile
 
     type(IndexFile) :: ndx
 

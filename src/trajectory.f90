@@ -26,9 +26,9 @@
 module dcdfort_trajectory
 
     use dcdfort_common
-    use dcdfort_index
-    use dcdfort_reader
-    use dcdfort_utils
+    use dcdfort_index, only: IndexFile
+    use dcdfort_reader, only: dcdfile
+    use dcdfort_utils, only: vol
     implicit none
     private
 

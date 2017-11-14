@@ -21,7 +21,7 @@
 module dcdfort_tests
 
     use dcdfort_common
-    use dcdfort_trajectory
+    use dcdfort_trajectory, only: Trajectory
 
     implicit none
 

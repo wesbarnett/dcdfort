@@ -36,7 +36,7 @@ module dcdfort_index
     !> @brief ndxgroups class
     !> @details Contains the indicies for each atom in an index group, as well as the number of atoms, and index title of a group.
     !! Is part of the IndexFile class.
-    type ndxgroups
+    type, public :: ndxgroups
         integer(kind=int32), allocatable :: LOC(:)
         integer(kind=int32) :: NUMATOMS
         character (len=:), allocatable :: title

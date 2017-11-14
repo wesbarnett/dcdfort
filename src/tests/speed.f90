@@ -1,7 +1,7 @@
 program speed
 
     use dcdfort_common
-    use dcdfort_reader
+    use dcdfort_reader, only: dcdfile
 
     implicit none
     type(dcdfile) :: dcd

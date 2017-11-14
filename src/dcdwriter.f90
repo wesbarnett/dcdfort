@@ -29,6 +29,7 @@ module dcdfort_writer
     use iso_c_binding, only: C_NULL_CHAR
 
     implicit none
+    private
 
     real(kind=real64), parameter :: pi = 2.0d0*dacos(0.0d0)
 
