@@ -77,12 +77,12 @@ $(function() {
 <h2>Compilation</h2>
 <p>A couple of GNU Fortran extensions are used, so the GNU Fortran compiler is required.</p>
 <p>After cloning the repository, or extracting the release tarball, cd into the repository. Then:</p>
-<div class="fragment"><div class="line">meson builddir</div><div class="line">ninja -C builddir</div></div><!-- fragment --><h2>Testing</h2>
+<div class="fragment"><div class="line">meson build</div><div class="line">ninja -C build</div></div><!-- fragment --><h2>Testing</h2>
 <p>To test your build, do:</p>
-<div class="fragment"><div class="line">ninja -C builddir test</div></div><!-- fragment --><p>If any tests do not pass, please file an issue.</p>
+<div class="fragment"><div class="line">ninja -C build test</div></div><!-- fragment --><p>If any tests do not pass, please file an issue.</p>
 <h2>Installation</h2>
 <p>The following will install the library to the location specified by the meson flag <code>--prefix</code>, which is <code>/usr/local</code> by default.</p>
-<div class="fragment"><div class="line">ninja -C builddir install</div></div><!-- fragment --><h2>Usage</h2>
+<div class="fragment"><div class="line">ninja -C build install</div></div><!-- fragment --><h2>Usage</h2>
 <p>Compile your Fortran trajectory analysis program with <code>-ldcdfort</code>. You may also need to use <code>-I</code> to point to where the modules files are even with all of the right environment variables set (by default at <code>/usr/local/include</code>).</p>
 <h3>pkg-config</h3>
 <p>A pkg-config file is included, so that it can be used in your program compilations. You may need to set the <code>PKG_CONFIG_PATH</code> environment variable to find the file (by default in the directory <code>/usr/local/lib/pkgconfig</code>). See <code>man 1 pkg-config</code> for more information.</p>
@@ -127,8 +127,8 @@ $(function() {
 <h4>Utilities</h4>
 <p>There are several functions and subroutines in the <code><a class="el" href="namespacedcdfort__utils.html" title="Module that contains some useful utilities. ">dcdfort_utils</a></code> module, including periodic boundary and distance calculations. Check out the source file for what is available.</p>
 <h2>License</h2>
-<p>This project is release under the following license.</p>
-<div class="fragment"><div class="line">libdcdfort</div><div class="line"></div><div class="line">Copyright (C) 2017 James W. Barnett</div><div class="line"></div><div class="line">This program is free software; you can redistribute it and/or modify it under</div><div class="line">the terms of the GNU General Public License as published by the Free Software</div><div class="line">Foundation; either version 2 of the License, or (at your option) any later</div><div class="line">version.</div><div class="line"></div><div class="line">This program is distributed in the hope that it will be useful, but WITHOUT ANY</div><div class="line">WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A</div><div class="line">PARTICULAR PURPOSE. See the GNU General Public License for more details.</div><div class="line"></div><div class="line">You should have received a copy of the GNU General Public License along with</div><div class="line">this program; if not, write to the Free Software Foundation, Inc., 51 Franklin</div><div class="line">Street, Fifth Floor, Boston, MA 02110-1301 USA.</div></div><!-- fragment --><p>See the file <code>LICENSE</code> for full details. </p>
+<p>This project is released under the following license.</p>
+<div class="fragment"><div class="line">libdcdfort</div><div class="line"></div><div class="line">Copyright (C) 2017,2018 James W. Barnett</div><div class="line"></div><div class="line">This program is free software; you can redistribute it and/or modify it under</div><div class="line">the terms of the GNU General Public License as published by the Free Software</div><div class="line">Foundation; either version 2 of the License, or (at your option) any later</div><div class="line">version.</div><div class="line"></div><div class="line">This program is distributed in the hope that it will be useful, but WITHOUT ANY</div><div class="line">WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A</div><div class="line">PARTICULAR PURPOSE. See the GNU General Public License for more details.</div><div class="line"></div><div class="line">You should have received a copy of the GNU General Public License along with</div><div class="line">this program; if not, write to the Free Software Foundation, Inc., 51 Franklin</div><div class="line">Street, Fifth Floor, Boston, MA 02110-1301 USA.</div></div><!-- fragment --><p>See the file <code>LICENSE</code> for full details. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
