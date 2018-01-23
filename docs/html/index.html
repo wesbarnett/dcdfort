@@ -77,12 +77,12 @@ $(function() {
 <h2>Compilation</h2>
 <p>A couple of GNU Fortran extensions are used, so the GNU Fortran compiler is required.</p>
 <p>After cloning the repository, or extracting the release tarball, cd into the repository. Then:</p>
-<div class="fragment"><div class="line">meson --prefix=/usr/local build</div><div class="line">cd build</div><div class="line">ninja</div></div><!-- fragment --><h2>Testing</h2>
+<div class="fragment"><div class="line">meson builddir</div><div class="line">ninja -C builddir</div></div><!-- fragment --><h2>Testing</h2>
 <p>To test your build, do:</p>
-<div class="fragment"><div class="line">ninja test</div></div><!-- fragment --><p>If any tests do not pass, please file an issue.</p>
+<div class="fragment"><div class="line">ninja -C builddir test</div></div><!-- fragment --><p>If any tests do not pass, please file an issue.</p>
 <h2>Installation</h2>
 <p>The following will install the library to the location specified by the meson flag <code>--prefix</code>, which is <code>/usr/local</code> by default.</p>
-<div class="fragment"><div class="line">ninja install</div></div><!-- fragment --><h2>Usage</h2>
+<div class="fragment"><div class="line">ninja -C builddir install</div></div><!-- fragment --><h2>Usage</h2>
 <p>Compile your Fortran trajectory analysis program with <code>-ldcdfort</code>. You may also need to use <code>-I</code> to point to where the modules files are even with all of the right environment variables set (by default at <code>/usr/local/include</code>).</p>
 <h3>pkg-config</h3>
 <p>A pkg-config file is included, so that it can be used in your program compilations. You may need to set the <code>PKG_CONFIG_PATH</code> environment variable to find the file (by default in the directory <code>/usr/local/lib/pkgconfig</code>). See <code>man 1 pkg-config</code> for more information.</p>
