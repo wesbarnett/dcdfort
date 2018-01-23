@@ -7,6 +7,7 @@ program main
     type(Trajectory) :: trj
     real(8) :: box(6)
     real :: x(3)
+    integer :: i, j
 
     call trj%read("dump.dcd")
 
@@ -19,6 +20,9 @@ program main
         do j = 1, trj%natoms()
 
             x = trj%x(i,j)
+
+            ! Just for testing
+            write(*,*) x
 
         end do
 
