@@ -344,7 +344,7 @@ for what is available.
 
 ## License
 
-This project is release under the following license.
+This project is released under the following license.
 
 ```
 libdcdfort
