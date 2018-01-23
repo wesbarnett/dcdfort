@@ -18,9 +18,9 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-project('dcdfort', 'Fortran', version : '1.2')
+project('dcdfort', 'fortran', version : '1.2', license : 'GPL2')
 src = ['src/common.f90', 'src/dcdreader.f90', 'src/dcdwriter.f90', 'src/indexfile.f90', 'src/trajectory.f90', 'src/utils.f90'] 
-main_lib = shared_library('dcdfort', src, install : true)
+main_lib = shared_library('dcdfort', src, install : true, soversion : meson.project_version())
 
 install_data('LICENSE', install_dir : 'share/licenes/dcdfort/')
 install_data('README.md', install_dir : 'share/docs/dcdfort/')
@@ -31,8 +31,8 @@ meson.add_install_script('meson/install_modules.sh')
 pkg = import('pkgconfig')
 pkg.generate(
   libraries : main_lib, 
-  name : meson.project_name(), 
-  filebase : meson.project_name(),
+  name : meson.project_name(),
+  filebase : ''.join(['lib', meson.project_name()]), 
   description : 'Fortran toolkit for analyzing DCD trajectory files',
   version : meson.project_version(), 
   url : 'https://github.com/wesbarnett/dcdfort')
