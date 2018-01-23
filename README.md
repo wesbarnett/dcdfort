@@ -44,9 +44,8 @@ After cloning the repository, or extracting the release tarball, cd into the
 repository. Then:
 
 ```bash
-meson --prefix=/usr/local build
-cd build
-ninja
+meson builddir
+ninja -C builddir
 ```
 
 ## Testing
@@ -54,7 +53,7 @@ ninja
 To test your build, do:
 
 ```bash
-ninja test
+ninja -C builddir test
 ```
 
 If any tests do not pass, please file an issue.
@@ -66,7 +65,7 @@ the meson flag `--prefix`, which is `/usr/local` by
 default.
 
 ```bash
-ninja install
+ninja -C builddir install
 ```
 
 ## Usage
