@@ -22,10 +22,10 @@ project('dcdfort', 'fortran', version : '1.2', license : 'GPL2')
 src = ['src/common.f90', 'src/dcdreader.f90', 'src/dcdwriter.f90', 'src/indexfile.f90', 'src/trajectory.f90', 'src/utils.f90'] 
 main_lib = shared_library('dcdfort', src, install : true, soversion : meson.project_version())
 
-install_data('LICENSE', install_dir : 'share/licenes/dcdfort/')
-install_data('README.md', install_dir : 'share/docs/dcdfort/')
-install_subdir('docs/html', install_dir : 'share/docs/dcdfort/')
-install_subdir('example', install_dir : 'share/dcdfort/')
+install_data('LICENSE', install_dir : join_paths('share/licenes',meson.project_name()))
+install_data('README.md', install_dir : join_paths('share/docs',meson.project_name()))
+install_subdir('docs/html', install_dir : join_paths('share/docs',meson.project_name()))
+install_subdir('example', install_dir : join_paths('share',meson.project_name()))
 meson.add_install_script('meson/install_modules.sh')
 
 pkg = import('pkgconfig')
@@ -37,17 +37,19 @@ pkg.generate(
   version : meson.project_version(), 
   url : 'https://github.com/wesbarnett/dcdfort')
 
+test_path = 'src/tests'
+
 main_dep = declare_dependency(link_with : main_lib)
-test_lib = shared_library('dcdfort_tests', 'src/tests/dcdfort_tests.f90', dependencies : main_dep)
+test_lib = shared_library('dcdfort_tests', join_paths(test_path,'dcdfort_tests.f90'), dependencies : main_dep)
 test_dep = declare_dependency(link_with : [ main_lib, test_lib ])
 
 run_command('meson/copy_test_files.sh')
 
-read_dcdfile = executable('read_dcdfile', 'src/tests/dcdfile.f90', dependencies : test_dep)
-read_next = executable('read_next', 'src/tests/read_next.f90', dependencies : test_dep)
-utils = executable('utils', 'src/tests/utils.f90', dependencies : test_dep)
-ndxfile = executable('ndxfile', 'src/tests/ndxfile.f90', dependencies : test_dep)
-ndxfile_grp = executable('ndxfile_grp', 'src/tests/ndxfile_grp.f90', dependencies : test_dep)
+read_dcdfile = executable('read_dcdfile', join_paths(test_path,'dcdfile.f90'), dependencies : test_dep)
+read_next = executable('read_next', join_paths(test_path,'read_next.f90'), dependencies : test_dep)
+utils = executable('utils', join_paths(test_path,'utils.f90'), dependencies : test_dep)
+ndxfile = executable('ndxfile', join_paths(test_path,'ndxfile.f90'), dependencies : test_dep)
+ndxfile_grp = executable('ndxfile_grp', join_paths(test_path,'ndxfile_grp.f90'), dependencies : test_dep)
 
 test('dcdfile read()', read_dcdfile)
 test('dcdfile read_next()', read_next)
