@@ -22,6 +22,12 @@ project('dcdfort', 'Fortran', version : '1.2')
 src = ['src/common.f90', 'src/dcdreader.f90', 'src/dcdwriter.f90', 'src/indexfile.f90', 'src/trajectory.f90', 'src/utils.f90'] 
 main_lib = shared_library('dcdfort', src, install : true)
 
+install_data('LICENSE', install_dir : 'share/licenes/dcdfort/')
+install_data('README.md', install_dir : 'share/docs/dcdfort/')
+install_subdir('docs/html', install_dir : 'share/docs/dcdfort/')
+install_subdir('example', install_dir : 'share/dcdfort/')
+meson.add_install_script('meson/install_modules.sh')
+
 pkg = import('pkgconfig')
 pkg.generate(
   libraries : main_lib, 
@@ -31,21 +37,11 @@ pkg.generate(
   version : meson.project_version(), 
   url : 'https://github.com/wesbarnett/dcdfort')
 
-install_data('LICENSE', install_dir : 'share/licenes/dcdfort/')
-install_subdir('docs/html', install_dir : 'share/docs/dcdfort/')
-install_subdir('example', install_dir : 'share/dcdfort/')
-
 main_dep = declare_dependency(link_with : main_lib)
 test_lib = shared_library('dcdfort_tests', 'src/tests/dcdfort_tests.f90', dependencies : main_dep)
 test_dep = declare_dependency(link_with : [ main_lib, test_lib ])
 
-testdcd_file = join_paths([meson.source_root(),'src/tests/test.dcd'])
-testdcd_file_out = join_paths([meson.build_root(),'test.dcd'])
-run_command('cp', testdcd_file , testdcd_file_out)
-
-testndx_file = join_paths([meson.source_root(),'src/tests/test.ndx'])
-testndx_file_out = join_paths([meson.build_root(),'test.ndx'])
-run_command('cp', testndx_file , testndx_file_out)
+run_command('meson/copy_test_files.sh')
 
 read_dcdfile = executable('read_dcdfile', 'src/tests/dcdfile.f90', dependencies : test_dep)
 read_next = executable('read_next', 'src/tests/read_next.f90', dependencies : test_dep)

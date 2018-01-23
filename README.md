@@ -1,6 +1,6 @@
 # libdcdfort
 
-Copyright (C) 2017 James W. Barnett
+Copyright (C) 2017,2018 James W. Barnett
 
 http://github.com/wesbarnett/dcdfort
 
@@ -44,10 +44,9 @@ After cloning the repository, or extracting the release tarball, cd into the
 repository. Then:
 
 ```bash
-mkdir build
+meson --prefix=/usr/local build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
-make
+ninja
 ```
 
 ## Testing
@@ -55,7 +54,7 @@ make
 To test your build, do:
 
 ```bash
-make test
+ninja test
 ```
 
 If any tests do not pass, please file an issue.
@@ -63,11 +62,11 @@ If any tests do not pass, please file an issue.
 ## Installation
 
 The following will install the library to the location specified by
-the cmake flag `-DCMAKE_INSTALL_PREFIX`, which is `/usr/local` by
+the meson flag `--prefix`, which is `/usr/local` by
 default.
 
 ```bash
-make install
+ninja install
 ```
 
 ## Usage
@@ -76,12 +75,6 @@ Compile your Fortran trajectory analysis program with `-ldcdfort`. You
 may also need to use `-I` to point to where the modules files are even
 with all of the right environment variables set
 (by default at `/usr/local/include`). 
-
-### Linking other cmake projects
-
-A file is included to easily link other cmake projects to the dcdfort
-installation. Use `find_package ( dcdfort )` and the variables
-`dcdfort_INCLUDE_DIRS` and `dcdfort_LIBRARIES` in your `CMakeLists.txt`.
 
 ### pkg-config
 
