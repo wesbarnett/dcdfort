@@ -153,7 +153,7 @@ contains
                 n = n + 1
             end do
 
-            write(error_unit,'(a)') prompt//"  "//trim(title_string(1:n))
+            write(error_unit,'(a)') prompt//"  "//trim(title_string(1:n-1))
         end do
 
         read(this%u) dummy, dummy
