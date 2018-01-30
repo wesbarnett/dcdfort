@@ -36,7 +36,7 @@ module dcdfort_writer
     !> @brief dcdwriter class
     type, public :: dcdwriter
         integer(kind=int32), private :: u
-        integer(kind=int32), private :: nframes_pos, iend_pos, curr_pos
+        integer(kind=int64), private :: nframes_pos, iend_pos, curr_pos
         integer(kind=int32), private :: nframes
         integer(kind=int32), private :: iend
         integer(kind=int32), private :: nevery
@@ -189,17 +189,17 @@ contains
         write(this%u) 48
         write(this%u) coord_size
 
-        write(this%u) xyz(1,:)
+        write(this%u) xyz(:,1)
 
         write(this%u) coord_size
         write(this%u) coord_size
 
-        write(this%u) xyz(2,:)
+        write(this%u) xyz(:,2)
 
         write(this%u) coord_size
         write(this%u) coord_size
 
-        write(this%u) xyz(3,:)
+        write(this%u) xyz(:,3)
 
         write(this%u) coord_size
 
