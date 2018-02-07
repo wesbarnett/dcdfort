@@ -173,7 +173,7 @@ contains
         class(dcdwriter), intent(inout) :: this
         integer(kind=int32) :: coord_size
 
-        coord_size = size(xyz,2)*4
+        coord_size = size(xyz,1)*4
         box = box_in
     
         ! Should be 48 (6 double precision floats)
@@ -189,17 +189,17 @@ contains
         write(this%u) 48
         write(this%u) coord_size
 
-        write(this%u) xyz(1,:)
+        write(this%u) xyz(:,1)
 
         write(this%u) coord_size
         write(this%u) coord_size
 
-        write(this%u) xyz(2,:)
+        write(this%u) xyz(:,2)
 
         write(this%u) coord_size
         write(this%u) coord_size
 
-        write(this%u) xyz(3,:)
+        write(this%u) xyz(:,3)
 
         write(this%u) coord_size
 

@@ -215,8 +215,8 @@ contains
         integer(kind=int32) :: dummy(6), nbytes, ndims, i
         class(dcdfile), intent(inout) :: this
 
-        nbytes = size(xyz,2)*4
-        ndims = size(xyz,1)
+        nbytes = size(xyz,1)*4
+        ndims = size(xyz,2)
 
         if (ndims /= 3) then
             call error_stop_program("Number of dimensions of xyz array is incorrect.")
@@ -234,7 +234,7 @@ contains
         end if
 
         ! 48, then no. of bytes for x coordinates, x coordinates (repeat for y and z coordinates)
-        read(this%u) dummy(1:2), xyz(1,:), dummy(3:4), xyz(2,:), dummy(5:6), xyz(3,:)
+        read(this%u) dummy(1:2), xyz(:,1), dummy(3:4), xyz(:,2), dummy(5:6), xyz(:,3)
 
         if (dummy(1) /= 48) then
             call error_stop_program("Problem reading in DCD snapshot coordinates.")
