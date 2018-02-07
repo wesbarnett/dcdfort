@@ -192,13 +192,13 @@ contains
 
         if (present(ndxgrp)) then
 
-            allocate(xyz(this%N,3))
+            allocate(xyz(3,this%N))
             this%NUMATOMS = this%natoms(trim(ndxgrp))
             do I = 1, N
 
                 if (modulo(I*(S+1), 1000) .eq. 0) call print_frames_saved(I, ndxgrp)
 
-                allocate(this%frameArray(I)%xyz(this%NUMATOMS,3))
+                allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
                 call this%dcd%skip_next(S)
                 call this%dcd%read_next(xyz, this%frameArray(I)%box)
 
@@ -206,9 +206,9 @@ contains
                     if (trim(this%ndx%group(J)%title) .eq. trim(ndxgrp)) then
                         ! Tends to be faster to list this out individually
                         do K = 1, this%NUMATOMS
-                            this%frameArray(I)%xyz(K,1) = xyz(this%ndx%group(J)%LOC(K),1)
-                            this%frameArray(I)%xyz(K,2) = xyz(this%ndx%group(J)%LOC(K),2)
-                            this%frameArray(I)%xyz(K,3) = xyz(this%ndx%group(J)%LOC(K),3)
+                            this%frameArray(I)%xyz(1,K) = xyz(1,this%ndx%group(J)%LOC(K))
+                            this%frameArray(I)%xyz(2,K) = xyz(2,this%ndx%group(J)%LOC(K))
+                            this%frameArray(I)%xyz(3,K) = xyz(3,this%ndx%group(J)%LOC(K))
                         end do
                         exit
                     end if
@@ -225,7 +225,7 @@ contains
 
                 if (modulo(I*(S+1), 1000) .eq. 0) call print_frames_saved(I)
 
-                allocate(this%frameArray(I)%xyz(this%NUMATOMS,3))
+                allocate(this%frameArray(I)%xyz(3,this%NUMATOMS))
                 call this%dcd%skip_next(S)
                 call this%dcd%read_next(this%frameArray(I)%xyz, this%frameArray(I)%box)
 
@@ -289,9 +289,9 @@ contains
         end if
 
         ! Faster to list individually
-        trajectory_get_xyz(1) = this%frameArray(frame)%xyz(atom_tmp,1)
-        trajectory_get_xyz(2) = this%frameArray(frame)%xyz(atom_tmp,2)
-        trajectory_get_xyz(3) = this%frameArray(frame)%xyz(atom_tmp,3)
+        trajectory_get_xyz(1) = this%frameArray(frame)%xyz(1,atom_tmp)
+        trajectory_get_xyz(2) = this%frameArray(frame)%xyz(2,atom_tmp)
+        trajectory_get_xyz(3) = this%frameArray(frame)%xyz(3,atom_tmp)
 
     end function trajectory_get_xyz
 
