@@ -29,7 +29,7 @@ module dcdfort_common
 
 contains
 
-    pure subroutine error_stop_program(message)
+    subroutine error_stop_program(message)
 
         implicit none
         character (len=*), intent(in) :: message

@@ -115,7 +115,7 @@ contains
     !> @param[inout] this the Trajectory object
     !> @param[in] group name of index group
     !> @return number of atoms in index group (if specified) or in system
-    pure function trajectory_get_natoms(this, group)
+    function trajectory_get_natoms(this, group)
 
         implicit none
         integer(kind=int32) :: trajectory_get_natoms
@@ -262,7 +262,7 @@ contains
     !> @param[in] atom atomid of particle to get
     !> @param[in] group optional index group
     !> @return coordinate of the particle
-    pure function trajectory_get_xyz(this, frame, atom, group)
+    function trajectory_get_xyz(this, frame, atom, group)
 
         implicit none
         real(kind=real32) :: trajectory_get_xyz(3)
@@ -342,7 +342,7 @@ contains
     !! alpha = cosine of angle between B and C;
     !! beta = cosine of angle between A and C;
     !! gamma = cosine of angle between A and B;
-    pure function trajectory_get_box(this, frame)
+    function trajectory_get_box(this, frame)
 
         implicit none
         real(kind=real64) :: trajectory_get_box(6)
@@ -357,7 +357,7 @@ contains
 
     end function trajectory_get_box
 
-    pure subroutine trajectory_check_frame(this, frame)
+    subroutine trajectory_check_frame(this, frame)
 
         implicit none
         class(Trajectory), intent(in) :: this
@@ -387,7 +387,7 @@ contains
     !> @param[inout] this Trajectory class
     !> @param[in] frame snapshot to get box volume of
     !> @return the volume of the box of the frame specified
-    pure function trajectory_vol(this, frame)
+    function trajectory_vol(this, frame)
 
         implicit none
         class(Trajectory), intent(in) :: this
