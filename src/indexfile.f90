@@ -224,7 +224,7 @@ contains
     !> @param[in] group_name index group title or name (in brackets in the index file)
     !> @param[in] I the location in the group
     !> @return If an atom is specified, integer returns the overall index for that atom; otherwise, returns number of atoms in group
-    function indexfile_get(this, group_name, I)
+    pure function indexfile_get(this, group_name, I)
 
         implicit none
         integer(kind=int32) :: indexfile_get
