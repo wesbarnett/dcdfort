@@ -288,10 +288,7 @@ contains
             call error_stop_program(trim(message))
         end if
 
-        ! Faster to list individually
-        trajectory_get_xyz(1) = this%frameArray(frame)%xyz(atom_tmp,1)
-        trajectory_get_xyz(2) = this%frameArray(frame)%xyz(atom_tmp,2)
-        trajectory_get_xyz(3) = this%frameArray(frame)%xyz(atom_tmp,3)
+        trajectory_get_xyz = this%frameArray(frame)%xyz(atom_tmp,:)
 
     end function trajectory_get_xyz
 
@@ -351,9 +348,7 @@ contains
         integer(kind=int32) :: i
 
         call trajectory_check_frame(this, frame)
-        do i = 1, 6
-            trajectory_get_box(i) = this%frameArray(frame)%box(i)
-        end do
+        trajectory_get_box = this%frameArray(frame)%box
 
     end function trajectory_get_box
 
