@@ -73,7 +73,7 @@ $(function() {
 <div class="fragment"><div class="line">using <a class="code" href="namespacedcdfort__trajectory.html">dcdfort_trajectory</a></div><div class="line"><span class="keywordtype">type</span>(Trajectory) :: trj</div><div class="line"></div><div class="line"><span class="keyword">call </span>trj%read(<span class="stringliteral">&quot;mytrajectoryfile.dcd&quot;</span>)</div></div><!-- fragment --><p>Now all information from the trajectory file (atom coordinates, box dimensions) is accessible via object getters. See the <a href="#api">API</a> below.</p>
 <p>This is similar to my other project <a href="https://github.com/wesbarnett/libgmxfort">libgmxfort</a>, except that this project does not require any plugins to read the binary trajectory files.</p>
 <p><b>Note:</b> DCD files generated from simulation packages other than LAMMPS will probably not work with this library. LAMMPS outputs DCD files as 32-bit CHARMM files with a unit cell and three dimensions, which is what this library can read in.</p>
-<p>Full API documentation is <a href="https://cdn.rawgit.com/wesbarnett/dcdfort/1.1/docs/html/index.html">here</a>.</p>
+<p>Full API documentation is <a href="https://cdn.rawgit.com/wesbarnett/dcdfort/1.2/docs/html/index.html">here</a>.</p>
 <h2>Build requirements</h2>
 <ul>
 <li><code>gfortran &gt;= 7.1</code> - Required because we use <code>convert=swap</code> with <code>open</code>, which is a GNU-specific extension. Additionally version 7.1 added the ability to use non-constant error stop codes, which we use.</li>
