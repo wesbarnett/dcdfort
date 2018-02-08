@@ -34,7 +34,7 @@ contains
         implicit none
         character (len=*), intent(in) :: message
 
-        error stop prompt//"ERROR: "//message
+        error stop prompt//message
 
     end subroutine error_stop_program
 
