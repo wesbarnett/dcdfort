@@ -35,6 +35,7 @@ module dcdfort_reader
     type, public :: dcdfile
         integer(kind=int32), private :: u
         integer(kind=int64) :: filesize, framesize
+        character(len=80), allocatable :: titles(:)
     contains
         !> Opens file to read from
         procedure :: open => dcdfile_open
@@ -145,6 +146,7 @@ contains
         if (ntitle > 0) then
             write(error_unit,'(a)') prompt//"The following titles were found:"
         end if
+        allocate(this%titles(ntitle))
         do i = 1, ntitle
             read(this%u) title_string
 
@@ -153,7 +155,8 @@ contains
                 n = n + 1
             end do
 
-            write(error_unit,'(a)') prompt//"  "//trim(title_string(1:n-1))
+            this%titles(i) = trim(title_string(1:n-1))
+            write(error_unit,'(a)') prompt//"  "//this%titles(i)
         end do
 
         read(this%u) dummy, dummy
@@ -191,6 +194,7 @@ contains
         implicit none
         class(dcdfile), intent(inout) :: this
 
+        deallocate(this%titles)
         close(this%u)
 
     end subroutine dcdfile_close
