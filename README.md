@@ -33,7 +33,7 @@ files as 32-bit CHARMM files with a unit cell and three dimensions,
 which is what this library can read in.
 
 Full API documentation is
-[here](https://cdn.rawgit.com/wesbarnett/dcdfort/1.1/docs/html/index.html).
+[here](https://cdn.rawgit.com/wesbarnett/dcdfort/1.2/docs/html/index.html).
 
 ## Build requirements
 
