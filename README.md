@@ -37,8 +37,10 @@ Full API documentation is
 
 ## Compilation
 
-A couple of GNU Fortran extensions are used, so the GNU Fortran
-compiler is required.
+The GNU Fortran compiler version >= 7.1 is required, since
+non-constant error stop codes are used and we are using the
+`convert="swap"` GNU extension when reading in DCD files of different
+endiness.
 
 After cloning the repository, or extracting the release tarball, cd into the
 repository. Then:
