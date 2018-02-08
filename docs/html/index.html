@@ -77,7 +77,8 @@ $(function() {
 <h2>Compilation</h2>
 <p>The GNU Fortran compiler version &gt;= 7.1 is required, since non-constant error stop codes are used and we are using the <code>convert="swap"</code> GNU extension when reading in DCD files of different endiness.</p>
 <p>After cloning the repository, or extracting the release tarball, cd into the repository. Then:</p>
-<div class="fragment"><div class="line">meson build</div><div class="line">ninja -C build</div></div><!-- fragment --><h2>Testing</h2>
+<div class="fragment"><div class="line">meson build</div><div class="line">ninja -C build</div></div><!-- fragment --><p>If you want to change some of the compiler optimizations or other setttings, use <code>FFLAGS</code>:</p>
+<div class="fragment"><div class="line">FFLAGS=&quot;-O3&quot; meson build</div><div class="line">ninja -C build</div></div><!-- fragment --><h2>Testing</h2>
 <p>To test your build, do:</p>
 <div class="fragment"><div class="line">ninja -C build test</div></div><!-- fragment --><p>If any tests do not pass, please file an issue.</p>
 <h2>Installation</h2>
