@@ -76,7 +76,7 @@ $(function() {
 <p>Full API documentation is <a href="https://cdn.rawgit.com/wesbarnett/dcdfort/1.1/docs/html/index.html">here</a>.</p>
 <h2>Build requirements</h2>
 <ul>
-<li><code>gfortran &gt;= 7.1</code> - Required because we use <code>convert=swap</code> with <code>open</code>, which is a GNU-specific intrinsic. Additionally version 7.1 added the ability to use non-constant error stop codes, which we use.</li>
+<li><code>gfortran &gt;= 7.1</code> - Required because we use <code>convert=swap</code> with <code>open</code>, which is a GNU-specific extension. Additionally version 7.1 added the ability to use non-constant error stop codes, which we use.</li>
 <li><code>coreutils &gt;= 8.23</code> - Allows the use of <code>-D</code> and <code>-t</code> together in <code>install</code>, which we use to install the Fortran <code>.mod</code> files. You can use an older version; you just have to manually create the <code>include</code> directory where the module files will be installed.</li>
 </ul>
 <h2>Compilation</h2>

@@ -44,6 +44,8 @@ Full API documentation is
   `install`, which we use to install the Fortran `.mod` files. You can
   use an older version; you just have to manually create the `include`
   directory where the module files will be installed.
+* [`meson`](http://mesonbuild.com/)
+* [`ninja`](https://ninja-build.org/)
 
 ## Compilation
 
