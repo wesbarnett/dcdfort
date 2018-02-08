@@ -38,7 +38,7 @@ Full API documentation is
 ## Build requirements
 
 * `gfortran >= 7.1` - Required because we use `convert=swap` with
-  `open`, which is a GNU-specific intrinsic. Additionally version 7.1
+  `open`, which is a GNU-specific extension. Additionally version 7.1
    added the ability to use non-constant error stop codes, which we use.
 * `coreutils >= 8.23` - Allows the use of `-D` and `-t` together in
   `install`, which we use to install the Fortran `.mod` files. You can
