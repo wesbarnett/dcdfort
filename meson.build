@@ -19,6 +19,13 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 project('dcdfort', 'fortran', version : '1.2', license : 'GPL2')
+
+compiler = meson.get_compiler('fortran')
+
+if compiler.get_id() != 'gcc'
+  error('GNU Fortran compiler version >= 7.3.0 is required.')
+endif
+
 src = ['src/common.f90', 'src/dcdreader.f90', 'src/dcdwriter.f90', 'src/indexfile.f90', 'src/trajectory.f90', 'src/utils.f90'] 
 main_lib = shared_library('dcdfort', src, install : true, soversion : meson.project_version())
 
