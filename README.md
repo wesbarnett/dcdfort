@@ -35,12 +35,17 @@ which is what this library can read in.
 Full API documentation is
 [here](https://cdn.rawgit.com/wesbarnett/dcdfort/1.1/docs/html/index.html).
 
-## Compilation
+## Build requirements
 
-The GNU Fortran compiler version >= 7.1 is required, since
-non-constant error stop codes are used and we are using the
-`convert="swap"` GNU extension when reading in DCD files of different
-endiness.
+* `gfortran >= 7.1` - Required because we use `convert=swap` with
+  `open`, which is a GNU-specific intrinsic. Additionally version 7.1
+   added the ability to use non-constant error stop codes, which we use.
+* `coreutils >= 8.23` - Allows the use of `-D` and `-t` together in
+  `install`, which we use to install the Fortran `.mod` files. You can
+  use an older version; you just have to manually create the `include`
+  directory where the module files will be installed.
+
+## Compilation
 
 After cloning the repository, or extracting the release tarball, cd into the
 repository. Then:
