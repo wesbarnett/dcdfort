@@ -2,6 +2,8 @@
 
 Copyright (C) 2017,2018 James W. Barnett
 
+[![DOI](https://zenodo.org/badge/93893810.svg)](https://zenodo.org/badge/latestdoi/93893810)
+
 https://github.com/wesbarnett/dcdfort
 
 ## About
