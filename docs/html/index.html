@@ -130,7 +130,7 @@ $(function() {
 <h4>Reading in specific groups only</h4>
 <p>As shown above, the most common use of this library is to use <code>read()</code> or <code>read_next()</code> to save all atom locations and then use getters like <code>x()</code> and <code>natoms()</code> to get information about them by specifying an index group as an argument.</p>
 <p>To save memory, you can save just a specific index group with read():</p>
-<div class="fragment"><div class="line">trj%read(xtcfile, ndxfile, <span class="stringliteral">&quot;C&quot;</span>)</div></div><!-- fragment --><p>If you do this, you only have access to the group above, and you should never pass an index group name to getters like x(), since only one group is available. If you do specify a group in a getter after already specifying it in <code>read()</code> or <code>read_next()</code>, you will get an error, and the program will stop.</p>
+<div class="fragment"><div class="line">trj%read(xtcfile, ndxfile, <span class="stringliteral">&quot;C&quot;</span>)</div></div><!-- fragment --><p>If you do this, you only have access to the group above, and you should never pass an index group name to getters like <code>x()</code>, since only one group is available. If you do specify a group in a getter after already specifying it in <code>read()</code> or <code>read_next()</code>, you will get an error, and the program will stop.</p>
 <h4>Utilities</h4>
 <p>There are several functions and subroutines in the <code><a class="el" href="namespacedcdfort__utils.html" title="Module that contains some useful utilities. ">dcdfort_utils</a></code> module, including periodic boundary and distance calculations. Check out the source file for what is available.</p>
 <h2>License</h2>
