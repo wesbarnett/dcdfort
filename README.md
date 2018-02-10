@@ -2,7 +2,7 @@
 
 Copyright (C) 2017,2018 James W. Barnett
 
-http://github.com/wesbarnett/dcdfort
+https://github.com/wesbarnett/dcdfort
 
 ## About
 
