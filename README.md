@@ -21,8 +21,10 @@ call trj%read("mytrajectoryfile.dcd")
 ```
 
 Now all information from the trajectory file (atom coordinates, box
-dimensions) is accessible via object getters. See the [API](#api)
-below.
+dimensions) is accessible via object getters. There is additionally
+support for GROMACS-style index files and groups. Basic utility
+functions are also provided (*e.g.*, pbc and distance). See the
+[API](#api) below. 
 
 This is similar to my other project
 [libgmxfort](https://github.com/wesbarnett/libgmxfort), except that
@@ -33,9 +35,6 @@ trajectory files.
 LAMMPS will probably not work with this library. LAMMPS outputs DCD
 files as 32-bit CHARMM files with a unit cell and three dimensions,
 which is what this library can read in.
-
-Full API documentation is
-[here](https://cdn.rawgit.com/wesbarnett/dcdfort/1.2/docs/html/index.html).
 
 ## Build requirements
 
@@ -110,7 +109,7 @@ the other utilities.  There is an example in the `example` folder on
 how to do this.
 
 Full API documentation is
-[here](https://cdn.rawgit.com/wesbarnett/dcdfort/1.1/docs/html/index.html).
+[here](https://cdn.rawgit.com/wesbarnett/dcdfort/1.3/docs/html/index.html).
 
 #### Reading in trajectory and index files
 
@@ -359,7 +358,7 @@ If you do specify a group in a getter after already specifying it in `read()` or
 
 There are several functions and subroutines in the `dcdfort_utils` module,
 including periodic boundary and distance calculations. Check out the source file
-for what is available.
+and full API documentation for what is available.
 
 ## License
 
