@@ -54,18 +54,9 @@ After cloning the repository, or extracting the release tarball, cd into the
 repository. Then:
 
 ```bash
-meson build
+meson --buildtype=release build
 ninja -C build
 ```
-
-If you want to change some of the compiler optimizations or other
-setttings, use `FFLAGS`:
-
-```bash
-FFLAGS="-O3" meson build
-ninja -C build
-```
-
 ## Testing
 
 To test your build, do:
