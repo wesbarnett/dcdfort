@@ -31,8 +31,6 @@ module dcdfort_writer
     implicit none
     private
 
-    real(kind=real64), parameter :: pi = 2.0d0*dacos(0.0d0)
-
     !> @brief dcdwriter class
     type, public :: dcdwriter
         integer(kind=int32), private :: u
