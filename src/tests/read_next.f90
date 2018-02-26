@@ -69,6 +69,18 @@ program read_next_test
 
     call trj%close()
 
+    ! TEST 6
+    call trj%read(dcdfile, last=10)
+    x = trj%x(10, 5)
+    ans = [-11.111647, -9.451539, 8.782396]
+    call check(x, ans, passed, total)
+
+    ! TEST 7
+    call trj%read(dcdfile, last=10, every=2)
+    x = trj%x(5, 5)
+    ans = [-11.111647, -9.451539, 8.782396]
+    call check(x, ans, passed, total)
+
     call finished_tests(passed, total)
 
 end program read_next_test

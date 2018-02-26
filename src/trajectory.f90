@@ -160,7 +160,7 @@ contains
     !> @brief Trajectory class method which reads a specified number of frames into memory after using the open() method
     !
     !> @param[inout] this Trajectory class
-    !> @param[in] F number of frames to read in; if not specified, 1 frame is read
+    !> @param[in] F frame number to read up to; if not specified, 1 frame is read
     !> @param[in] ndxgrp read only this index group into memory
     !> @param[in] every Read in every this many frames; default is to read in every frame
     !> @return number of frames read in
@@ -304,14 +304,15 @@ contains
     !> read into memory.
     !> @param[in] every Read in every this many frames; default is 1
     !> @param[in] skip Skip this many frames at the beginning of the trajectory file; default is 0
-    subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp, every, skip)
+    !> @param[in] last Last frame to read in
+    subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp, every, skip, last)
 
         implicit none
         class(Trajectory), intent(inout) :: this
         character(len=*), optional :: ndxfile, ndxgrp
         character(len=*) :: dcdfile
-        integer(kind=int32) :: N
-        integer(kind=int32), intent(in), optional :: every, skip
+        integer(kind=int32) :: nread
+        integer(kind=int32), intent(in), optional :: every, skip, last
 
         call this%open(dcdfile, ndxfile)
 
@@ -321,12 +322,23 @@ contains
         if (present(skip)) then
             write(error_unit,'(a,i0,a)') prompt//"Skipping first ", skip, " snapshots."
         end if
+        if (present(last)) then
+            write(error_unit,'(a,i0,a)') prompt//"Limiting to ", last, " snapshots."
+        end if
 
         if (present(skip)) then
-            N = this%skip_next(skip)
-            N = this%read_next(this%NFRAMES-N, ndxgrp, every)
+            nread = this%skip_next(skip)
+            if (present(last)) then
+                nread = this%read_next(last, ndxgrp, every)
+            else
+                nread = this%read_next(this%NFRAMES-nread, ndxgrp, every)
+            end if
         else
-            N = this%read_next(this%NFRAMES, ndxgrp, every)
+            if (present(last)) then
+                nread = this%read_next(last, ndxgrp, every)
+            else
+                nread = this%read_next(this%NFRAMES, ndxgrp, every)
+            end if
         end if
 
         call this%close()

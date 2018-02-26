@@ -25,7 +25,7 @@ module dcdfort_tests
 
     implicit none
 
-    type(Trajectory) :: trj
+    type(Trajectory) :: trj, trj2
     real(kind=real32), parameter :: pi_2 = acos(0.0)
     character(len=8), parameter :: dcdfile = "test.dcd"
     character(len=8), parameter :: ndxfile = "test.ndx"
