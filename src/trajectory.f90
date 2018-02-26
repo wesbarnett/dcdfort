@@ -315,7 +315,7 @@ contains
         call this%open(dcdfile, ndxfile)
 
         if (present(every)) then
-            write(error_unit,'(a,i0,a)') prompt//"Saving ", every, " snapshots into memory."
+            write(error_unit,'(a,i0,a)') prompt//"Saving every ", every, " snapshots into memory."
         end if
         if (present(skip)) then
             write(error_unit,'(a,i0,a)') prompt//"Skipping first ", skip, " snapshots."
