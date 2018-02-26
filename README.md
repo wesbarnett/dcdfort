@@ -352,6 +352,15 @@ There are several functions and subroutines in the `dcdfort_utils` module,
 including periodic boundary and distance calculations. Check out the source file
 and full API documentation for what is available.
 
+## Vision
+
+This library will only ever read in and process DCD files and
+auxillary files that are useful in analyzing trajectories (for
+example, GROMACS-style index files). Support for a wider range of DCD
+file formats could be added but is not planned at this time.
+
+Only basic utility functions will ever be provided.
+
 ## License
 
 This project is released under the following license.
