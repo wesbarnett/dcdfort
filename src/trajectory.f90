@@ -39,14 +39,16 @@ module dcdfort_trajectory
 
     !> @brief Trajectory class
     type, public :: Trajectory
-        !> number of trajectory frames (snapshots) in Trajectory object
-        integer(kind=int32) :: NFRAMES
+        !> number of trajectory frames (snapshots) in trajectory file
+        integer(kind=int32) :: nframes
+        !> number of trajectory frames (snapshots) actually read into Trajectory object
+        integer(kind=int32) :: frames_read
         !> timestep of first frame in trajectory file
-        integer(kind=int32) :: ISTART         
+        integer(kind=int32) :: istart         
         !> timestep of last frame in trajectory file
-        integer(kind=int32) :: IEND  
+        integer(kind=int32) :: iend  
         !> frequency trajectory was saved (in time steps)
-        integer(kind=int32) :: NEVERY 
+        integer(kind=int32) :: nevery 
         !> simulation time step
         real(kind=real32) :: timestep
         type(IndexFile), private :: ndx
@@ -54,7 +56,6 @@ module dcdfort_trajectory
         type(Frame), allocatable, private :: frameArray(:)
         integer(kind=int32), private :: NUMATOMS
         integer(kind=int32), private :: N
-        integer(kind=int32), private :: frames_read
         integer(kind=int32), private :: FRAMES_REMAINING
         logical(kind=int32), private :: read_only_index_group
     contains
