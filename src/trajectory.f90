@@ -304,7 +304,7 @@ contains
     !> read into memory.
     !> @param[in] every Read in every this many frames; default is 1
     !> @param[in] skip Skip this many frames at the beginning of the trajectory file; default is 0
-    !> @param[in] last Last frame to read in
+    !> @param[in] last Last frame to process in the DCD trajectory file
     subroutine trajectory_read(this, dcdfile, ndxfile, ndxgrp, every, skip, last)
 
         implicit none
@@ -323,7 +323,7 @@ contains
             write(error_unit,'(a,i0,a)') prompt//"Skipping first ", skip, " snapshots."
         end if
         if (present(last)) then
-            write(error_unit,'(a,i0,a)') prompt//"Limiting to ", last, " snapshots."
+            write(error_unit,'(a,i0)') prompt//"Last snapshot to process:", last
         end if
 
         if (present(skip)) then
