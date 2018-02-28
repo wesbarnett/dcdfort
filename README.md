@@ -148,6 +148,17 @@ following reads in only every 10th snapshot into memory:
 call trj%read("traj.dcd", "index.ndx", every=10)
 ```
 
+To limit the number of frames read in, use the `last` argument, which
+specifies the last frame to read in numbered relative to the number
+of frames in the trajectory file. This is not necessarily the number
+of frames that you will read in when combined with `skip` and `every`.
+
+```fortran
+call trj%read("traj.dcd", "index.ndx", last=1000)
+```
+
+All of these arguments can be used together.
+
 If you want to read in the trajectory file in frame-by-frame use `read_next()`
 instead of `read()`. To use this, you must additionally open and close the dcd
 file on your own. By default it reads in one frame:
