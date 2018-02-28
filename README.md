@@ -225,16 +225,16 @@ this will simply use the first group with that name. It's best not to repeat
 group names in your index file. The library will give you a warning if it finds
 that an index name is duplicated, but the program will continue.
 
-Note that when you use `x()` you will still have to give it the frame number as
-the first argument even if you only read in one frame with `read_next()`.  You
-can always get the *total* number of frames in a trajectory file object with the
-`nframes` member:
-
 If you want direct access to the object storing a coordinate, do the
 following use `trj%frameArray(i)%xyz(j,k)` where `i` is the frame
 number, `j` are the x, y, and z coordinates (so `1`, `2`, and `3`),
 and `k` is the atom number. The `x()` method is just a convenient way
 to get this object.
+
+Note that when you use `x()` you will still have to give it the frame number as
+the first argument even if you only read in one frame with `read_next()`.  You
+can always get the *total* number of frames in a trajectory file object with the
+`nframes` member:
 
 ```fortran
 integer :: n
@@ -245,7 +245,13 @@ n = trj%nframes
 This is distinct from the number of frames read in using `read_next()`. The
 frame number passed to the `x()` method, and other methods here, is always in
 relationship to the number of frames read in, not the total number of frames in
-the file.
+the file. To get the nubmer of frames read in using `read()` use:
+
+```fortran
+integer :: n
+! ...
+n = trj%frames_read
+```
 
 To get the timestep corresponding with the first saved frame in the
 trajectory file do:
