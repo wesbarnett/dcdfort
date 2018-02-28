@@ -100,7 +100,7 @@ the other utilities.  There is an example in the `example` folder on
 how to do this.
 
 Full API documentation is here:
-* [1.3](https://cdn.rawgit.com/wesbarnett/dcdfort/1.3/docs/html/index.html)
+* [1.4](https://cdn.rawgit.com/wesbarnett/dcdfort/1.4/docs/html/index.html)
 * [master](https://rawgit.com/wesbarnett/dcdfort/master/docs/html/index.html)
 
 #### Reading in trajectory and index files
