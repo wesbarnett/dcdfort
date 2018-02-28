@@ -256,7 +256,7 @@ n = trj%nframes
 This is distinct from the number of frames read in using `read_next()`. The
 frame number passed to the `x()` method, and other methods here, is always in
 relationship to the number of frames read in, not the total number of frames in
-the file. To get the nubmer of frames read in using `read()` use:
+the file. To get the number of frames read in using `read()` use:
 
 ```fortran
 integer :: n
