@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['open',['open',['../structdcdfort__reader_1_1dcdfile.html#adc8a28a9e2fd6a7178e31d06d1cfa29c',1,'dcdfort_reader::dcdfile::open()'],['../structdcdfort__writer_1_1dcdwriter.html#a369acf578a55fc421a094cf1000c4856',1,'dcdfort_writer::dcdwriter::open()'],['../structdcdfort__trajectory_1_1trajectory.html#ac721e469da3345e1138836a6a4772748',1,'dcdfort_trajectory::trajectory::open()']]]
+  ['natoms',['natoms',['../structdcdfort__trajectory_1_1trajectory.html#a327f50e22ad8a9c8dc8a14045a8f4299',1,'dcdfort_trajectory::trajectory']]],
+  ['ndxgroups',['ndxgroups',['../structdcdfort__index_1_1ndxgroups.html',1,'dcdfort_index']]],
+  ['nevery',['nevery',['../structdcdfort__trajectory_1_1trajectory.html#a86ca01f6e1458b3f2199daadc7692d90',1,'dcdfort_trajectory::trajectory']]],
+  ['nframes',['nframes',['../structdcdfort__trajectory_1_1trajectory.html#a7ebcbd9289ceaae0caa134ec5837b280',1,'dcdfort_trajectory::trajectory']]]
 ];

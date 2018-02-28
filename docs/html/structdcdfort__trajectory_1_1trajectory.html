@@ -97,7 +97,7 @@ procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr class="memdesc:a0120f4ea727921609805b9f633d4cfd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trajectory class method which closes a DCD file which was opened with <a class="el" href="structdcdfort__trajectory_1_1trajectory.html#ac721e469da3345e1138836a6a4772748" title="Trajectory class method which opens DCD file and optionally index file. ">open()</a> <br /></td></tr>
 <tr class="separator:a0120f4ea727921609805b9f633d4cfd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4f10aacfd7f3b7d7b6905d92bcc1c63"><td class="memItemLeft" align="right" valign="top"><a id="af4f10aacfd7f3b7d7b6905d92bcc1c63"></a>
-procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdcdfort__trajectory_1_1trajectory.html#af4f10aacfd7f3b7d7b6905d92bcc1c63">read</a> =&gt; <a class="el" href="namespacedcdfort__trajectory.html#af98b3b409501d01657d7cd60c54603e0">trajectory_read</a></td></tr>
+procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdcdfort__trajectory_1_1trajectory.html#af4f10aacfd7f3b7d7b6905d92bcc1c63">read</a> =&gt; <a class="el" href="namespacedcdfort__trajectory.html#ad1e3b1cb77ba06c46464f741a7fd72de">trajectory_read</a></td></tr>
 <tr class="memdesc:af4f10aacfd7f3b7d7b6905d92bcc1c63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trajectory class method which opens, reads, and closes a trajectory file. <br /></td></tr>
 <tr class="separator:af4f10aacfd7f3b7d7b6905d92bcc1c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62167d7232406b232cfd3e869d92936f"><td class="memItemLeft" align="right" valign="top"><a id="a62167d7232406b232cfd3e869d92936f"></a>
@@ -117,8 +117,12 @@ procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 Public Attributes</h2></td></tr>
 <tr class="memitem:a7ebcbd9289ceaae0caa134ec5837b280"><td class="memItemLeft" align="right" valign="top"><a id="a7ebcbd9289ceaae0caa134ec5837b280"></a>
 integer(kind=int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdcdfort__trajectory_1_1trajectory.html#a7ebcbd9289ceaae0caa134ec5837b280">nframes</a></td></tr>
-<tr class="memdesc:a7ebcbd9289ceaae0caa134ec5837b280"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of trajectory frames (snapshots) in Trajectory object <br /></td></tr>
+<tr class="memdesc:a7ebcbd9289ceaae0caa134ec5837b280"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of trajectory frames (snapshots) in trajectory file <br /></td></tr>
 <tr class="separator:a7ebcbd9289ceaae0caa134ec5837b280"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14f875783c9bb4fcaab7b833b8bb19f6"><td class="memItemLeft" align="right" valign="top"><a id="a14f875783c9bb4fcaab7b833b8bb19f6"></a>
+integer(kind=int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdcdfort__trajectory_1_1trajectory.html#a14f875783c9bb4fcaab7b833b8bb19f6">frames_read</a></td></tr>
+<tr class="memdesc:a14f875783c9bb4fcaab7b833b8bb19f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of trajectory frames (snapshots) actually read into Trajectory object <br /></td></tr>
+<tr class="separator:a14f875783c9bb4fcaab7b833b8bb19f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa23beef1fcd1ed3e62f98117d82cbe8d"><td class="memItemLeft" align="right" valign="top"><a id="aa23beef1fcd1ed3e62f98117d82cbe8d"></a>
 integer(kind=int32)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdcdfort__trajectory_1_1trajectory.html#aa23beef1fcd1ed3e62f98117d82cbe8d">istart</a></td></tr>
 <tr class="memdesc:aa23beef1fcd1ed3e62f98117d82cbe8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">timestep of first frame in trajectory file <br /></td></tr>

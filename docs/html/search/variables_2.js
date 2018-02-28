@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['nevery',['nevery',['../structdcdfort__trajectory_1_1trajectory.html#a86ca01f6e1458b3f2199daadc7692d90',1,'dcdfort_trajectory::trajectory']]],
-  ['nframes',['nframes',['../structdcdfort__trajectory_1_1trajectory.html#a7ebcbd9289ceaae0caa134ec5837b280',1,'dcdfort_trajectory::trajectory']]]
+  ['iend',['iend',['../structdcdfort__trajectory_1_1trajectory.html#a40ef856ce71f94b2130f717743f71779',1,'dcdfort_trajectory::trajectory']]],
+  ['istart',['istart',['../structdcdfort__trajectory_1_1trajectory.html#aa23beef1fcd1ed3e62f98117d82cbe8d',1,'dcdfort_trajectory::trajectory']]]
 ];
