@@ -141,11 +141,11 @@ reading them into memory.
 call trj%read("traj.dcd", "index.ndx", skip=100)
 ```
 
-To only ready in every so many frames, use the `nevery` argument. The
+To only ready in every so many frames, use the `every` argument. The
 following reads in only every 10th snapshot into memory:
 
 ```fortran
-call trj%read("traj.dcd", "index.ndx", nevery=10)
+call trj%read("traj.dcd", "index.ndx", every=10)
 ```
 
 If you want to read in the trajectory file in frame-by-frame use `read_next()`
