@@ -2,7 +2,7 @@
 ! This file is part of libdcdfort
 ! https://github.com/wesbarnett/dcdfort
 !
-! Copyright (c) 2017 James W. Barnett
+! Copyright (c) 2017,2018 James W. Barnett
 !
 ! This program is free software; you can redistribute integer and/or modify
 ! integer under the terms of the GNU General Public License as published by

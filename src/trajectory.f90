@@ -2,7 +2,7 @@
 ! This file is part of libdcdfort
 ! https://github.com/wesbarnett/dcdfort
 !
-! Copyright (c) 2017 by James W. Barnett
+! Copyright (c) 2017,2018 by James W. Barnett
 !
 ! This program is free software; you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
