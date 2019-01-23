@@ -1,5 +1,6 @@
 language: fortran
 install:
+    - sudo apt-get update
     - sudo apt-get install meson ninja
 script:
     - meson build
