@@ -1,6 +1,7 @@
 language: fortran
 dist: xenial
 install:
+    - sudo add-apt-repository universe
     - sudo apt-get update
     - sudo apt-get install meson ninja
 script:
