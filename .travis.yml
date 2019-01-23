@@ -1,9 +1,10 @@
 language: fortran
 dist: xenial
 install:
-    - sudo add-apt-repository universe
-    - sudo apt-get update
-    - sudo apt-get install meson ninja
+    - sudo apt-get -qq update
+    - sudo apt-get install ninja python-pip python-dev build-essential
+    - sudo pip install --upgrade pip
+    - sudo pip install meson
 script:
     - meson build
     - ninja -C build
