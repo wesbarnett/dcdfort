@@ -1,5 +1,8 @@
 # libdcdfort
 
+**Update 10/03/2020: I am no longer an active LAMMPS user and can no longer support
+this library. Please fork if you wish to continue development.**
+
 Copyright (C) 2017,2018 James W. Barnett
 
 [![DOI](https://zenodo.org/badge/93893810.svg)](https://zenodo.org/badge/latestdoi/93893810)
